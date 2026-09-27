@@ -470,4 +470,12 @@ export const translations: Record<string, string> = {
   // Explore (Solid Pop)
   apply_by: 'Apply by {date}',
   filter_by_format: 'Filter by format',
+
+  // Sponsor (Solid Pop)
+  review_shortcut_hint: 'Shortcut: focus a card, then press A to approve or R to reject.',
+  application_approved_toast: 'Application approved.',
+  application_rejected_toast: 'Application rejected.',
+  review_now: 'Review now',
+  applications_waiting: '{count} applications waiting for review',
+  all_caught_up: 'All caught up. No applications waiting.',
 };

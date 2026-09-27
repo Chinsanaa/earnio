@@ -1,6 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { Check, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { SponsorShell } from '@/components/sponsor/SponsorShell';
@@ -144,7 +147,8 @@ export default function SponsorCampaignDetailPage() {
   async function handleApplication(
     applicationId: string,
     status: 'approved' | 'rejected',
-    sponsorNotes?: string
+    sponsorNotes?: string,
+    fromKeyboard = false
   ) {
     setActionId(applicationId);
     try {
@@ -152,8 +156,17 @@ export default function SponsorCampaignDetailPage() {
       setApplications((prev) =>
         prev.map((a) => (a.id === applicationId ? updated : a))
       );
+      toast.success(t(status === 'approved' ? 'application_approved_toast' : 'application_rejected_toast'));
+      if (fromKeyboard) {
+        // Keep keyboard reviewers in flow: jump to the next pending card.
+        requestAnimationFrame(() =>
+          document.querySelector<HTMLElement>('[data-pending-application]')?.focus()
+        );
+      }
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Failed to update application');
+      const message = err instanceof ApiError ? err.message : 'Failed to update application';
+      setError(message);
+      toast.error(message);
     } finally {
       setActionId(null);
     }
@@ -230,14 +243,20 @@ export default function SponsorCampaignDetailPage() {
                 </p>
               )}
 
+              {statusBreakdown.pending > 0 && (
+                <p className="mt-4 hidden text-xs font-medium text-[color:var(--muted-foreground)] md:block">
+                  {t('review_shortcut_hint')}
+                </p>
+              )}
+
               <ul className="mt-4 space-y-4">
                 {applications.map((app) => (
                   <ApplicationCard
                     key={app.id}
                     application={app}
                     busy={actionId === app.id}
-                    onApprove={(notes) => handleApplication(app.id, 'approved', notes)}
-                    onReject={(notes) => handleApplication(app.id, 'rejected', notes)}
+                    onApprove={(notes, kb) => handleApplication(app.id, 'approved', notes, kb)}
+                    onReject={(notes, kb) => handleApplication(app.id, 'rejected', notes, kb)}
                   />
                 ))}
               </ul>
@@ -331,6 +350,14 @@ export default function SponsorCampaignDetailPage() {
   );
 }
 
+const STATUS_BADGE: Record<string, string> = {
+  pending: 'badge-status-pending',
+  approved: 'badge-status-success',
+  rejected: 'badge-status-danger',
+  completed: 'badge-status-info',
+  paid: 'badge-status-success',
+};
+
 function ApplicationCard({
   application,
   busy,
@@ -339,8 +366,8 @@ function ApplicationCard({
 }: {
   application: SponsorApplication;
   busy: boolean;
-  onApprove: (notes?: string) => void;
-  onReject: (notes?: string) => void;
+  onApprove: (notes?: string, fromKeyboard?: boolean) => void;
+  onReject: (notes?: string, fromKeyboard?: boolean) => void;
 }) {
   const [notes, setNotes] = useState('');
   const { t } = useLanguage();
@@ -348,11 +375,30 @@ function ApplicationCard({
 
   const approved = application.status === 'approved';
 
+  function onKeyDown(e: React.KeyboardEvent<HTMLLIElement>) {
+    // Only when the card itself has focus, never while typing a note.
+    if (!pending || busy || e.target !== e.currentTarget || e.metaKey || e.ctrlKey || e.altKey) return;
+    const key = e.key.toLowerCase();
+    if (key === 'a') {
+      e.preventDefault();
+      onApprove(notes.trim() || undefined, true);
+    } else if (key === 'r') {
+      e.preventDefault();
+      onReject(notes.trim() || undefined, true);
+    }
+  }
+
   return (
-    <li className="creator-panel p-5">
+    <li
+      className="creator-panel p-5 focus-visible:shadow-hard"
+      tabIndex={pending ? 0 : undefined}
+      onKeyDown={onKeyDown}
+      data-pending-application={pending ? '' : undefined}
+      aria-keyshortcuts={pending ? 'A R' : undefined}
+    >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="font-semibold text-[color:var(--foreground)]">
+          <p className="font-display text-lg font-bold tracking-tight text-[color:var(--foreground)]">
             {application.creator?.name ?? 'Creator'}
             {application.creator && (
               <span className="ml-2 text-sm font-normal text-[color:var(--muted)]">
@@ -361,9 +407,11 @@ function ApplicationCard({
             )}
           </p>
           <p className="mt-1 text-xs text-[color:var(--muted)]">
-            {t('applied_label')} {formatDate(application.applied_at)} ·{' '}
-            {applicationStatusLabel(application.status)}
+            {t('applied_label')} {formatDate(application.applied_at)}
           </p>
+          <span className={`mt-2 inline-flex ${STATUS_BADGE[application.status] ?? 'badge-status-neutral'}`}>
+            {applicationStatusLabel(application.status)}
+          </span>
         </div>
         {application.creator?.email && (
           <a
@@ -412,22 +460,20 @@ function ApplicationCard({
             className="input-touch"
           />
           <div className="flex gap-2">
-            <button
-              type="button"
+            <Button
               disabled={busy}
               onClick={() => onApprove(notes.trim() || undefined)}
-              className="min-h-11 rounded-xl bg-[color:var(--success)] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+              className="bg-pop-mint text-pop-foreground hover:bg-pop-mint"
             >
+              <Check className="size-4" aria-hidden />
               {busy ? '…' : t('approve')}
-            </button>
-            <button
-              type="button"
-              disabled={busy}
-              onClick={() => onReject(notes.trim() || undefined)}
-              className="btn-secondary"
-            >
+              <kbd className="ml-1 hidden rounded border-[1.5px] border-current px-1 font-mono text-[10px] md:inline">A</kbd>
+            </Button>
+            <Button variant="outline" disabled={busy} onClick={() => onReject(notes.trim() || undefined)}>
+              <X className="size-4" aria-hidden />
               {t('reject')}
-            </button>
+              <kbd className="ml-1 hidden rounded border-[1.5px] border-current px-1 font-mono text-[10px] md:inline">R</kbd>
+            </Button>
           </div>
         </div>
       )}

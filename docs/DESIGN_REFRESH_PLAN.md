@@ -9,7 +9,7 @@
 - [x] Phase 2: primitives (Button variants, Card, Badge tones, Input, Dialog, Sheet, Tooltip, Tabs, DropdownMenu, Toaster, NumberTicker)
 - [x] Phase 3: shells + nav (Cmd/Ctrl+K command palette, lime active nav, bottom tab bar sized per role)
 - [x] Phase 4: creator screens (animated totals, platform bento, onboarding checklist, payout review sheet/dialog, filter chips, empty states)
-- [ ] Phase 5: sponsor + landing
+- [x] Phase 5: sponsor + landing (pop chart + badges, review-now card, A/R review shortcuts, lime marquee, bento features, sticker testimonials, scroll reveal)
 - [ ] Phase 6: polish
 
 ## TL;DR

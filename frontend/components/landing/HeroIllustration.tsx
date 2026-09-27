@@ -32,28 +32,25 @@ function Chip({
   className,
   icon,
   label,
-  tone = 'primary',
+  tone = 'sky',
   delay,
 }: {
   className?: string;
   icon: keyof typeof ICONS;
   label: string;
-  tone?: 'primary' | 'success';
+  tone?: 'sky' | 'lime' | 'mint';
   delay?: string;
 }) {
+  const toneClass = { sky: 'bg-pop-sky', lime: 'bg-pop-lime', mint: 'bg-pop-mint' }[tone];
   return (
     <div
-      className={`landing-float-card landing-float absolute flex items-center gap-2 rounded-full bg-card px-3.5 py-2 ${className ?? ''}`}
+      className={`landing-float absolute flex items-center gap-2 rounded-full border-2 border-pop-foreground px-3.5 py-2 text-pop-foreground shadow-hard-sm ${toneClass} ${className ?? ''}`}
       style={delay ? { animationDelay: delay } : undefined}
     >
-      <span
-        className={`flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-full ${
-          tone === 'success' ? 'bg-success/15 text-success' : 'bg-primary-soft text-primary'
-        }`}
-      >
+      <span className="flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-full border-2 border-pop-foreground bg-[color:var(--card)] text-[color:var(--foreground)]">
         <Icon name={icon} />
       </span>
-      <span className="font-mono text-[13px] font-bold text-landing-fg">{label}</span>
+      <span className="font-mono text-[13px] font-bold">{label}</span>
     </div>
   );
 }
@@ -105,7 +102,7 @@ export function HeroIllustration({
     <div className="relative mx-auto flex min-h-[420px] w-full max-w-[520px] items-center justify-center lg:max-w-none">
       {/* Orbital paths */}
       <svg
-        className="pointer-events-none absolute inset-0 h-full w-full text-[var(--blue-200)]"
+        className="pointer-events-none absolute inset-0 h-full w-full text-[color:var(--border-strong)]"
         viewBox="0 0 400 400"
         fill="none"
         aria-hidden
@@ -124,21 +121,21 @@ export function HeroIllustration({
       </svg>
 
       {/* Earnings stat card */}
-      <div className="relative w-[300px] -rotate-2 rounded-2xl border border-border bg-surface p-6 shadow-xl">
+      <div className="relative w-[300px] -rotate-2 rounded-3xl border-2 border-outline bg-card p-6 shadow-hard-lg">
         <div className="flex items-center justify-between">
           <span className="text-[13px] font-semibold text-muted-foreground">This month</span>
-          <span className="inline-flex items-center gap-1 font-mono text-[13px] font-bold text-success">
+          <span className="inline-flex items-center gap-1 rounded-full border-[1.5px] border-pop-foreground bg-pop-lime px-2 py-0.5 font-mono text-[12px] font-bold text-pop-foreground">
             ▲ 18.2%
           </span>
         </div>
-        <div className="mt-1.5 font-mono text-[32px] font-semibold tracking-[-0.02em] text-landing-fg">
+        <div className="mt-1.5 font-mono text-[32px] font-bold tracking-[-0.02em] text-landing-fg">
           ₮2,480,000
         </div>
         <div className="mt-[18px] flex h-14 items-end gap-1.5">
           {BARS.map((h, i) => (
             <div
               key={i}
-              className={`flex-1 rounded-[5px] ${i === BARS.length - 1 ? 'bg-accent' : 'bg-[var(--blue-100)]'}`}
+              className={`flex-1 rounded-[5px] border-2 border-outline ${i === BARS.length - 1 ? 'bg-pop-lime' : 'bg-primary-soft'}`}
               style={{ height: `${h}%` }}
             />
           ))}
@@ -151,9 +148,9 @@ export function HeroIllustration({
         </div>
       </div>
 
-      <Chip className="left-[0%] top-[6%]" icon="trend" label={`${metrics[0]} views`} delay="0s" />
-      <Chip className="right-[-2%] top-[12%]" icon="wallet" label={`${metrics[2]} earned`} delay="0.5s" />
-      <Chip className="bottom-[8%] left-[6%]" icon="check" label="Payout sent" tone="success" delay="1s" />
+      <Chip className="left-[0%] top-[6%] -rotate-3" icon="trend" label={`${metrics[0]} views`} tone="sky" delay="0s" />
+      <Chip className="right-[-2%] top-[12%] rotate-2" icon="wallet" label={`${metrics[2]} earned`} tone="lime" delay="0.5s" />
+      <Chip className="bottom-[8%] left-[6%] rotate-1" icon="check" label="Payout sent" tone="mint" delay="1s" />
     </div>
   );
 }

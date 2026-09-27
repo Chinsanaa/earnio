@@ -1,6 +1,10 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { Megaphone, Plus } from 'lucide-react';
+import { buttonVariants } from '@/components/ui/button';
+import { EmptyState } from '@/components/ui/empty-state';
+import { Skeleton } from '@/components/ui/Skeleton';
 import Link from 'next/link';
 import { SponsorShell } from '@/components/sponsor/SponsorShell';
 import { CampaignStatusBadge } from '@/components/sponsor/CampaignStatusBadge';
@@ -63,27 +67,31 @@ export default function SponsorCampaignsPage() {
         title={t('campaigns')}
         description={t('campaigns_subtitle')}
         actions={
-          <Link href="/sponsor/campaigns/new" className="btn-primary w-auto px-5">
+          <Link href="/sponsor/campaigns/new" className={buttonVariants({ variant: 'pop' })}>
+            <Plus className="size-4" aria-hidden />
             {t('new_campaign')}
           </Link>
         }
       />
 
       {counts.legacy > 0 && (
-        <p className="mb-4 text-sm text-amber-800 dark:text-amber-200">
+        <p className="alert-warning mb-4">
           {counts.legacy} older campaign{counts.legacy === 1 ? '' : 's'} need publishing — open
           them and use Publish.
         </p>
       )}
 
-      <div className="mb-6 flex flex-wrap gap-2">
+      <div className="mb-6 flex flex-wrap gap-2" role="group">
         {(['all', 'published', 'closed'] as const).map((key) => (
           <button
             key={key}
             type="button"
+            aria-pressed={tab === key}
             onClick={() => setTab(key)}
-            className={`min-h-10 rounded-xl px-3 py-2 text-sm font-semibold transition ${
-              tab === key ? 'nav-link-active' : 'nav-link-inactive border border-[color:var(--border)]'
+            className={`min-h-10 rounded-full border-2 px-4 py-1.5 text-sm font-bold transition-colors ${
+              tab === key
+                ? 'border-outline bg-pop-lime text-pop-foreground shadow-hard-sm'
+                : 'border-border-strong bg-card text-foreground hover:border-outline'
             }`}
           >
             {tabLabels[key]} ({counts[key]})
@@ -92,25 +100,29 @@ export default function SponsorCampaignsPage() {
       </div>
 
       {loading && (
-        <p className="text-sm text-[color:var(--muted-foreground)]">{t('loading_campaigns')}</p>
+        <div className="space-y-4" aria-label={t('loading_campaigns')}>
+          <Skeleton className="h-28 rounded-2xl" />
+          <Skeleton className="h-28 rounded-2xl" />
+          <Skeleton className="h-28 rounded-2xl" />
+        </div>
       )}
       {error ? (
         <p className="alert-error">{error}</p>
       ) : null}
 
       {!loading && !error && filtered.length === 0 && (
-        <p className="text-sm text-[color:var(--muted-foreground)]">
-          {tab === 'all' ? (
-            <>
-              {t('no_campaigns_yet')}{' '}
-              <Link href="/sponsor/campaigns/new" className="link-primary">
-                {t('no_campaigns_yet')}
+        <EmptyState
+          icon={Megaphone}
+          title={tab === 'all' ? t('no_campaigns_yet') : `No ${tabLabels[tab].toLowerCase()} campaigns.`}
+          action={
+            tab === 'all' ? (
+              <Link href="/sponsor/campaigns/new" className={buttonVariants({ variant: 'pop' })}>
+                <Plus className="size-4" aria-hidden />
+                {t('new_campaign')}
               </Link>
-            </>
-          ) : (
-            `No ${tabLabels[tab].toLowerCase()} campaigns.`
-          )}
-        </p>
+            ) : null
+          }
+        />
       )}
 
       <div className="space-y-4">
@@ -118,7 +130,7 @@ export default function SponsorCampaignsPage() {
           <Link
             key={c.id}
             href={`/sponsor/campaigns/${c.id}`}
-            className="creator-panel block cursor-pointer p-5 transition duration-200 hover:-translate-y-0.5 hover:shadow-md"
+            className="creator-panel pop-press block cursor-pointer p-5"
           >
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
@@ -132,7 +144,7 @@ export default function SponsorCampaignsPage() {
                   {c.description}
                 </p>
                 <p className="mt-2 text-xs text-[color:var(--muted)]">
-                  {contentTypeLabel(c.content_type)} · Apply by {formatDate(c.deadline_apply)}
+                  {contentTypeLabel(c.content_type)} · {t('apply_by').replace('{date}', formatDate(c.deadline_apply))}
                 </p>
                 {isLegacyUnpublished(c.status) && (
                   <p className="mt-2 text-xs font-semibold text-[color:var(--primary)]">
@@ -141,14 +153,14 @@ export default function SponsorCampaignsPage() {
                 )}
               </div>
               <div className="text-right">
-                <p className="text-lg font-semibold text-primary">
+                <p className="font-mono text-lg font-bold text-[color:var(--foreground)]">
                   {formatMnt(c.payment_amount_mnt)}
                 </p>
                 <p className="mt-1 text-xs text-[color:var(--muted)]">
                   {c.applicationCount} {t('applications')}
                   {c.pendingCount > 0 && (
-                    <span className="ml-1 font-semibold text-amber-600 dark:text-amber-400">
-                      · {c.pendingCount} {t('pending_applications').toLowerCase()}
+                    <span className="badge-status-pending ml-2">
+                      {c.pendingCount} {t('pending_applications').toLowerCase()}
                     </span>
                   )}
                 </p>

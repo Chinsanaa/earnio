@@ -15,7 +15,7 @@ export function LandingFooter({ content }: { content: LandingContent }) {
   const isBrand = content.audience === 'brand';
 
   return (
-    <footer className="landing-footer border-t border-sky-100/80">
+    <footer className="landing-footer border-t-2 border-[color:var(--outline)]">
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr] lg:gap-8 lg:px-10">
         <div className="max-w-sm">
           <EarnioLogo href={content.homeHref} />
@@ -94,7 +94,7 @@ export function LandingFooter({ content }: { content: LandingContent }) {
         </div>
       </div>
 
-      <div className="border-t border-sky-100/80 px-6 py-6 lg:px-10">
+      <div className="border-t-2 border-[color:var(--border)] px-6 py-6 lg:px-10">
         <p className="mx-auto max-w-7xl text-xs text-landing-muted">
           {t(isBrand ? 'footer_brands' : 'footer_creators')}
         </p>

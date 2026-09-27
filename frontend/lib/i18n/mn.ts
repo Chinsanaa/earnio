@@ -437,4 +437,12 @@ export const translations: Record<string, string> = {
   // Explore (Solid Pop)
   apply_by: '{date} хүртэл хүсэлт гаргах',
   filter_by_format: 'Форматаар шүүх',
+
+  // Sponsor (Solid Pop)
+  review_shortcut_hint: 'Товчлол: картыг сонгоод A дарж зөвшөөрөх, R дарж татгалзах.',
+  application_approved_toast: 'Өргөдлийг зөвшөөрлөө.',
+  application_rejected_toast: 'Өргөдлөөс татгалзлаа.',
+  review_now: 'Одоо шалгах',
+  applications_waiting: '{count} өргөдөл шалгахыг хүлээж байна',
+  all_caught_up: 'Бүгдийг шалгасан. Хүлээгдэж буй өргөдөл алга.',
 };

@@ -8,9 +8,9 @@ export function ApplicationStatusChart({ data }: { data: ApplicationStatusBreakd
   const { t } = useLanguage();
 
   const slices = [
-    { key: 'pending', label: t('pending_short'), value: data.pending, color: '#f59e0b' },
-    { key: 'approved', label: t('approved_short'), value: data.approved, color: 'var(--success)' },
-    { key: 'rejected', label: t('rejected_short'), value: data.rejected, color: 'var(--destructive)' },
+    { key: 'pending', label: t('pending_short'), value: data.pending, color: 'var(--pop-sun)' },
+    { key: 'approved', label: t('approved_short'), value: data.approved, color: 'var(--pop-mint)' },
+    { key: 'rejected', label: t('rejected_short'), value: data.rejected, color: 'var(--pop-coral)' },
   ];
 
   const total = slices.reduce((sum, s) => sum + s.value, 0);
@@ -29,18 +29,19 @@ export function ApplicationStatusChart({ data }: { data: ApplicationStatusBreakd
             nameKey="label"
             innerRadius={56}
             outerRadius={80}
-            paddingAngle={2}
+            paddingAngle={0}
             isAnimationActive={false}
           >
             {slices.map((slice) => (
-              <Cell key={slice.key} fill={slice.color} />
+              <Cell key={slice.key} fill={slice.color} stroke="var(--outline)" strokeWidth={2} />
             ))}
           </Pie>
           <Tooltip
             formatter={(value, name) => [`${value ?? 0}`, String(name ?? '')]}
             contentStyle={{
               borderRadius: 12,
-              border: '1px solid var(--border)',
+              border: '2px solid var(--outline)',
+              boxShadow: 'var(--shadow-hard-sm)',
               background: 'var(--card)',
               color: 'var(--foreground)',
               fontSize: 12,
