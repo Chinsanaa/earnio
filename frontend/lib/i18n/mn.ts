@@ -390,4 +390,11 @@ export const translations: Record<string, string> = {
   // OAuth / Auth errors
   oauth_error: 'Нийгмийн сүлжээгээр нэвтрэх боломжгүй байна. Дахин оролдоно уу.',
   error_refresh_message: 'Гэнэтийн алдаа гарлаа. Хуудсыг шинэчилж үзнэ үү.',
+
+  // Command palette
+  command_search: 'Хайх',
+  command_placeholder: 'Хуудас, үйлдэл хайх…',
+  command_pages: 'Хуудсууд',
+  command_actions: 'Үйлдлүүд',
+  command_no_results: 'Илэрц олдсонгүй.',
 };

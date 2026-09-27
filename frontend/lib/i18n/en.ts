@@ -423,4 +423,11 @@ export const translations: Record<string, string> = {
   toggle_color_theme: 'Toggle color theme',
   switch_to_light: 'Switch to light mode',
   switch_to_dark: 'Switch to dark mode',
+
+  // Command palette
+  command_search: 'Search',
+  command_placeholder: 'Search pages and actions…',
+  command_pages: 'Pages',
+  command_actions: 'Actions',
+  command_no_results: 'No results found.',
 };

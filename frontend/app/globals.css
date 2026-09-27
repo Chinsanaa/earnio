@@ -1815,3 +1815,52 @@ html.apple-platform textarea {
 .link-primary {
   @apply font-semibold text-primary transition hover:text-primary-hover hover:underline;
 }
+
+/* Command palette trigger (topbar) */
+.creator-command-trigger {
+  display: inline-flex;
+  height: 2.5rem;
+  min-width: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  border: var(--border-width) solid var(--outline);
+  background: var(--card);
+  padding: 0 0.625rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--landing-muted);
+  transition: box-shadow 0.15s, color 0.15s;
+}
+
+.creator-command-trigger:hover {
+  color: var(--landing-fg);
+  box-shadow: var(--shadow-hard-sm);
+}
+
+.creator-command-trigger-label,
+.creator-command-trigger-kbd {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .creator-command-trigger {
+    padding: 0 0.5rem 0 0.75rem;
+  }
+
+  .creator-command-trigger-label,
+  .creator-command-trigger-kbd {
+    display: inline;
+  }
+}
+
+.creator-command-trigger-kbd {
+  border-radius: 0.375rem;
+  border: 1.5px solid var(--border-strong);
+  background: var(--card-muted);
+  padding: 0 0.375rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--landing-fg);
+}
