@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { applicationStatusLabel, contentTypeLabel, formatMnt } from '@/lib/format';
 import type { SponsorshipListing } from '@/lib/types/sponsorship';
+import { popToneFor } from '@/lib/design/popTone';
 
 export function SponsorshipCard({ sponsorship }: { sponsorship: SponsorshipListing }) {
   const title = sponsorship.title.replace(/^\[Demo\]\s*/, '');
@@ -8,10 +9,10 @@ export function SponsorshipCard({ sponsorship }: { sponsorship: SponsorshipListi
 
   return (
     <Link href={`/sponsorships/${sponsorship.id}`} className="creator-gig-card">
-      <div className="creator-gig-thumb">
+      <div className="creator-gig-thumb" data-tone={popToneFor(sponsorship.id)}>
         <span className="creator-gig-price">{formatMnt(sponsorship.payment_amount_mnt)}</span>
         <div className="flex h-full items-end p-4">
-          <span className="rounded-full bg-white/90 px-2.5 py-1 text-xs font-medium text-landing-muted dark:bg-card/90">
+          <span className="rounded-full border-2 border-[color:var(--pop-foreground)] bg-[color:var(--card)] px-2.5 py-1 text-xs font-bold text-landing-fg">
             {contentTypeLabel(sponsorship.content_type)}
           </span>
         </div>

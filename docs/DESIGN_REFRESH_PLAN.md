@@ -1,7 +1,16 @@
 # Earnio Design Refresh Plan: "Solid Pop"
 
-> Status: **Proposed** (plan only, nothing implemented yet). Written September 2026.
-> Owner decision needed on the open questions at the bottom before Phase 1 starts.
+> Status: **In progress.** Written September 2026. Open questions resolved with defaults (see section 7).
+
+## Progress
+
+- [x] Phase 0: gradient guardrail (rule 4 in `designSystem.test.ts`)
+- [x] Phase 1: Solid Pop tokens, gradients/mesh/glass removed, design-system mirrored
+- [ ] Phase 2: primitives
+- [ ] Phase 3: shells + nav
+- [ ] Phase 4: creator screens
+- [ ] Phase 5: sponsor + landing
+- [ ] Phase 6: polish
 
 ## TL;DR
 
@@ -146,7 +155,10 @@ Each phase = one PR. Each PR must pass `cd frontend && npm run lint && npm test 
 
 ---
 
-## 7. Open questions (need your call)
+## 7. Open questions (resolved with defaults)
+
+Decided: remove glass/blur; warm paper background; Skiper UI free pieces only; medium outline intensity (cards, buttons, inputs, chips; tables keep 1px dividers).
+
 
 1. **Glass/blur:** blur is not a gradient, but it is not "solid" either. Plan assumes **remove it**. OK?
 2. **Background:** warm paper `#F5F3EE` or keep cool `#F7FAFF`?

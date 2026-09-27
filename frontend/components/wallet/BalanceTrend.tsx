@@ -53,18 +53,12 @@ export function BalanceTrend({ transactions }: { transactions: WalletTransaction
         preserveAspectRatio="none"
         className="h-32 w-full overflow-visible"
       >
-        <defs>
-          <linearGradient id="balance-trend-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="var(--primary)" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <path d={areaPath} fill="url(#balance-trend-fill)" />
+        <path d={areaPath} fill="var(--primary-soft)" />
         <path
           d={linePath}
           fill="none"
           stroke="var(--primary)"
-          strokeWidth="2"
+          strokeWidth="3"
           vectorEffect="non-scaling-stroke"
         />
       </svg>

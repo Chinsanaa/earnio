@@ -1,7 +1,7 @@
 /* ============================================================
    Earnio — Color tokens
-   Single electric-blue identity: Earnio Blue #2E5BFF (azure),
-   cool slate ink ramp, cyan "spark" highlight, money-green.
+   "Solid Pop": Earnio Blue #2E5BFF on warm paper, ink outlines,
+   flat pop accents (lime/sun/coral/lilac/mint/sky). Solid colors only.
 
    Generated from the canonical source: app/globals.css.
    Do not edit values here independently — update app/globals.css
@@ -34,30 +34,34 @@
   --ink-100: #E9EEF6;
   --ink-50:  #F4F7FC;
 
-  /* --- Atmospheric mesh (blue-tinted radial backgrounds) --- */
-  --mesh-1: #DCE6FF;
-  --mesh-2: #CFEBFF;
-  --mesh-3: #E6ECFF;
+  /* --- Solid Pop accents (flat fills, always with --pop-foreground ink text).
+         Theme-invariant. NO GRADIENTS anywhere in this system. --- */
+  --pop-lime:       #C6F432;
+  --pop-sun:        #FFD23F;
+  --pop-coral:      #FF6B4A;
+  --pop-lilac:      #B9A6FF;
+  --pop-mint:       #7EE8C4;
+  --pop-sky:        #8FB3FF;
+  --pop-foreground: #0B1220;
 
-  /* --- Brand gradients --- */
-  --gradient-brand: linear-gradient(135deg, #4D74FF 0%, #2E5BFF 45%, #1736B8 100%); /* @kind color */
-  --gradient-spark: linear-gradient(115deg, #2E5BFF 0%, #12C2F3 100%); /* @kind color */
-  --gradient-ink:   linear-gradient(160deg, #161E2E 0%, #0B1220 100%); /* @kind color */
+  /* --- Sticker outline --- */
+  --outline:    #0B1220;
+  --shadow-ink: #0B1220;
 
   /* === Semantic aliases (light) === */
-  --background:                  #F7FAFF;
+  --background:                  #F5F3EE;
   --foreground:                  #0B1220;
   --card:                        #FFFFFF;
-  --card-muted:                  #F4F7FC;
-  --surface:                     #F4F7FC;
+  --card-muted:                  #EFECE4;
+  --surface:                     #EFECE4;
   --surface-raised:              #FFFFFF;
-  --border:                      #D7DEEA;
+  --border:                      #D9D4C7;
   --border-strong:               #7E8DA6;
   --muted:                       #5A6A85;
-  --muted-foreground:            #647596;
+  --muted-foreground:            #5A6A85;
   --primary:                     #2E5BFF;
   --primary-hover:               #1F45E5;
-  --primary-soft:                #EEF3FF;
+  --primary-soft:                #E3EAFF;
   --primary-foreground:          #FFFFFF;
   --accent:                      #12C2F3;
   --accent-soft:                 #E0F9FF;
@@ -75,13 +79,18 @@
   --on-color:                    #0B1220;
   --ring:                        #2E5BFF;
 
-  /* Landing palette — airy blue/white */
+  /* Landing palette — flat paper + ink */
   --landing-fg:        #0B1220;
   --landing-muted:     #5A6A85;
-  --landing-bg-top:    #EEF3FF;
-  --landing-bg-bottom: #FFFFFF;
-  --landing-sky-50:    #EEF3FF;
-  --landing-sky-100:   #DCE6FF;
+  --landing-bg-top:    #F5F3EE;
+  --landing-bg-bottom: #F5F3EE;
+  --landing-sky-50:    #EFECE4;
+  --landing-sky-100:   #D9D4C7;
+
+  /* Creator hero — solid Earnio Blue block */
+  --hero-bg:       #1F45E5;
+  --hero-fg:       #FFFFFF;
+  --hero-fg-muted: #DCE6FF;
 }
 
 /* === Dark theme (full parity — every token above gets a considered dark value,
@@ -115,16 +124,14 @@
   --destructive-soft:            #3A1418;
   --destructive-text:            #F87171;
   --on-color:                    #0B1220;
-  --ring:                        #5C7DFF;
-
-  --mesh-1: #16214A;
-  --mesh-2: #102A3F;
-  --mesh-3: #141C2C;
+  --ring:                        #8DA8FF;
+  --outline:                     #606F8A;
+  --shadow-ink:                  #3C4A66;
 
   --landing-fg:        #F4F7FC;
-  --landing-muted:     #8492A8;
+  --landing-muted:     #AEB9CC;
   --landing-bg-top:    #0B1220;
-  --landing-bg-bottom: #060B14;
-  --landing-sky-50:    #0F1F33;
-  --landing-sky-100:   #1F3046;
+  --landing-bg-bottom: #0B1220;
+  --landing-sky-50:    #192234;
+  --landing-sky-100:   #27324A;
 }

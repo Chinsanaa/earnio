@@ -250,3 +250,4 @@ Full endpoint tables: [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md).
 ## Update log
 
 - **2026-09-27:** Added [docs/DESIGN_REFRESH_PLAN.md](./docs/DESIGN_REFRESH_PLAN.md), a proposed "Solid Pop" frontend redesign: solid colors only (no gradients, enforced by a planned CI test), hard offset shadows, curated copy-paste libraries (shadcn/ui, Motion, Vengeance UI, Skiper UI free tier, Magic UI, Sonner, Vaul, cmdk), and a 6-phase rollout. Plan only; nothing implemented yet. Open questions listed in section 7.
+- **2026-09-27 (Phase 0+1):** Solid Pop tokens landed in `frontend/app/globals.css` (warm paper bg, `--pop-*` accents, `--outline`, hard shadows `--shadow-hard*`), all gradients/mesh/glass/blur removed, charts use solid fills, `design-system/` + `MASTER.md` mirrored. New CI rule 4 bans gradients. `lib/design/popTone.ts` picks stable card colors.

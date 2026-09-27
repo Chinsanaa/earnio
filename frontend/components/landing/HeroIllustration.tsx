@@ -43,7 +43,7 @@ function Chip({
 }) {
   return (
     <div
-      className={`landing-float-card landing-float absolute flex items-center gap-2 rounded-full border border-border bg-surface/90 px-3.5 py-2 backdrop-blur-md ${className ?? ''}`}
+      className={`landing-float-card landing-float absolute flex items-center gap-2 rounded-full bg-card px-3.5 py-2 ${className ?? ''}`}
       style={delay ? { animationDelay: delay } : undefined}
     >
       <span

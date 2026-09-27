@@ -7,8 +7,8 @@ export interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
   max?: number;
   /** Bar thickness in px. @default 8 */
   height?: number;
-  /** Use the blue→cyan spark gradient fill. @default false */
-  gradient?: boolean;
+  /** Use the solid lime pop fill. @default false */
+  pop?: boolean;
   /** Solid fill color override. */
   color?: string;
   /** Track color override. */

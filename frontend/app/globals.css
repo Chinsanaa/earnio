@@ -28,18 +28,28 @@
   --ink-100: #E9EEF6;
   --ink-50:  #F4F7FC;
 
+  /* Solid Pop accents — flat fills, always paired with --pop-foreground (ink) text.
+     Same values in both themes. No gradients anywhere: see designSystem.test.ts rule 4. */
+  --pop-lime:       #C6F432;
+  --pop-sun:        #FFD23F;
+  --pop-coral:      #FF6B4A;
+  --pop-lilac:      #B9A6FF;
+  --pop-mint:       #7EE8C4;
+  --pop-sky:        #8FB3FF;
+  --pop-foreground: #0B1220;
+
   /* Semantic — same variable names for Tailwind/component compat */
-  --background:         #F7FAFF;
+  --background:         #F5F3EE;
   --foreground:         #0B1220;
   --card:               #FFFFFF;
-  --card-muted:         #F4F7FC;
-  --surface:            #F4F7FC;
-  --border:             #D7DEEA;
+  --card-muted:         #EFECE4;
+  --surface:            #EFECE4;
+  --border:             #D9D4C7;
   --muted:              #5A6A85;
-  --muted-foreground:   #647596;
+  --muted-foreground:   #5A6A85;
   --primary:            #2E5BFF;
   --primary-hover:      #1F45E5;
-  --primary-soft:       #EEF3FF;
+  --primary-soft:       #E3EAFF;
   --primary-foreground: #FFFFFF;
   --accent:             #12C2F3;
   --accent-soft:        #E0F9FF;
@@ -58,7 +68,17 @@
   --border-strong:      #7E8DA6;
   --surface-raised:     #FFFFFF;
   --ring:               #2E5BFF;
-  --focus-ring:         0 0 0 3px color-mix(in srgb, var(--primary) 28%, transparent);
+  --focus-ring:         0 0 0 3px var(--ring);
+
+  /* Outlines + hard offset shadows ("sticker" depth, no blur) */
+  --outline:            #0B1220;
+  --shadow-ink:         #0B1220;
+  --border-width:       2px;
+  --press-offset:       2px;
+  --shadow-hard-sm:     2px 2px 0 0 var(--shadow-ink);
+  --shadow-hard:        4px 4px 0 0 var(--shadow-ink);
+  --shadow-hard-lg:     6px 6px 0 0 var(--shadow-ink);
+
   --radius:             1rem;
   --radius-xs:          0.375rem;
   --radius-sm:          0.5rem;
@@ -72,67 +92,60 @@
   --dur-fast:           140ms;
   --dur-base:           220ms;
   --dur-slow:           360ms;
-  --shadow-glow:        0 20px 50px -20px rgba(46, 91, 255, 0.35);
-  --shadow-brand:       0 14px 30px -10px rgba(46, 91, 255, 0.45);
-  --shadow-sm:          0 2px 6px rgba(11, 18, 32, 0.06), 0 1px 2px rgba(11, 18, 32, 0.04);
-  --shadow-md:          0 8px 20px -6px rgba(11, 18, 32, 0.10), 0 2px 6px rgba(11, 18, 32, 0.05);
+  --shadow-glow:        var(--shadow-hard);
+  --shadow-brand:       var(--shadow-hard);
+  --shadow-sm:          var(--shadow-hard-sm);
+  --shadow-md:          var(--shadow-hard);
+  --shadow-lg:          var(--shadow-hard-lg);
 
-  /* Atmospheric mesh — blue-tinted */
-  --mesh-1: #DCE6FF;
-  --mesh-2: #CFEBFF;
-  --mesh-3: #E6ECFF;
-
-  /* Landing palette — airy blue/white */
+  /* Landing palette — flat paper + ink */
   --landing-fg:               #0B1220;
   --landing-muted:            #5A6A85;
-  --landing-bg-top:           #EEF3FF;
-  --landing-bg-bottom:        #FFFFFF;
-  --landing-sky-50:           #EEF3FF;
-  --landing-sky-100:          #DCE6FF;
-  --landing-card-shadow:      0 8px 32px rgba(11, 18, 32, 0.08);
-  --landing-btn-shadow:       0 2px 8px rgba(46, 91, 255, 0.25);
-  --landing-btn-light-shadow: 0 2px 4px rgba(11, 18, 32, 0.08);
-  --landing-surface:          rgb(255 255 255 / 0.92);
-  --landing-surface-strong:   rgb(255 255 255 / 0.98);
-  --landing-feature-bg:       rgb(255 255 255 / 0.7);
-  --landing-feature-border:   rgb(255 255 255 / 0.8);
-  --landing-menu-hover-bg:    rgb(255 255 255 / 0.8);
-  --landing-ray-color:        rgb(255 255 255 / 0.9);
+  --landing-bg-top:           #F5F3EE;
+  --landing-bg-bottom:        #F5F3EE;
+  --landing-sky-50:           #EFECE4;
+  --landing-sky-100:          #D9D4C7;
+  --landing-card-shadow:      var(--shadow-hard);
+  --landing-btn-shadow:       var(--shadow-hard-sm);
+  --landing-btn-light-shadow: var(--shadow-hard-sm);
+  --landing-surface:          #FFFFFF;
+  --landing-surface-strong:   #FFFFFF;
+  --landing-feature-bg:       #FFFFFF;
+  --landing-feature-border:   #0B1220;
+  --landing-menu-hover-bg:    #EFECE4;
   --landing-btn-solid-bg:     #0B1220;
   --landing-btn-solid-fg:     #FFFFFF;
-  --landing-btn-solid-hover:  #2A2A2A;
+  --landing-btn-solid-hover:  #27324A;
   --landing-btn-soft-bg:      #FFFFFF;
   --landing-btn-soft-fg:      #0B1220;
-  --landing-btn-soft-hover:   #F9FAFB;
+  --landing-btn-soft-hover:   #EFECE4;
 
-  /* Glass surfaces — creator app translucent panels */
-  --glass-soft:           rgb(255 255 255 / 0.6);
-  --glass-medium:         rgb(255 255 255 / 0.8);
-  --glass-strong:         rgb(255 255 255 / 0.9);
-  --glass-border-soft:    rgb(255 255 255 / 0.7);
-  --glass-border-medium:  rgb(255 255 255 / 0.85);
-  --glass-border-strong:  rgb(255 255 255 / 0.92);
-  --chrome-blur:          rgb(255 255 255 / 0.8);
-  --shadow-knob:          0 1px 3px rgba(0, 0, 0, 0.35);
-  --shadow-lift:          0 16px 36px rgba(11, 18, 32, 0.14);
+  /* Solid surfaces (formerly translucent "glass") */
+  --glass-soft:           #FAF8F4;
+  --glass-medium:         #FFFFFF;
+  --glass-strong:         #FFFFFF;
+  --glass-border-soft:    #D9D4C7;
+  --glass-border-medium:  #0B1220;
+  --glass-border-strong:  #0B1220;
+  --chrome-blur:          #FFFFFF;
+  --shadow-knob:          1px 1px 0 0 var(--shadow-ink);
+  --shadow-lift:          var(--shadow-hard-lg);
 
-  /* Creator hero — an intentionally always-dark spotlight card, same in both themes */
-  --hero-bg-gradient: linear-gradient(135deg, #0b1220 0%, #121a2c 55%, #0b1220 100%);
-  --hero-shadow:      0 30px 60px -22px rgba(11, 18, 32, 0.35);
-  --hero-glow-1:      rgba(46, 91, 255, 0.4);
-  --hero-glow-2:      rgba(18, 194, 243, 0.22);
-  --hero-fg:          #ffffff;
-  --hero-fg-muted:    rgba(255, 255, 255, 0.6);
-  --hero-fg-faint:    rgba(255, 255, 255, 0.55);
-  --hero-divider:     rgba(255, 255, 255, 0.12);
-  --hero-trend-up-bg:    rgba(16, 185, 129, 0.16);
-  --hero-trend-up-fg:    #34d399;
-  --hero-trend-down-bg:  rgba(240, 69, 90, 0.16);
-  --hero-trend-down-fg:  #f87171;
+  /* Creator hero — solid Earnio Blue block, same in both themes */
+  --hero-bg:          #1F45E5;
+  --hero-shadow:      6px 6px 0 0 #0B1220;
+  --hero-fg:          #FFFFFF;
+  --hero-fg-muted:    #DCE6FF;
+  --hero-fg-faint:    #DCE6FF;
+  --hero-divider:     #5C7DFF;
+  --hero-trend-up-bg:    #C6F432;
+  --hero-trend-up-fg:    #0B1220;
+  --hero-trend-down-bg:  #FF6B4A;
+  --hero-trend-down-fg:  #0B1220;
 
   /* Neutral darkening scrims — same in both themes, sit behind modals/drawers */
-  --overlay-scrim:      rgb(20 20 20 / 0.45);
-  --overlay-scrim-soft: rgb(20 20 20 / 0.25);
+  --overlay-scrim:      rgb(11 18 32 / 0.55);
+  --overlay-scrim-soft: rgb(11 18 32 / 0.3);
 
   /* Fonts */
   --font-display:  'Space Grotesk', system-ui, sans-serif;
@@ -169,46 +182,33 @@
   --on-color:           #0B1220;
   --border-strong:      #606F8A;
   --surface-raised:     #1E2839;
-  --ring:               #5C7DFF;
-  --shadow-glow:        0 20px 60px -15px rgba(92, 125, 255, 0.25);
-  --shadow-brand:       0 14px 34px -10px rgba(92, 125, 255, 0.35);
-  --shadow-sm:          0 2px 6px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.25);
-  --shadow-md:          0 8px 22px -6px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.30);
-  --mesh-1: #16214A;
-  --mesh-2: #102A3F;
-  --mesh-3: #141C2C;
+  --ring:               #8DA8FF;
+  --outline:            #606F8A;
+  --shadow-ink:         #3C4A66;
   --landing-fg:               #F4F7FC;
-  --landing-muted:            #8492A8;
+  --landing-muted:            #AEB9CC;
   --landing-bg-top:           #0B1220;
-  --landing-bg-bottom:        #060b14;
-  --landing-sky-50:           #0f1f33;
-  --landing-sky-100:          #1f3046;
-  --landing-card-shadow:      0 10px 40px rgba(0, 0, 0, 0.45);
-  --landing-btn-shadow:       0 4px 14px rgba(0, 0, 0, 0.45);
-  --landing-btn-light-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
-  --landing-surface:          rgb(20 28 44 / 0.92);
-  --landing-surface-strong:   rgb(20 28 44 / 0.98);
-  --landing-feature-bg:       rgb(30 40 57 / 0.7);
-  --landing-feature-border:   rgb(96 111 138 / 0.35);
-  --landing-menu-hover-bg:    rgb(255 255 255 / 0.08);
-  --landing-ray-color:        rgb(63 214 255 / 0.12);
+  --landing-bg-bottom:        #0B1220;
+  --landing-sky-50:           #192234;
+  --landing-sky-100:          #27324A;
+  --landing-surface:          #141C2C;
+  --landing-surface-strong:   #141C2C;
+  --landing-feature-bg:       #141C2C;
+  --landing-feature-border:   #606F8A;
+  --landing-menu-hover-bg:    #192234;
   --landing-btn-solid-bg:     #5C7DFF;
   --landing-btn-solid-fg:     #0B1220;
   --landing-btn-solid-hover:  #8DA8FF;
   --landing-btn-soft-bg:      #1E2839;
   --landing-btn-soft-fg:      #F4F7FC;
   --landing-btn-soft-hover:   #27324A;
-
-  /* Glass surfaces — creator app translucent panels */
-  --glass-soft:           rgb(15 22 36 / 0.6);
-  --glass-medium:         rgb(13 19 31 / 0.82);
-  --glass-strong:         rgb(13 19 31 / 0.92);
-  --glass-border-soft:    rgb(51 65 85 / 0.6);
-  --glass-border-medium:  rgb(51 65 85 / 0.72);
-  --glass-border-strong:  rgb(51 65 85 / 0.8);
-  --chrome-blur:          rgb(11 18 32 / 0.75);
-  --shadow-knob:          0 1px 3px rgba(0, 0, 0, 0.5);
-  --shadow-lift:          0 16px 40px rgba(0, 0, 0, 0.5);
+  --glass-soft:           #111929;
+  --glass-medium:         #141C2C;
+  --glass-strong:         #141C2C;
+  --glass-border-soft:    #27324A;
+  --glass-border-medium:  #606F8A;
+  --glass-border-strong:  #606F8A;
+  --chrome-blur:          #0B1220;
 }
 
 body {
@@ -272,13 +272,48 @@ html.apple-platform textarea {
   }
 }
 
-/* Atmospheric mesh */
+/* Flat page background (formerly an atmospheric gradient mesh) */
 .mesh-bg {
   background-color: var(--background);
-  background-image:
-    radial-gradient(ellipse 80% 60% at 10% -10%, var(--mesh-1) 0%, transparent 55%),
-    radial-gradient(ellipse 70% 50% at 90% 0%, var(--mesh-3) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 40% at 50% 100%, var(--mesh-2) 0%, transparent 45%);
+}
+
+/* Solid Pop helpers: sticker outline + hard offset shadow + tactile press */
+.pop-outline {
+  border: var(--border-width) solid var(--outline);
+}
+
+.pop-shadow {
+  box-shadow: var(--shadow-hard);
+}
+
+.pop-shadow-sm {
+  box-shadow: var(--shadow-hard-sm);
+}
+
+.pop-press {
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.pop-press:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-hard);
+}
+
+.pop-press:active:not(:disabled) {
+  transform: translate(var(--press-offset), var(--press-offset));
+  box-shadow: none;
+}
+
+.bg-pop-lime { background-color: var(--pop-lime); color: var(--pop-foreground); }
+.bg-pop-sun { background-color: var(--pop-sun); color: var(--pop-foreground); }
+.bg-pop-coral { background-color: var(--pop-coral); color: var(--pop-foreground); }
+.bg-pop-lilac { background-color: var(--pop-lilac); color: var(--pop-foreground); }
+.bg-pop-mint { background-color: var(--pop-mint); color: var(--pop-foreground); }
+.bg-pop-sky { background-color: var(--pop-sky); color: var(--pop-foreground); }
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
 }
 
 .font-display {
@@ -358,52 +393,15 @@ html.apple-platform textarea {
 
 /* Components */
 .card {
-  @apply rounded-2xl border border-border bg-card;
-  box-shadow: var(--shadow-sm);
+  @apply rounded-2xl bg-card;
+  border: var(--border-width) solid var(--outline);
+  box-shadow: var(--shadow-hard-sm);
 }
 
 .card-elevated {
-  @apply rounded-2xl border border-border bg-card;
-  box-shadow: var(--shadow-md);
-}
-
-.input-touch {
-  @apply min-h-11 w-full rounded-xl border border-border bg-card px-4 py-2.5 text-base text-foreground outline-none transition;
-}
-
-.input-touch:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent);
-}
-
-.btn-primary {
-  @apply inline-flex min-h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition;
-  color: var(--primary-foreground);
-  background: var(--primary);
-}
-
-.btn-primary:hover {
-  background: var(--primary-hover);
-}
-
-.btn-primary:active {
-  transform: scale(0.98);
-}
-
-.btn-primary:disabled {
-  @apply cursor-not-allowed opacity-60;
-}
-
-.btn-secondary {
-  @apply inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-xl border border-border bg-card px-5 py-2.5 text-sm font-medium text-foreground transition;
-}
-
-.btn-secondary:hover {
-  background: var(--surface);
-}
-
-.btn-secondary:active {
-  transform: scale(0.98);
+  @apply rounded-2xl bg-card;
+  border: var(--border-width) solid var(--outline);
+  box-shadow: var(--shadow-hard);
 }
 
 .btn-ghost {
@@ -441,7 +439,7 @@ html.apple-platform textarea {
 
 /* SideShift-inspired landing page */
 .landing-page {
-  background: linear-gradient(180deg, var(--landing-bg-top) 0%, var(--landing-bg-bottom) 45%);
+  background: var(--landing-bg-top);
   color: var(--landing-fg);
   min-height: 100%;
   scroll-behavior: smooth;
@@ -487,17 +485,16 @@ html.apple-platform textarea {
 /* Auth pages — landing visual continuity */
 .auth-card {
   border-radius: 1.25rem;
-  border: 1px solid var(--border);
+  border: var(--border-width) solid var(--outline);
   background: var(--card);
-  box-shadow: var(--landing-card-shadow);
-  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-hard-lg);
   color: var(--foreground);
 }
 
 .auth-input {
   @apply min-h-11 w-full rounded-xl px-4 py-2.5 text-base outline-none transition;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--card);
+  border: var(--border-width) solid var(--border-strong);
   color: var(--foreground);
 }
 
@@ -506,8 +503,8 @@ html.apple-platform textarea {
 }
 
 .auth-input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent);
+  border-color: var(--outline);
+  box-shadow: var(--shadow-hard-sm);
 }
 
 .auth-link {
@@ -543,8 +540,8 @@ html.apple-platform textarea {
   justify-content: center;
   gap: 0.75rem;
   border-radius: 0.75rem;
-  border: 1px solid var(--border);
-  background: var(--surface);
+  border: var(--border-width) solid var(--outline);
+  background: var(--card);
   padding: 0.625rem 1rem;
   font-size: 0.9375rem;
   font-weight: 500;
@@ -553,8 +550,8 @@ html.apple-platform textarea {
 }
 
 .oauth-provider-btn:hover:not(:disabled) {
-  border-color: var(--primary);
   background: var(--card-muted);
+  box-shadow: var(--shadow-hard-sm);
 }
 
 .oauth-provider-btn:disabled {
@@ -586,7 +583,6 @@ html.apple-platform textarea {
   justify-content: center;
   background: var(--overlay-scrim);
   padding: 1rem;
-  backdrop-filter: blur(4px);
 }
 
 .legal-modal-panel {
@@ -596,9 +592,9 @@ html.apple-platform textarea {
   flex-direction: column;
   overflow: hidden;
   border-radius: 1.25rem;
-  border: 1px solid var(--border);
+  border: var(--border-width) solid var(--outline);
   background: var(--card);
-  box-shadow: var(--landing-card-shadow);
+  box-shadow: var(--shadow-hard-lg);
 }
 
 .legal-modal-header {
@@ -651,9 +647,8 @@ html.apple-platform textarea {
 }
 
 .landing-nav {
-  background: color-mix(in srgb, var(--card) 70%, transparent);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
+  background: var(--background);
+  border-bottom: var(--border-width) solid var(--outline);
 }
 
 .landing-menu-btn {
@@ -703,11 +698,10 @@ html.apple-platform textarea {
   height: 100%;
   width: min(100%, 20rem);
   transform: translateX(100%);
-  border-left: 1px solid var(--landing-sky-100);
+  border-left: var(--border-width) solid var(--outline);
   background: var(--landing-surface-strong);
   box-shadow: var(--landing-card-shadow);
   transition: transform 0.25s ease;
-  backdrop-filter: blur(12px);
 }
 
 .landing-mobile-menu-open .landing-mobile-menu-panel {
@@ -718,48 +712,61 @@ html.apple-platform textarea {
   @apply inline-flex cursor-pointer items-center justify-center rounded-full font-semibold transition;
   background: var(--landing-btn-solid-bg);
   color: var(--landing-btn-solid-fg);
-  box-shadow: var(--landing-btn-shadow);
+  border: var(--border-width) solid var(--outline);
+  box-shadow: var(--shadow-hard-sm);
 }
 
 .landing-btn-dark:hover {
   background: var(--landing-btn-solid-hover);
-  transform: translateY(-1px);
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-hard);
 }
 
 .landing-btn-dark:active {
-  transform: translateY(0);
+  transform: translate(var(--press-offset), var(--press-offset));
+  box-shadow: none;
 }
 
 .landing-btn-light {
   @apply inline-flex cursor-pointer items-center justify-center rounded-full font-semibold transition;
   background: var(--landing-btn-soft-bg);
   color: var(--landing-btn-soft-fg);
-  box-shadow: var(--landing-btn-light-shadow);
+  border: var(--border-width) solid var(--outline);
+  box-shadow: var(--shadow-hard-sm);
 }
 
 .landing-btn-light:hover {
   background: var(--landing-btn-soft-hover);
-  transform: translateY(-1px);
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-hard);
+}
+
+.landing-btn-light:active {
+  transform: translate(var(--press-offset), var(--press-offset));
+  box-shadow: none;
 }
 
 .landing-float-card {
   background: var(--landing-surface);
-  box-shadow: var(--landing-card-shadow);
-  backdrop-filter: blur(8px);
+  border: var(--border-width) solid var(--outline);
+  box-shadow: var(--shadow-hard);
 }
 
 .landing-feature-card {
   background: var(--landing-feature-bg);
-  box-shadow: var(--landing-btn-light-shadow);
-  border: 1px solid var(--landing-feature-border);
+  box-shadow: var(--shadow-hard);
+  border: var(--border-width) solid var(--landing-feature-border);
+  transition: transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
 }
 
+.landing-feature-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-hard-lg);
+}
+
+/* Decorative layer kept for layout compatibility; intentionally flat now. */
 .landing-rays {
-  background: radial-gradient(
-    ellipse 80% 60% at 50% 100%,
-    var(--landing-ray-color) 0%,
-    transparent 70%
-  );
+  background: transparent;
 }
 
 @keyframes landing-float {
@@ -796,7 +803,7 @@ html.apple-platform textarea {
 }
 
 .not-found-hero {
-  background: radial-gradient(ellipse 70% 60% at 50% 40%, var(--primary-hover) 0%, transparent 70%);
+  background: var(--pop-sun);
 }
 
 .not-found-ghost-number {
@@ -822,8 +829,9 @@ html.apple-platform textarea {
   justify-content: center;
   border-radius: 9999px;
   background: var(--landing-btn-soft-bg);
-  color: var(--primary);
-  box-shadow: var(--landing-btn-light-shadow);
+  color: var(--foreground);
+  border: var(--border-width) solid var(--outline);
+  box-shadow: var(--shadow-hard-sm);
   transition: transform 0.15s ease, background 0.15s ease;
 }
 
@@ -842,7 +850,10 @@ html.apple-platform textarea {
   }
 
   .landing-btn-dark:hover,
-  .landing-btn-light:hover {
+  .landing-btn-light:hover,
+  .landing-feature-card:hover,
+  .pop-press:hover:not(:disabled),
+  .pop-press:active:not(:disabled) {
     transform: none;
   }
 
@@ -877,7 +888,7 @@ html.apple-platform textarea {
   display: none;
   height: 100%;
   overflow-y: auto;
-  border-right: 1px solid var(--border);
+  border-right: var(--border-width) solid var(--outline);
   background: var(--card);
   padding: 1.5rem 0.875rem;
 }
@@ -925,14 +936,15 @@ html.apple-platform textarea {
 }
 
 .creator-sidebar-link-active {
-  background: var(--landing-btn-solid-bg);
-  color: var(--landing-btn-solid-fg);
-  box-shadow: var(--landing-btn-shadow);
+  background: var(--pop-lime);
+  color: var(--pop-foreground);
+  font-weight: 700;
+  box-shadow: inset 0 0 0 var(--border-width) var(--outline), var(--shadow-hard-sm);
 }
 
 .creator-sidebar-link-active:hover {
-  background: var(--landing-btn-solid-hover);
-  color: var(--landing-btn-solid-fg);
+  background: var(--pop-lime);
+  color: var(--pop-foreground);
 }
 
 .creator-sidebar-logout {
@@ -961,9 +973,8 @@ html.apple-platform textarea {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: var(--border-width) solid var(--outline);
   background: var(--chrome-blur);
-  backdrop-filter: blur(14px);
   padding: 0.875rem 1rem;
 }
 
@@ -988,8 +999,8 @@ html.apple-platform textarea {
   justify-content: center;
   gap: 0.25rem;
   border-radius: 9999px;
-  border: 1px solid var(--border);
-  background: var(--landing-sky-50);
+  border: var(--border-width) solid var(--outline);
+  background: var(--card);
   padding: 0.3125rem;
   margin: 0 auto;
 }
@@ -1018,14 +1029,15 @@ html.apple-platform textarea {
 }
 
 .creator-topbar-nav-link-active {
-  background: var(--landing-btn-solid-bg);
-  color: var(--landing-btn-solid-fg);
-  box-shadow: var(--landing-btn-shadow);
+  background: var(--pop-lime);
+  color: var(--pop-foreground);
+  font-weight: 700;
+  box-shadow: inset 0 0 0 var(--border-width) var(--outline);
 }
 
 .creator-topbar-nav-link-active:hover {
-  background: var(--landing-btn-solid-hover);
-  color: var(--landing-btn-solid-fg);
+  background: var(--pop-lime);
+  color: var(--pop-foreground);
 }
 
 .creator-topbar-actions {
@@ -1054,7 +1066,7 @@ html.apple-platform textarea {
   gap: 0.625rem;
   border-radius: 9999px;
   padding: 0.1875rem 0.75rem 0.1875rem 0.1875rem;
-  border: 1px solid var(--border);
+  border: var(--border-width) solid var(--outline);
   background: var(--card);
   transition: background 0.15s, border-color 0.15s;
 }
@@ -1084,10 +1096,10 @@ html.apple-platform textarea {
   flex-direction: column;
   gap: 0.25rem;
   border-radius: 1rem;
-  border: 1px solid var(--landing-sky-100);
+  border: var(--border-width) solid var(--outline);
   background: var(--glass-strong);
   padding: 0.5rem;
-  box-shadow: var(--landing-card-shadow);
+  box-shadow: var(--shadow-hard);
 }
 
 .creator-profile-dropdown-header {
@@ -1114,6 +1126,7 @@ html.apple-platform textarea {
   border-radius: 9999px;
   background: var(--card);
   box-shadow: var(--shadow-knob);
+  border: 1px solid var(--outline);
   transition: transform 0.2s;
 }
 
@@ -1143,15 +1156,18 @@ html.apple-platform textarea {
 
 /* Surfaces */
 .glass-card {
-  @apply rounded-2xl border border-border bg-card shadow-sm;
+  @apply rounded-2xl border-2 bg-card shadow-sm;
+  border-color: var(--outline);
 }
 
 .glass-panel {
-  @apply rounded-2xl border border-border/80 bg-card/90 shadow-sm backdrop-blur-md;
+  @apply rounded-2xl border-2 bg-card shadow-sm;
+  border-color: var(--outline);
 }
 
 .stat-card {
-  @apply relative overflow-hidden rounded-2xl border border-border bg-card p-5 transition duration-200 hover:border-primary/40 hover:shadow-md;
+  @apply relative overflow-hidden rounded-2xl border-2 bg-card p-5 shadow-sm transition duration-200 hover:shadow-md;
+  border-color: var(--outline);
 }
 
 @media (min-width: 1024px) {
@@ -1171,7 +1187,7 @@ html.apple-platform textarea {
   right: 0;
   z-index: 40;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  border-top: 1px solid var(--landing-sky-100);
+  border-top: var(--border-width) solid var(--outline);
   background: var(--card);
   padding: 0.5rem 0.25rem calc(0.5rem + env(safe-area-inset-bottom, 0px));
 }
@@ -1198,9 +1214,11 @@ html.apple-platform textarea {
 }
 
 .creator-bottom-link-active {
-  color: var(--landing-fg);
-  background: var(--landing-sky-100);
+  color: var(--pop-foreground);
+  background: var(--pop-lime);
   border-radius: 0.75rem;
+  font-weight: 700;
+  box-shadow: inset 0 0 0 var(--border-width) var(--outline);
 }
 
 .creator-icon-btn {
@@ -1211,13 +1229,15 @@ html.apple-platform textarea {
   align-items: center;
   justify-content: center;
   border-radius: 0.75rem;
-  border: 1px solid var(--landing-sky-100);
+  border: var(--border-width) solid var(--outline);
+  background: var(--card);
   color: var(--landing-fg);
-  transition: background 0.15s;
+  transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
 }
 
 .creator-icon-btn:hover {
   background: var(--landing-sky-50);
+  box-shadow: var(--shadow-hard-sm);
 }
 
 .creator-avatar {
@@ -1232,7 +1252,7 @@ html.apple-platform textarea {
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--landing-btn-solid-fg);
-  box-shadow: 0 0 0 2px var(--card), 0 0 0 3.5px var(--landing-sky-100);
+  border: var(--border-width) solid var(--outline);
 }
 
 .creator-avatar-lg {
@@ -1245,19 +1265,11 @@ html.apple-platform textarea {
   position: relative;
   overflow: hidden;
   border-radius: 1.25rem;
-  background: var(--hero-bg-gradient);
+  background: var(--hero-bg);
   color: var(--hero-fg);
   padding: 1.75rem;
-  box-shadow: var(--hero-shadow);
-}
-
-.creator-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(ellipse 60% 50% at 100% 0%, var(--hero-glow-1) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 0% 100%, var(--hero-glow-2) 0%, transparent 60%);
-  pointer-events: none;
+  border: var(--border-width) solid var(--outline);
+  box-shadow: var(--shadow-hard-lg);
 }
 
 .creator-hero-body {
@@ -1272,9 +1284,10 @@ html.apple-platform textarea {
 
 .creator-hero-amount {
   font-family: var(--font-mono);
-  font-size: 2.5rem;
+  font-size: clamp(2.25rem, 7vw, 3.5rem);
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
   margin-top: 0.375rem;
 }
 
@@ -1285,7 +1298,8 @@ html.apple-platform textarea {
   border-radius: 9999px;
   padding: 0.25rem 0.625rem;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
+  border: 1.5px solid var(--pop-foreground);
 }
 
 .creator-trend-badge-up {
@@ -1329,20 +1343,18 @@ html.apple-platform textarea {
 
 .creator-panel {
   border-radius: 1.25rem;
-  border: 1px solid var(--glass-border-medium);
+  border: var(--border-width) solid var(--glass-border-medium);
   background: var(--glass-medium);
   padding: 1.25rem;
-  box-shadow: var(--landing-btn-light-shadow);
-  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-hard-sm);
 }
 
 .creator-panel-lg {
   border-radius: 1.5rem;
-  border: 1px solid var(--glass-border-strong);
+  border: var(--border-width) solid var(--glass-border-strong);
   background: var(--glass-medium);
   padding: 1.5rem;
-  box-shadow: var(--landing-card-shadow);
-  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-hard);
 }
 
 @media (min-width: 640px) {
@@ -1355,11 +1367,10 @@ html.apple-platform textarea {
   position: relative;
   overflow: hidden;
   border-radius: 1.5rem;
-  border: 1px solid var(--glass-border-strong);
+  border: var(--border-width) solid var(--glass-border-strong);
   background: var(--glass-strong);
   padding: 1.75rem;
-  box-shadow: var(--landing-card-shadow);
-  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-hard);
 }
 
 @media (min-width: 640px) {
@@ -1373,9 +1384,9 @@ html.apple-platform textarea {
   position: absolute;
   inset: 0 auto auto 0;
   width: 100%;
-  height: 3px;
-  background: linear-gradient(90deg, var(--primary), var(--accent));
-  opacity: 0.85;
+  height: 6px;
+  background: var(--pop-lime);
+  border-bottom: var(--border-width) solid var(--outline);
 }
 
 /* Page header used at the top of every creator app page */
@@ -1389,15 +1400,16 @@ html.apple-platform textarea {
 }
 
 .creator-page-title {
-  font-size: 1.375rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-family: var(--font-display);
+  font-size: 1.625rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
   color: var(--landing-fg);
 }
 
 @media (min-width: 640px) {
   .creator-page-title {
-    font-size: 1.625rem;
+    font-size: 2rem;
   }
 }
 
@@ -1410,33 +1422,36 @@ html.apple-platform textarea {
 /* Onboarding progress bar (GettingStartedPlan) */
 .creator-progress-track {
   margin-top: 1rem;
-  height: 0.5rem;
+  height: 0.75rem;
   width: 100%;
   overflow: hidden;
   border-radius: var(--radius-full);
-  background: var(--border);
+  border: var(--border-width) solid var(--outline);
+  background: var(--card);
 }
 
 .creator-progress-fill {
   height: 100%;
   border-radius: var(--radius-full);
-  background: linear-gradient(90deg, var(--primary), var(--accent));
+  background: var(--pop-lime);
   transition: width 0.3s var(--ease-out);
 }
 
 /* Stat cards (wallet balances, etc.) */
 .creator-stat-card {
   border-radius: 1.25rem;
-  border: 1px solid var(--glass-border-medium);
+  border: var(--border-width) solid var(--glass-border-medium);
   background: var(--glass-medium);
   padding: 1.25rem;
-  box-shadow: var(--landing-card-shadow);
-  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-hard-sm);
 }
 
 .creator-stat-card-highlight {
-  border-color: transparent;
-  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  background: var(--primary-hover);
+}
+
+.dark .creator-stat-card-highlight {
+  background: var(--primary);
 }
 
 .creator-stat-card-highlight .creator-stat-label,
@@ -1452,9 +1467,10 @@ html.apple-platform textarea {
 
 .creator-stat-value {
   margin-top: 0.375rem;
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-family: var(--font-mono);
+  font-size: 1.625rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   color: var(--landing-fg);
 }
 
@@ -1465,7 +1481,7 @@ html.apple-platform textarea {
   justify-content: space-between;
   gap: 0.75rem;
   border-radius: 1rem;
-  border: 1px solid var(--glass-border-soft);
+  border: var(--border-width) solid var(--glass-border-soft);
   background: var(--glass-soft);
   padding: 0.75rem 1rem;
 }
@@ -1494,7 +1510,7 @@ html.apple-platform textarea {
   justify-content: space-between;
   gap: 0.75rem;
   border-radius: 1rem;
-  border: 1px solid color-mix(in srgb, var(--destructive) 35%, transparent);
+  border: var(--border-width) solid var(--destructive-fill);
   background: var(--destructive-soft);
   padding: 0.625rem 0.875rem;
 }
@@ -1522,7 +1538,7 @@ html.apple-platform textarea {
 .creator-search {
   width: 100%;
   border-radius: 9999px;
-  border: 1px solid var(--landing-sky-100);
+  border: var(--border-width) solid var(--outline);
   background: var(--glass-strong);
   padding: 0.75rem 1rem 0.75rem 2.75rem;
   font-size: 0.875rem;
@@ -1536,8 +1552,7 @@ html.apple-platform textarea {
 
 .creator-search:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--primary-soft);
+  box-shadow: var(--shadow-hard-sm);
 }
 
 /* Sponsorship/gig cards (explore page) */
@@ -1546,22 +1561,53 @@ html.apple-platform textarea {
   flex-direction: column;
   overflow: hidden;
   border-radius: 1.25rem;
-  border: 1px solid var(--glass-border-medium);
+  border: var(--border-width) solid var(--glass-border-medium);
   background: var(--glass-medium);
-  box-shadow: var(--landing-card-shadow);
-  backdrop-filter: blur(10px);
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: var(--shadow-hard);
+  transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
 }
 
 .creator-gig-card:hover {
-  transform: translateY(-2px);
+  transform: translate(-2px, -2px);
   box-shadow: var(--shadow-lift);
 }
 
+/* Solid color-block header; tone comes from popToneFor() via data-tone. */
 .creator-gig-thumb {
   position: relative;
   height: 9rem;
-  background: linear-gradient(135deg, var(--landing-sky-100), var(--landing-sky-50));
+  background: var(--pop-sky);
+  border-bottom: var(--border-width) solid var(--outline);
+}
+
+.creator-gig-thumb[data-tone='sky'] {
+  background: var(--pop-sky);
+}
+
+.creator-gig-thumb[data-tone='lilac'] {
+  background: var(--pop-lilac);
+}
+
+.creator-gig-thumb[data-tone='mint'] {
+  background: var(--pop-mint);
+}
+
+.creator-gig-thumb[data-tone='sun'] {
+  background: var(--pop-sun);
+}
+
+.creator-gig-thumb[data-tone='coral'] {
+  background: var(--pop-coral);
+}
+
+.creator-gig-thumb[data-tone='lime'] {
+  background: var(--pop-lime);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .creator-gig-card:hover {
+    transform: none;
+  }
 }
 
 .creator-gig-price {
@@ -1572,16 +1618,19 @@ html.apple-platform textarea {
   border-radius: 9999px;
   background: var(--landing-btn-solid-bg);
   padding: 0.25rem 0.625rem;
+  font-family: var(--font-mono);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--landing-btn-solid-fg);
+  border: var(--border-width) solid var(--outline);
 }
 
 /* Data tables (transaction history, etc.) */
 .creator-table-wrap {
   overflow-x: auto;
   border-radius: 1rem;
-  border: 1px solid var(--glass-border-soft);
+  border: var(--border-width) solid var(--outline);
+  background: var(--card);
 }
 
 .creator-table {
@@ -1619,34 +1668,46 @@ html.apple-platform textarea {
   background: var(--glass-soft);
 }
 
+/* Legacy name kept for compatibility: now a solid brand color, never a gradient. */
 .text-gradient {
-  @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  color: var(--primary);
 }
 
 .badge-pill {
-  @apply inline-flex items-center rounded-full border border-border bg-primary-soft px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-primary;
-}
-
-.dark .badge-pill {
-  @apply text-muted-foreground;
+  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider;
+  background: var(--pop-lime);
+  color: var(--pop-foreground);
+  border: 1.5px solid var(--pop-foreground);
 }
 
 /* Status badges — one definition per status, themed via dark: pairs.
    Use instead of one-off bg-{color}-100/text-{color}-800 combinations. */
 .badge-status-success {
-  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold border border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300;
+  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold;
+  background: var(--pop-mint);
+  color: var(--pop-foreground);
+  border: 1.5px solid var(--pop-foreground);
 }
 
 .badge-status-pending {
-  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold border border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200;
+  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold;
+  background: var(--pop-sun);
+  color: var(--pop-foreground);
+  border: 1.5px solid var(--pop-foreground);
 }
 
 .badge-status-danger {
-  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold border border-red-200 bg-red-50 text-red-800 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300;
+  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold;
+  background: var(--pop-coral);
+  color: var(--pop-foreground);
+  border: 1.5px solid var(--pop-foreground);
 }
 
 .badge-status-info {
-  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold border border-sky-200 bg-sky-50 text-sky-800 dark:border-sky-900/50 dark:bg-sky-950/40 dark:text-sky-300;
+  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold;
+  background: var(--pop-sky);
+  color: var(--pop-foreground);
+  border: 1.5px solid var(--pop-foreground);
 }
 
 .badge-status-neutral {
@@ -1677,19 +1738,40 @@ html.apple-platform textarea {
 
 /* Forms */
 .input-touch {
-  @apply min-h-11 w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-base text-foreground outline-none transition duration-200 placeholder:text-muted focus:border-primary focus:ring-2 focus:ring-primary/20;
+  @apply min-h-11 w-full rounded-xl bg-card px-3.5 py-2.5 text-base text-foreground outline-none transition duration-200 placeholder:text-muted;
+  border: var(--border-width) solid var(--border-strong);
+}
+
+.input-touch:focus {
+  border-color: var(--outline);
+  box-shadow: var(--shadow-hard-sm);
 }
 
 .btn-primary {
-  @apply inline-flex min-h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold tracking-wide text-primary-foreground shadow-md transition duration-200 hover:bg-primary-hover active:scale-95 disabled:cursor-not-allowed disabled:opacity-60;
+  @apply inline-flex min-h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-bold tracking-wide text-primary-foreground transition duration-200 hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60;
+  border: var(--border-width) solid var(--outline);
+  box-shadow: var(--shadow-hard-sm);
+}
+
+.btn-primary:active:not(:disabled),
+.btn-secondary:active:not(:disabled),
+.btn-accent:active:not(:disabled) {
+  transform: translate(var(--press-offset), var(--press-offset));
+  box-shadow: none;
 }
 
 .btn-secondary {
-  @apply inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition duration-200 hover:bg-surface hover:border-border/60 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60;
+  @apply inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-xl bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition duration-200 hover:bg-surface disabled:cursor-not-allowed disabled:opacity-60;
+  border: var(--border-width) solid var(--outline);
+  box-shadow: var(--shadow-hard-sm);
 }
 
 .btn-accent {
-  @apply inline-flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-xl bg-accent px-4 py-3 text-sm font-semibold text-on-color shadow-md transition duration-200 hover:opacity-90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60;
+  @apply inline-flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold transition duration-200 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60;
+  background: var(--pop-lime);
+  color: var(--pop-foreground);
+  border: var(--border-width) solid var(--outline);
+  box-shadow: var(--shadow-hard-sm);
 }
 
 .link-primary {

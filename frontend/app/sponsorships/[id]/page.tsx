@@ -150,7 +150,7 @@ export default function SponsorshipDetailPage() {
                   />
                 </div>
                 {applyError && <p className="text-sm text-destructive-text">{applyError}</p>}
-                <div className="fixed bottom-16 left-0 right-0 z-30 border-t border-sky-100 bg-white/95 p-4 backdrop-blur dark:border-border dark:bg-card/95 md:static md:border-0 md:bg-transparent md:p-0">
+                <div className="fixed bottom-16 left-0 right-0 z-30 border-t-2 border-[color:var(--outline)] bg-card p-4 md:static md:border-0 md:bg-transparent md:p-0">
                   <button
                     type="submit"
                     disabled={submitting}
