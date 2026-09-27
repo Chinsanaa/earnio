@@ -33,7 +33,7 @@ export function OfflineBanner() {
   return (
     <div
       role="alert"
-      className="bg-[color:var(--primary)] px-4 py-2.5 text-center text-sm font-semibold text-white"
+      className="bg-[color:var(--primary)] px-4 py-2.5 text-center text-sm font-semibold text-primary-foreground"
     >
       {t('offline_message')}
     </div>

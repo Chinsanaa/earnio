@@ -27,13 +27,13 @@ export function PasswordRequirements({ password, showRequirements = true }: Pass
           key={req.key}
           className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium transition ${
             req.met
-              ? 'bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-300'
+              ? 'bg-pop-mint text-pop-foreground'
               : 'bg-[color:var(--card-muted)] text-[color:var(--muted-foreground)]'
           }`}
         >
           <span
             className={`flex h-2.5 w-2.5 items-center justify-center rounded-full ${
-              req.met ? 'bg-green-500' : 'border border-current opacity-50'
+              req.met ? 'border border-pop-foreground bg-pop-foreground' : 'border border-current opacity-50'
             }`}
           />
           {req.label}

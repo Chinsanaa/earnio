@@ -21,7 +21,7 @@ export function EmailVerificationSection({ user }: { user: AuthUser }) {
         <h2 className="text-base font-semibold tracking-tight text-landing-fg">
           {t('email_verification')}
         </h2>
-        <p className="mt-2 text-sm text-emerald-700 dark:text-emerald-300">{t('email_verified')}</p>
+        <p className="mt-2 text-sm text-success-text">{t('email_verified')}</p>
       </section>
     );
   }
@@ -99,12 +99,12 @@ export function EmailVerificationSection({ user }: { user: AuthUser }) {
       ) : null}
 
       {error ? (
-        <p className="mt-3 text-sm text-red-600 dark:text-red-400" role="alert">
+        <p className="mt-3 text-sm text-destructive-text" role="alert">
           {error}
         </p>
       ) : null}
       {localSuccess ? (
-        <p className="mt-3 text-sm text-emerald-700 dark:text-emerald-300" role="status">
+        <p className="mt-3 text-sm text-success-text" role="status">
           {t('email_verified_success')}
         </p>
       ) : null}

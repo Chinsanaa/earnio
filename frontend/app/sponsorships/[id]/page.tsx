@@ -129,7 +129,7 @@ export default function SponsorshipDetailPage() {
             {sponsorship.hasApplied ? (
               <p className="creator-panel mt-6 text-sm font-medium text-landing-fg">
                 {t('you_applied_status')}{' '}
-                <span className="text-sky-700 dark:text-sky-300">
+                <span className="text-accent-text">
                   {applicationStatusLabel(sponsorship.applicationStatus ?? 'pending')}
                 </span>
               </p>

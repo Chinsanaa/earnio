@@ -1,6 +1,6 @@
 # Earnio Design Refresh Plan: "Solid Pop"
 
-> Status: **In progress.** Written September 2026. Open questions resolved with defaults (see section 7).
+> Status: **Implemented** (all phases). Written September 2026. Open questions resolved with defaults (see section 7).
 
 ## Progress
 
@@ -10,7 +10,7 @@
 - [x] Phase 3: shells + nav (Cmd/Ctrl+K command palette, lime active nav, bottom tab bar sized per role)
 - [x] Phase 4: creator screens (animated totals, platform bento, onboarding checklist, payout review sheet/dialog, filter chips, empty states)
 - [x] Phase 5: sponsor + landing (pop chart + badges, review-now card, A/R review shortcuts, lime marquee, bento features, sticker testimonials, scroll reveal)
-- [ ] Phase 6: polish
+- [x] Phase 6: polish (dark-mode fixes, token cleanup, `text-white` CI guard, reduced-motion + keyboard + MN checks, docs)
 
 ## TL;DR
 
@@ -170,3 +170,8 @@ Decided: remove glass/blur; warm paper background; Skiper UI free pieces only; m
 - Vengeance UI overview: <https://next.jqueryscript.net/next-js/vengeance-ui/>
 - Skiper UI docs and pricing: <https://skiper-ui.com/docs/quick-start>, <https://tailkits.com/components/skiper-ui/>
 - Animated React library comparison 2026: <https://ui.spectrumhq.in/best-animated-react-component-libraries>
+
+## Known follow-ups (not done)
+
+- **Cyrillic fonts:** `app/layout.tsx` loads Space Grotesk / Plus Jakarta Sans / JetBrains Mono with the `latin` subset only, so Mongolian text falls back to a system font. This predates the refresh. Check which subsets each family ships before adding them (an unsupported subset fails the build).
+- Unused legacy `components/layout/AppShell.tsx` could be deleted.

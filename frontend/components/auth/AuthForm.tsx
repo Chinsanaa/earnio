@@ -115,7 +115,7 @@ export function AuthForm({
   return (
     <div className="w-full max-w-md">
       <div className="auth-card p-8 sm:p-10">
-        <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-landing-fg text-white">
+        <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl border-2 border-pop-foreground bg-pop-lime text-pop-foreground shadow-hard-sm">
           <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden>
             <path
               d="M3 12L21 4L14 21L11 13L3 12Z"
@@ -148,13 +148,13 @@ export function AuthForm({
                 placeholder={field.placeholder}
                 className={`auth-input ${
                   field.type === 'password' && isSignupForm && passwordError
-                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                    ? 'border-destructive-fill focus:border-destructive-fill focus:ring-destructive-fill'
                     : ''
                 }`}
                 onChange={field.type === 'password' && isSignupForm ? handlePasswordChange : undefined}
               />
               {field.type === 'password' && isSignupForm && passwordError && (
-                <p className="mt-2 text-sm text-red-600 dark:text-red-400">{passwordError}</p>
+                <p className="mt-2 text-sm text-destructive-text">{passwordError}</p>
               )}
               {field.type === 'password' && isSignupForm && (
                 <PasswordRequirements password={passwordValue} showRequirements={true} />

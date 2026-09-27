@@ -42,7 +42,7 @@ export function ForgotPasswordForm({ onSuccess }: ForgotPasswordFormProps) {
     return (
       <div className="w-full max-w-md">
         <div className="auth-card p-8 sm:p-10">
-          <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-green-100 text-green-600 dark:text-green-400">
+          <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl border-2 border-pop-foreground bg-pop-mint text-pop-foreground shadow-hard-sm">
             <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden>
               <path
                 d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
@@ -78,7 +78,7 @@ export function ForgotPasswordForm({ onSuccess }: ForgotPasswordFormProps) {
   return (
     <div className="w-full max-w-md">
       <div className="auth-card p-8 sm:p-10">
-        <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-landing-fg text-white">
+        <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl border-2 border-pop-foreground bg-pop-lime text-pop-foreground shadow-hard-sm">
           <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden>
             <path
               d="M3 12L21 4L14 21L11 13L3 12Z"

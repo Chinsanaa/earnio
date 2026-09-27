@@ -59,7 +59,7 @@ export function AccountSettingsContent({ user }: { user: AuthUser }) {
           </div>
         </div>
 
-        <form onSubmit={handleSaveProfile} className="mt-6 space-y-4 border-t border-sky-100 pt-5">
+        <form onSubmit={handleSaveProfile} className="mt-6 space-y-4 border-t-2 border-[color:var(--border)] pt-5">
           <div>
             <label htmlFor="settings-name" className="mb-2 block text-sm font-medium text-landing-muted">
               {t('name')}
@@ -94,12 +94,12 @@ export function AccountSettingsContent({ user }: { user: AuthUser }) {
           </div>
 
           {error ? (
-            <p className="text-sm text-red-600 dark:text-red-400" role="alert">
+            <p className="text-sm text-destructive-text" role="alert">
               {error}
             </p>
           ) : null}
           {success ? (
-            <p className="text-sm text-emerald-700 dark:text-emerald-300" role="status">
+            <p className="text-sm text-success-text" role="status">
               {success}
             </p>
           ) : null}

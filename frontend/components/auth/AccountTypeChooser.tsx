@@ -44,7 +44,7 @@ export function AccountTypeChooser({ mode }: { mode: ChooserMode }) {
   return (
     <div className="w-full max-w-md">
       <div className="auth-card p-8 sm:p-10">
-        <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-landing-fg text-white">
+        <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl border-2 border-pop-foreground bg-pop-lime text-pop-foreground shadow-hard-sm">
           <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden>
             <path
               d="M3 12L21 4L14 21L11 13L3 12Z"
@@ -94,7 +94,7 @@ function AccountTypeCard({
   return (
     <Link
       href={href}
-      className="group block rounded-xl border border-sky-100 bg-white/80 p-5 text-left transition hover:border-landing-fg/20 hover:bg-white hover:shadow-sm dark:border-border dark:bg-card/80 dark:hover:bg-card"
+      className="pop-press group block rounded-xl border-2 border-outline bg-card p-5 text-left shadow-hard-sm"
     >
       <span className="text-base font-semibold text-landing-fg group-hover:text-landing-fg">
         {label}

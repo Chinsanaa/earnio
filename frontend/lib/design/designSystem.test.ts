@@ -208,6 +208,8 @@ describe('design system: no unpaired light-mode-only Tailwind color utilities', 
     /\bbg-(red|amber|emerald|sky|green|blue|slate|gray|neutral|zinc)-(50|100|200)\b/,
     /\btext-(gray|slate|neutral|zinc)-(800|900)\b/,
     /\bborder-(gray|slate|neutral|zinc)-(100|200)\b/,
+    // White text only works on a fill that stays dark in both themes; use a *-foreground token.
+    /\btext-white\b/,
   ];
 
   const files = [...listSourceFiles(APP_DIR), ...listSourceFiles(COMPONENTS_DIR)];

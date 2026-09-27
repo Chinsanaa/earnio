@@ -39,8 +39,8 @@ export function DeleteAccountSection() {
   }
 
   return (
-    <section className="creator-panel-lg border border-red-200/80">
-      <h2 className="text-base font-semibold tracking-tight text-red-700 dark:text-red-300">{t('delete_account')}</h2>
+    <section className="creator-panel-lg" style={{ borderColor: 'var(--destructive-fill)' }}>
+      <h2 className="text-base font-semibold tracking-tight text-destructive-text">{t('delete_account')}</h2>
       <p className="mt-2 text-sm text-landing-muted">
         {t('delete_account_subtitle')}
       </p>
@@ -87,7 +87,7 @@ export function DeleteAccountSection() {
         <button
           type="submit"
           disabled={!canSubmit}
-          className="rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-xl border-2 border-outline bg-destructive-fill px-4 py-2.5 text-sm font-semibold text-destructive-fill-foreground shadow-hard-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {pending ? t('deleting_account') : t('delete_my_account')}
         </button>

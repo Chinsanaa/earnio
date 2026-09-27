@@ -19,7 +19,7 @@ function PlatformCardSkeleton() {
         <Skeleton className="h-16 rounded-xl" />
       </div>
 
-      <div className="flex items-center justify-between gap-3 border-t border-sky-100 pt-3">
+      <div className="flex items-center justify-between gap-3 border-t-2 border-[color:var(--border)] pt-3">
         <Skeleton className="h-3 w-28" />
         <Skeleton className="h-8 w-20 rounded-xl" />
       </div>

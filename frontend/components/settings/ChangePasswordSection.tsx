@@ -93,12 +93,12 @@ export function ChangePasswordSection() {
         </div>
 
         {error ? (
-          <p className="text-sm text-red-600 dark:text-red-400" role="alert">
+          <p className="text-sm text-destructive-text" role="alert">
             {error}
           </p>
         ) : null}
         {success ? (
-          <p className="text-sm text-emerald-700 dark:text-emerald-300" role="status">
+          <p className="text-sm text-success-text" role="status">
             {success}
           </p>
         ) : null}
