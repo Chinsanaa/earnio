@@ -238,8 +238,15 @@ Full endpoint tables: [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md).
 | Understand system design | [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) |
 | See what's done vs. stubbed | [docs/APP_OVERVIEW.md](./docs/APP_OVERVIEW.md) |
 | Change landing or auth UI | [docs/FRONTEND.md](./docs/FRONTEND.md) |
+| Plan the "Solid Pop" design refresh (no gradients) | [docs/DESIGN_REFRESH_PLAN.md](./docs/DESIGN_REFRESH_PLAN.md) |
 | Deploy to production | [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) |
 | Run QA before release | [docs/QA_MANUAL_CHECKLIST.md](./docs/QA_MANUAL_CHECKLIST.md) |
 | Check scope before coding | [instructions.md](./instructions.md) |
 | Work on iOS | [ios/README.md](./ios/README.md) |
 | Apply a DB migration | [supabase/README.md](./supabase/README.md) |
+
+---
+
+## Update log
+
+- **2026-09-27:** Added [docs/DESIGN_REFRESH_PLAN.md](./docs/DESIGN_REFRESH_PLAN.md), a proposed "Solid Pop" frontend redesign: solid colors only (no gradients, enforced by a planned CI test), hard offset shadows, curated copy-paste libraries (shadcn/ui, Motion, Vengeance UI, Skiper UI free tier, Magic UI, Sonner, Vaul, cmdk), and a 6-phase rollout. Plan only; nothing implemented yet. Open questions listed in section 7.
