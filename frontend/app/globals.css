@@ -316,6 +316,44 @@ html.apple-platform textarea {
   outline-offset: 2px;
 }
 
+/* Overlay primitives (Radix dialog, tooltip, dropdown): quick pop-in, no blur. */
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.pop-dialog[data-state='open'],
+.pop-dialog[data-state='delayed-open'],
+.pop-dialog[data-state='instant-open'] {
+  animation: pop-in var(--dur-fast) var(--ease-spring);
+}
+
+.pop-overlay[data-state='open'] {
+  animation: fade-in var(--dur-fast) var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pop-dialog[data-state],
+  .pop-overlay[data-state] {
+    animation: none;
+  }
+}
+
 .font-display {
   font-family: var(--font-display), system-ui, sans-serif;
 }
