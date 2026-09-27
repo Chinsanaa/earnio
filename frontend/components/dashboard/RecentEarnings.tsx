@@ -4,26 +4,26 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { buttonVariants } from '@/components/ui/button';
 import { PlatformBadge } from '@/components/dashboard/PlatformBadge';
 import { formatMnt, platformLabel, sourceLabel } from '@/lib/format';
+import { useLanguage } from '@/contexts/LanguageContext';
 import type { EarningsEntry } from '@/lib/types/dashboard';
 
 export function RecentEarnings({ data }: { data: EarningsEntry[] }) {
+  const { t } = useLanguage();
   return (
     <Card className="py-4">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Recent earnings</CardTitle>
+        <CardTitle>{t('recent_earnings')}</CardTitle>
         <Link
           href="/wallet"
           className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'text-muted-foreground' })}
         >
-          View all
+          {t('view_all')}
           <ArrowUpRight className="size-4" />
         </Link>
       </CardHeader>
       <CardContent>
         {data.length === 0 ? (
-          <p className="text-sm text-muted">
-            No earnings yet. Connect a platform or wait for your first sync.
-          </p>
+          <p className="text-sm text-muted">{t('no_earnings_yet')}</p>
         ) : (
           <div className="flex flex-col divide-y divide-border">
             {data.map((row) => (
@@ -37,7 +37,7 @@ export function RecentEarnings({ data }: { data: EarningsEntry[] }) {
                     </span>
                   </span>
                 </span>
-                <span className="text-sm font-semibold text-success">
+                <span className="rounded-full border-2 border-pop-foreground bg-pop-mint px-2.5 py-0.5 font-mono text-sm font-bold text-pop-foreground">
                   +{formatMnt(row.amount_mnt)}
                 </span>
               </div>

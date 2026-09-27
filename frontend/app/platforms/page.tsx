@@ -162,7 +162,7 @@ export default function PlatformsPage() {
                   <div className="flex items-center gap-3">
                     <PlatformBadge platform={platform.id} />
                     <div>
-                      <p className="font-medium text-landing-fg">{platform.label}</p>
+                      <p className="font-display text-lg font-bold tracking-tight text-landing-fg">{platform.label}</p>
                       <p className="text-xs text-landing-muted">
                         {account ? formatHandle(account.platform_username) : 'Not connected'}
                       </p>
@@ -193,7 +193,7 @@ export default function PlatformsPage() {
                         </p>
                       </div>
                     </div>
-                    <div className="mt-1 flex items-center justify-between gap-3 border-t border-sky-100 pt-3">
+                    <div className="mt-1 flex items-center justify-between gap-3 border-t-2 border-[color:var(--border)] pt-3">
                       <p className="text-xs text-landing-muted">
                         {account.last_synced_at
                           ? `${t('last_synced')}: ${formatDate(account.last_synced_at)}`
@@ -258,7 +258,7 @@ export default function PlatformsPage() {
 
         {history.length > 0 && (
           <section className="creator-panel-lg mt-6">
-            <h2 className="text-base font-semibold tracking-tight text-landing-fg">{t('sync_history')}</h2>
+            <h2 className="font-display text-xl font-bold tracking-tight text-landing-fg">{t('sync_history')}</h2>
             <ul className="mt-4 space-y-2">
               {history.slice(0, 6).map((h) => (
                 <li key={h.id} className="creator-platform-row">

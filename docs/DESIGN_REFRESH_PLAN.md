@@ -8,7 +8,7 @@
 - [x] Phase 1: Solid Pop tokens, gradients/mesh/glass removed, design-system mirrored
 - [x] Phase 2: primitives (Button variants, Card, Badge tones, Input, Dialog, Sheet, Tooltip, Tabs, DropdownMenu, Toaster, NumberTicker)
 - [x] Phase 3: shells + nav (Cmd/Ctrl+K command palette, lime active nav, bottom tab bar sized per role)
-- [ ] Phase 4: creator screens
+- [x] Phase 4: creator screens (animated totals, platform bento, onboarding checklist, payout review sheet/dialog, filter chips, empty states)
 - [ ] Phase 5: sponsor + landing
 - [ ] Phase 6: polish
 

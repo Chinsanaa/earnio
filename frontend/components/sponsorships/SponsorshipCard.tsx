@@ -1,11 +1,13 @@
 import Link from 'next/link';
-import { applicationStatusLabel, contentTypeLabel, formatMnt } from '@/lib/format';
+import { applicationStatusLabel, contentTypeLabel, formatDate, formatMnt } from '@/lib/format';
+import { useLanguage } from '@/contexts/LanguageContext';
 import type { SponsorshipListing } from '@/lib/types/sponsorship';
 import { popToneFor } from '@/lib/design/popTone';
 
 export function SponsorshipCard({ sponsorship }: { sponsorship: SponsorshipListing }) {
   const title = sponsorship.title.replace(/^\[Demo\]\s*/, '');
   const brand = sponsorship.sponsor?.name ?? 'Brand partner';
+  const { t } = useLanguage();
 
   return (
     <Link href={`/sponsorships/${sponsorship.id}`} className="creator-gig-card">
@@ -19,12 +21,21 @@ export function SponsorshipCard({ sponsorship }: { sponsorship: SponsorshipListi
       </div>
       <div className="p-4">
         <p className="text-xs font-medium text-landing-muted">{brand}</p>
-        <h3 className="mt-1 line-clamp-2 text-base font-semibold text-landing-fg">{title}</h3>
-        {sponsorship.hasApplied ? (
-          <p className="mt-2 text-sm font-medium text-sky-700 dark:text-sky-300">
-            {applicationStatusLabel(sponsorship.applicationStatus ?? 'pending')}
-          </p>
-        ) : null}
+        <h3 className="mt-1 line-clamp-2 font-display text-lg font-bold leading-snug tracking-tight text-landing-fg">
+          {title}
+        </h3>
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          {sponsorship.hasApplied ? (
+            <span className="badge-status-info">
+              {applicationStatusLabel(sponsorship.applicationStatus ?? 'pending')}
+            </span>
+          ) : null}
+          {sponsorship.deadline_apply ? (
+            <span className="text-xs font-medium text-landing-muted">
+              {t('apply_by').replace('{date}', formatDate(sponsorship.deadline_apply))}
+            </span>
+          ) : null}
+        </div>
       </div>
     </Link>
   );
