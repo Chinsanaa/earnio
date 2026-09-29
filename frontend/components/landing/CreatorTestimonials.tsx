@@ -5,9 +5,9 @@ import { Reveal } from '@/components/ui/reveal';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const STICKERS = [
-  { tone: 'bg-pop-mint', tilt: '-rotate-1' },
-  { tone: 'bg-pop-sun', tilt: 'rotate-1' },
-  { tone: 'bg-pop-coral', tilt: '-rotate-1' },
+  { tone: 'bg-tint-blue', tilt: '-rotate-1' },
+  { tone: 'bg-tint-slate', tilt: 'rotate-1' },
+  { tone: 'bg-tint-blue', tilt: '-rotate-1' },
 ];
 
 export function CreatorTestimonials() {
@@ -27,12 +27,12 @@ export function CreatorTestimonials() {
             return (
               <Reveal key={item.name} delay={i * 0.08}>
                 <figure
-                  className={`flex h-full flex-col justify-between rounded-3xl border-2 border-pop-foreground p-7 text-pop-foreground shadow-hard ${sticker.tilt} ${sticker.tone}`}
+                  className={`flex h-full flex-col justify-between rounded-3xl border-2 border-outline p-7 text-tint-foreground shadow-hard ${sticker.tilt} ${sticker.tone}`}
                 >
                   <blockquote className="font-display text-lg font-semibold leading-snug tracking-tight">
                     &ldquo;{item.quote}&rdquo;
                   </blockquote>
-                  <figcaption className="mt-8 border-t-2 border-pop-foreground pt-4">
+                  <figcaption className="mt-8 border-t-2 border-outline pt-4">
                     <p className="font-bold">{item.name}</p>
                     <p className="text-sm">{item.role}</p>
                   </figcaption>

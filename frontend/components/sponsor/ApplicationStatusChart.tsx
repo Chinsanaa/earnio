@@ -8,9 +8,9 @@ export function ApplicationStatusChart({ data }: { data: ApplicationStatusBreakd
   const { t } = useLanguage();
 
   const slices = [
-    { key: 'pending', label: t('pending_short'), value: data.pending, color: 'var(--pop-sun)' },
-    { key: 'approved', label: t('approved_short'), value: data.approved, color: 'var(--pop-mint)' },
-    { key: 'rejected', label: t('rejected_short'), value: data.rejected, color: 'var(--pop-coral)' },
+    { key: 'pending', label: t('pending_short'), value: data.pending, color: 'var(--muted)' },
+    { key: 'approved', label: t('approved_short'), value: data.approved, color: 'var(--success)' },
+    { key: 'rejected', label: t('rejected_short'), value: data.rejected, color: 'var(--destructive)' },
   ];
 
   const total = slices.reduce((sum, s) => sum + s.value, 0);

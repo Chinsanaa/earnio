@@ -39,12 +39,12 @@ How Earnio writes.
 
 ## Visual foundations
 
-- **Color:** **Earnio Blue `#2E5BFF`** as the brand, an ink ramp (`#0B1220` → `#F4F7FC`), warm paper background, and flat **pop accents** (lime money, sun pending, coral danger, lilac sponsor, mint success, sky info). Full **dark theme** under `.dark`.
+- **Color:** a small palette: **Earnio Blue `#2E5BFF`**, an ink ramp (`#0B1220` → `#F4F7FC`), cool off-white neutrals, and calm tints (soft blue, slate; green/red reserved for success/danger). No neon, no yellow. Full **dark theme** under `.dark`.
 - **No gradients, ever.** Solid colors only ("Solid Pop"). Enforced by rule 4 in `lib/design/designSystem.test.ts`.
-- **Backgrounds:** flat warm paper `#F5F3EE` (light) / ink `#0B1220` (dark). Color comes from **solid pop blocks** (`--pop-lime/sun/coral/lilac/mint/sky`, always with ink text).
+- **Backgrounds:** flat cool off-white `#F6F7F9` (light) / ink `#0B1220` (dark). Accent color comes from Earnio Blue plus a few calm tints (`--tint-blue`, `--tint-slate`; `--tint-green`/`--tint-red` for status only). No neon, no yellow.
 - **Type:** **Space Grotesk** for display/headings (bold, geometric, characterful; tight tracking around −0.02em to −0.035em), **Plus Jakarta Sans** for body & UI, **JetBrains Mono** for all numerals/currency (tabular figures). All three are genuine Google Fonts — the live app loads them via `next/font/google` in `app/layout.tsx`; `tokens/fonts.css` mirrors the same three families for standalone use.
 - **Corner radii:** soft but not pill-everywhere — inputs 8px, buttons/rows 12px, cards 16px, panels 20px, hero cards 28px. Pills (`9999px`) are reserved for landing CTAs and chips/badges.
-- **Cards:** solid white (light) / `#141C2C` (dark) with a **2px `--outline`** and a **hard offset shadow** (`--shadow-hard-sm`, zero blur). The hero card carries a solid lime top-bar.
+- **Cards:** solid white (light) / `#141C2C` (dark) with a **2px `--outline`** and a **hard offset shadow** (`--shadow-hard-sm`, zero blur). The hero card carries a solid soft-blue top-bar.
 - **Shadows:** hard offset only: `2px`/`4px`/`6px` in `--shadow-ink`. No blur, no glow.
 - **Hover / press:** buttons lift `-1px` and grow their hard shadow on hover, then **press into the shadow** (`translate(2px, 2px)`, shadow removed). Transitions are quick (140–220ms) on the `--ease-out` curve.
 - **Motion:** restrained. A gentle `fade-up` entrance and an infinite `landing-float` on hero accents — **gated behind `prefers-reduced-motion: no-preference` with a visible base state** so content never hides. Easing `cubic-bezier(0.22,1,0.36,1)`; an optional spring for playful accents.

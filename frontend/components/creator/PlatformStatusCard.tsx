@@ -23,7 +23,7 @@ export function PlatformStatusCard({ platforms }: { platforms: PlatformAccount[]
           return (
             <li key={id} className="creator-platform-row">
               <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl border-2 border-pop-foreground bg-pop-sky text-xs font-bold text-pop-foreground">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl border-2 border-outline bg-tint-blue text-xs font-bold text-tint-foreground">
                   {id === 'tiktok' ? 'TT' : 'YT'}
                 </span>
                 <div>

@@ -58,7 +58,7 @@ export function BalanceTrend({ transactions }: { transactions: WalletTransaction
         <path
           d={linePath}
           fill="none"
-          stroke="var(--pop-lime)"
+          stroke="var(--tint-blue)"
           strokeWidth="3"
           vectorEffect="non-scaling-stroke"
         />

@@ -129,7 +129,7 @@ export function ResetPasswordForm({ onSuccess }: ResetPasswordFormProps) {
     return (
       <div className="w-full max-w-md">
         <div className="auth-card p-8 sm:p-10">
-          <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl border-2 border-pop-foreground bg-pop-coral text-pop-foreground shadow-hard-sm">
+          <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl border-2 border-outline bg-tint-red text-tint-foreground shadow-hard-sm">
             <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden>
               <path
                 d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m1 15h-2v-2h2v2m0-4h-2V7h2v6z"
@@ -153,7 +153,7 @@ export function ResetPasswordForm({ onSuccess }: ResetPasswordFormProps) {
   return (
     <div className="w-full max-w-md">
       <div className="auth-card p-8 sm:p-10">
-        <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl border-2 border-pop-foreground bg-pop-lime text-pop-foreground shadow-hard-sm">
+        <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl border-2 border-outline bg-tint-blue text-tint-foreground shadow-hard-sm">
           <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden>
             <path
               d="M12 1L3 5v6c0 6 9 13 9 13s9-7 9-13V5l-9-4z"

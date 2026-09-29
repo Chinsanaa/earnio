@@ -37,7 +37,7 @@ export function RecentEarnings({ data }: { data: EarningsEntry[] }) {
                     </span>
                   </span>
                 </span>
-                <span className="rounded-full border-2 border-pop-foreground bg-pop-mint px-2.5 py-0.5 font-mono text-sm font-bold text-pop-foreground">
+                <span className="rounded-full border-2 border-outline bg-tint-green px-2.5 py-0.5 font-mono text-sm font-bold text-tint-foreground">
                   +{formatMnt(row.amount_mnt)}
                 </span>
               </div>

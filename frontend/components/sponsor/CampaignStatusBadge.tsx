@@ -2,9 +2,9 @@ import { campaignStatusLabel } from '@/lib/sponsor/campaignForm';
 
 export function CampaignStatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
-    active: 'border-pop-foreground bg-pop-mint text-pop-foreground',
+    active: 'border-outline bg-tint-green text-tint-foreground',
     closed: 'border-border-strong bg-card-muted text-foreground',
-    draft: 'border-pop-foreground bg-pop-sun text-pop-foreground',
+    draft: 'border-outline bg-tint-slate text-tint-foreground',
   };
 
   return (

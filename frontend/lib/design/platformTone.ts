@@ -1,15 +1,12 @@
-import type { PopTone } from './popTone';
+import type { DecorativeTint } from './tint';
 
-/**
- * Solid Pop color for each creator platform, echoing its brand without copying it:
- * TikTok = sky (cyan), YouTube = coral (red), Instagram = lilac (purple/pink).
- */
-const PLATFORM_TONES: Record<string, PopTone> = {
-  tiktok: 'sky',
-  youtube: 'coral',
-  instagram: 'lilac',
+/** Tile tint per creator platform. Kept to the two calm decorative tints on purpose. */
+const PLATFORM_TINTS: Record<string, DecorativeTint> = {
+  tiktok: 'slate',
+  youtube: 'blue',
+  instagram: 'slate',
 };
 
-export function platformTone(platform: string): PopTone {
-  return PLATFORM_TONES[platform.toLowerCase()] ?? 'lime';
+export function platformTone(platform: string): DecorativeTint {
+  return PLATFORM_TINTS[platform.toLowerCase()] ?? 'blue';
 }

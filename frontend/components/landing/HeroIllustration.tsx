@@ -32,22 +32,22 @@ function Chip({
   className,
   icon,
   label,
-  tone = 'sky',
+  tone = 'blue',
   delay,
 }: {
   className?: string;
   icon: keyof typeof ICONS;
   label: string;
-  tone?: 'sky' | 'lime' | 'mint';
+  tone?: 'blue' | 'green';
   delay?: string;
 }) {
-  const toneClass = { sky: 'bg-pop-sky', lime: 'bg-pop-lime', mint: 'bg-pop-mint' }[tone];
+  const toneClass = { blue: 'bg-tint-blue', green: 'bg-tint-green' }[tone];
   return (
     <div
-      className={`landing-float absolute flex items-center gap-2 rounded-full border-2 border-pop-foreground px-3.5 py-2 text-pop-foreground shadow-hard-sm ${toneClass} ${className ?? ''}`}
+      className={`landing-float absolute flex items-center gap-2 rounded-full border-2 border-outline px-3.5 py-2 text-tint-foreground shadow-hard-sm ${toneClass} ${className ?? ''}`}
       style={delay ? { animationDelay: delay } : undefined}
     >
-      <span className="flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-full border-2 border-pop-foreground bg-[color:var(--card)] text-[color:var(--foreground)]">
+      <span className="flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-full border-2 border-outline bg-[color:var(--card)] text-[color:var(--foreground)]">
         <Icon name={icon} />
       </span>
       <span className="font-mono text-[13px] font-bold">{label}</span>
@@ -124,7 +124,7 @@ export function HeroIllustration({
       <div className="relative w-[300px] -rotate-2 rounded-3xl border-2 border-outline bg-card p-6 shadow-hard-lg">
         <div className="flex items-center justify-between">
           <span className="text-[13px] font-semibold text-muted-foreground">This month</span>
-          <span className="inline-flex items-center gap-1 rounded-full border-[1.5px] border-pop-foreground bg-pop-lime px-2 py-0.5 font-mono text-[12px] font-bold text-pop-foreground">
+          <span className="inline-flex items-center gap-1 rounded-full border-[1.5px] border-outline bg-tint-blue px-2 py-0.5 font-mono text-[12px] font-bold text-tint-foreground">
             ▲ 18.2%
           </span>
         </div>
@@ -135,7 +135,7 @@ export function HeroIllustration({
           {BARS.map((h, i) => (
             <div
               key={i}
-              className={`flex-1 rounded-[5px] border-2 border-outline ${i === BARS.length - 1 ? 'bg-pop-lime' : 'bg-primary-soft'}`}
+              className={`flex-1 rounded-[5px] border-2 border-outline ${i === BARS.length - 1 ? 'bg-primary' : 'bg-primary-soft'}`}
               style={{ height: `${h}%` }}
             />
           ))}
@@ -148,9 +148,9 @@ export function HeroIllustration({
         </div>
       </div>
 
-      <Chip className="left-[0%] top-[6%] -rotate-3" icon="trend" label={`${metrics[0]} views`} tone="sky" delay="0s" />
-      <Chip className="right-[-2%] top-[12%] rotate-2" icon="wallet" label={`${metrics[2]} earned`} tone="lime" delay="0.5s" />
-      <Chip className="bottom-[8%] left-[6%] rotate-1" icon="check" label="Payout sent" tone="mint" delay="1s" />
+      <Chip className="left-[0%] top-[6%] -rotate-3" icon="trend" label={`${metrics[0]} views`} tone="blue" delay="0s" />
+      <Chip className="right-[-2%] top-[12%] rotate-2" icon="wallet" label={`${metrics[2]} earned`} tone="blue" delay="0.5s" />
+      <Chip className="bottom-[8%] left-[6%] rotate-1" icon="check" label="Payout sent" tone="green" delay="1s" />
     </div>
   );
 }

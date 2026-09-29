@@ -6,12 +6,8 @@ import { formatMnt, platformLabel } from '@/lib/format';
 import type { DashboardSummary } from '@/lib/types/dashboard';
 
 const TONE_BG = {
-  sky: 'bg-pop-sky',
-  coral: 'bg-pop-coral',
-  lilac: 'bg-pop-lilac',
-  lime: 'bg-pop-lime',
-  mint: 'bg-pop-mint',
-  sun: 'bg-pop-sun',
+  blue: 'bg-tint-blue',
+  slate: 'bg-tint-slate',
 } as const;
 
 function compact(n: number | null): string {
@@ -37,14 +33,14 @@ export function PlatformBento({ data }: { data: DashboardSummary }) {
             <Link
               key={account.id}
               href="/platforms"
-              className={`pop-press flex min-h-40 flex-col justify-between rounded-2xl border-2 border-pop-foreground p-5 text-pop-foreground shadow-hard-sm ${TONE_BG[platformTone(account.platform)]}`}
+              className={`pop-press flex min-h-40 flex-col justify-between rounded-2xl border-2 border-outline p-5 text-tint-foreground shadow-hard-sm ${TONE_BG[platformTone(account.platform)]}`}
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
                   <p className="font-display text-lg font-bold">{platformLabel(account.platform)}</p>
                   <p className="truncate text-sm font-medium">@{account.platform_username}</p>
                 </div>
-                <span className="rounded-full border-2 border-pop-foreground bg-[color:var(--card)] px-2 py-0.5 font-mono text-xs font-bold text-[color:var(--foreground)]">
+                <span className="rounded-full border-2 border-outline bg-[color:var(--card)] px-2 py-0.5 font-mono text-xs font-bold text-[color:var(--foreground)]">
                   {compact(account.follower_count)}
                 </span>
               </div>

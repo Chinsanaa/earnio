@@ -10,7 +10,8 @@ const PRESS =
 
 const variantClasses: Record<Variant, string> = {
   default: cn('bg-primary text-primary-foreground hover:bg-primary-hover', PRESS),
-  pop: cn('bg-pop-lime text-pop-foreground', PRESS),
+  // Strongest call to action on a screen: solid Earnio Blue (same fill as default).
+  pop: cn('bg-primary text-primary-foreground hover:bg-primary-hover', PRESS),
   outline: cn('bg-card text-foreground hover:bg-card-muted', PRESS),
   ghost: 'border-2 border-transparent bg-transparent text-foreground hover:bg-card-muted',
   danger: cn('bg-destructive-fill text-destructive-fill-foreground', PRESS),

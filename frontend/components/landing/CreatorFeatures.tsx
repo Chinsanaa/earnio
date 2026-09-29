@@ -7,12 +7,12 @@ import { useLanguage } from '@/contexts/LanguageContext';
 export function CreatorFeatures() {
   const { t } = useLanguage();
 
-  // Bento: one large lime tile, then solid pop tiles. Every tile uses ink text.
+  // Bento: one solid Earnio Blue anchor tile, then calm tints with ink text.
   const features = [
-    { title: t('centralized_opportunities'), description: t('centralized_opportunities_desc'), icon: Briefcase, tone: 'bg-pop-lime', span: 'md:col-span-2 md:row-span-2' },
-    { title: t('payments_built_in'), description: t('payments_built_in_desc'), icon: Wallet, tone: 'bg-pop-sun', span: '' },
-    { title: t('track_performance'), description: t('see_views_revenue'), icon: BarChart3, tone: 'bg-pop-sky', span: '' },
-    { title: t('easy_delivery'), description: t('easy_delivery_desc'), icon: PackageCheck, tone: 'bg-pop-lilac', span: 'md:col-span-3' },
+    { title: t('centralized_opportunities'), description: t('centralized_opportunities_desc'), icon: Briefcase, tone: 'bg-primary text-primary-foreground', span: 'md:col-span-2 md:row-span-2' },
+    { title: t('payments_built_in'), description: t('payments_built_in_desc'), icon: Wallet, tone: 'bg-tint-slate text-tint-foreground', span: '' },
+    { title: t('track_performance'), description: t('see_views_revenue'), icon: BarChart3, tone: 'bg-tint-blue text-tint-foreground', span: '' },
+    { title: t('easy_delivery'), description: t('easy_delivery_desc'), icon: PackageCheck, tone: 'bg-tint-blue text-tint-foreground', span: 'md:col-span-3' },
   ];
 
   return (
@@ -29,9 +29,9 @@ export function CreatorFeatures() {
             return (
               <Reveal key={feature.title} delay={i * 0.06} className={feature.span}>
                 <div
-                  className={`flex h-full flex-col justify-between rounded-3xl border-2 border-pop-foreground p-7 text-pop-foreground shadow-hard transition-transform duration-200 hover:-translate-x-0.5 hover:-translate-y-0.5 motion-reduce:transform-none ${feature.tone} ${large ? 'min-h-72' : 'min-h-52'}`}
+                  className={`flex h-full flex-col justify-between rounded-3xl border-2 border-outline p-7 shadow-hard transition-transform duration-200 hover:-translate-x-0.5 hover:-translate-y-0.5 motion-reduce:transform-none ${feature.tone} ${large ? 'min-h-72' : 'min-h-52'}`}
                 >
-                  <span className="flex size-12 items-center justify-center rounded-2xl border-2 border-pop-foreground bg-[color:var(--card)] text-[color:var(--foreground)]">
+                  <span className="flex size-12 items-center justify-center rounded-2xl border-2 border-outline bg-[color:var(--card)] text-[color:var(--foreground)]">
                     <Icon className="size-6" aria-hidden />
                   </span>
                   <div className="mt-8">

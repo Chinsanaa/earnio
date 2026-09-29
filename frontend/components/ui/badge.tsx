@@ -1,19 +1,17 @@
 import { HTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
-import type { PopTone } from '@/lib/design/popTone';
+import type { Tint } from '@/lib/design/tint';
 
-const toneClasses: Record<PopTone | 'neutral', string> = {
+const toneClasses: Record<Tint | 'neutral', string> = {
   neutral: 'border-border-strong bg-card-muted text-foreground',
-  lime: 'border-pop-foreground bg-pop-lime text-pop-foreground',
-  sun: 'border-pop-foreground bg-pop-sun text-pop-foreground',
-  coral: 'border-pop-foreground bg-pop-coral text-pop-foreground',
-  lilac: 'border-pop-foreground bg-pop-lilac text-pop-foreground',
-  mint: 'border-pop-foreground bg-pop-mint text-pop-foreground',
-  sky: 'border-pop-foreground bg-pop-sky text-pop-foreground',
+  blue: 'border-outline bg-tint-blue text-tint-foreground',
+  slate: 'border-outline bg-tint-slate text-tint-foreground',
+  green: 'border-outline bg-tint-green text-tint-foreground',
+  red: 'border-outline bg-tint-red text-tint-foreground',
 };
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
-  tone?: PopTone | 'neutral';
+  tone?: Tint | 'neutral';
 }
 
 export function Badge({ className, tone = 'neutral', ...props }: BadgeProps) {

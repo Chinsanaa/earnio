@@ -65,7 +65,7 @@ export default function CommandPaletteDialog({
                         value={`${item.label} ${item.id}`}
                         keywords={item.keywords}
                         onSelect={() => run(item)}
-                        className="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border-2 border-transparent px-3 text-sm font-semibold data-[selected=true]:border-outline data-[selected=true]:bg-pop-lime data-[selected=true]:text-pop-foreground"
+                        className="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border-2 border-transparent px-3 text-sm font-semibold data-[selected=true]:border-outline data-[selected=true]:bg-tint-blue data-[selected=true]:text-tint-foreground"
                       >
                         <span className="flex size-5 items-center justify-center" aria-hidden>
                           {item.icon}

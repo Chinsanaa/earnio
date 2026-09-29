@@ -19,7 +19,7 @@ export function ProgressBar({ value = 0, max = 100, height = 8, pop = false, col
       <div
         style={{
           width: `${pct}%`, height: '100%', borderRadius: 'var(--radius-full)',
-          background: pop ? 'var(--pop-lime)' : (color || 'var(--primary)'),
+          background: pop ? 'var(--tint-blue)' : (color || 'var(--primary)'),
           transition: 'width var(--dur-slow) var(--ease-out)',
         }}
       />

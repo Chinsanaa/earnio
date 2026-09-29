@@ -2,12 +2,8 @@ import { cn } from '@/lib/utils';
 import { platformTone } from '@/lib/design/platformTone';
 
 const TONE_BG = {
-  sky: 'bg-pop-sky',
-  coral: 'bg-pop-coral',
-  lilac: 'bg-pop-lilac',
-  lime: 'bg-pop-lime',
-  mint: 'bg-pop-mint',
-  sun: 'bg-pop-sun',
+  blue: 'bg-tint-blue',
+  slate: 'bg-tint-slate',
 } as const;
 
 export function PlatformBadge({ platform, size = 'md' }: { platform: string; size?: 'sm' | 'md' }) {
@@ -15,7 +11,7 @@ export function PlatformBadge({ platform, size = 'md' }: { platform: string; siz
     <span
       aria-hidden
       className={cn(
-        'inline-flex shrink-0 items-center justify-center rounded-full border-2 border-pop-foreground font-bold text-pop-foreground',
+        'inline-flex shrink-0 items-center justify-center rounded-full border-2 border-outline font-bold text-tint-foreground',
         size === 'sm' ? 'size-7 text-xs' : 'size-10 text-sm',
         TONE_BG[platformTone(platform)]
       )}

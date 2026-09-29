@@ -2,7 +2,7 @@
 
 → UI routes & landing: [../../docs/FRONTEND.md](../../docs/FRONTEND.md) · Frontend folder: [../README.md](../README.md)
 
-**Style:** "Solid Pop" · Electric blue on warm paper · ink outlines · flat pop accents · Gen Z  
+**Style:** "Solid Pop" (calm) · Earnio Blue on cool off-white · ink outlines · a few calm tints · no neon, no yellow  
 **Mode:** Light + dark (full parity)
 
 ## Brand identity
@@ -14,8 +14,8 @@ Earnio uses a single electric-blue identity: **Earnio Blue `#2E5BFF`** (azure) p
 | Token | Light | Dark |
 |-------|-------|------|
 | Primary | `#2E5BFF` (Earnio Blue) | `#5C7DFF` |
-| Accent / spark | `#12C2F3` (cyan) | `#3FD6FF` |
-| Background | `#F5F3EE` (warm paper) | `#0B1220` |
+| Accent | `#5C7DFF` (light Earnio Blue) | `#8DA8FF` |
+| Background | `#F6F7F9` (cool off-white) | `#0B1220` |
 | Surface / card | `#FFFFFF` | `#141C2C` |
 | Foreground / ink | `#0B1220` | `#F4F7FC` |
 | Muted text | `#5A6A85` | `#8492A8` |
@@ -27,7 +27,7 @@ Earnio uses a single electric-blue identity: **Earnio Blue `#2E5BFF`** (azure) p
 
 | Text token | Light | Dark | Use instead of |
 |------------|-------|------|-----------------|
-| `--accent-text` | `#0E7490` | `#3FD6FF` (= accent) | `--accent` as text color |
+| `--accent-text` | `#1F45E5` | `#8DA8FF` (= accent) | `--accent` as text color |
 | `--success-text` | `#047857` | `#34D399` (= success) | `--success` as text color |
 | `--destructive-text` | `#D11F38` | `#F87171` (= destructive) | `--destructive` as text color |
 | `--primary-foreground` | `#FFFFFF` | `#0B1220` | text/icons placed *on* a `--primary` fill |
@@ -39,18 +39,19 @@ Note the dark values above mostly equal the fill color as-is (it's already light
 
 **Gradients are banned** everywhere: CSS `*-gradient()`, Tailwind `bg-gradient-*` / `from-*` / `via-*` / `to-*`, gradient text (`bg-clip-text`), and SVG `<linearGradient>` / `<radialGradient>` (including Recharts). Rule 4 in `lib/design/designSystem.test.ts` enforces this in CI. Blur/frosted glass is also retired: every surface is one flat color.
 
-### Solid Pop accents
+### Calm palette (a few colors only)
 
-Flat fills, identical in both themes, always paired with **ink text** (`--pop-foreground: #0B1220`). Each has one job.
+The palette is deliberately small: **Earnio Blue** (`--primary`), **ink**, cool **off-white neutrals**, and four calm tints. **No neon, no yellow** (CI rule in `designSystem.test.ts` rejects yellow/lime tokens and Tailwind `yellow-*`/`amber-*`/`lime-*`).
 
-| Token | Value | Ink contrast | Use |
-|-------|-------|--------------|-----|
-| `--pop-lime` | `#C6F432` | 14.6:1 | Money, active nav, progress, primary highlight |
-| `--pop-sun` | `#FFD23F` | 13.0:1 | Pending, highlight, 404 |
-| `--pop-coral` | `#FF6B4A` | 6.7:1 | Danger / trend down |
-| `--pop-lilac` | `#B9A6FF` | 8.9:1 | Sponsors, creative |
-| `--pop-mint` | `#7EE8C4` | 12.7:1 | Success / approved |
-| `--pop-sky` | `#8FB3FF` | 9.4:1 | Info |
+| Token | Light | Dark | Use |
+|-------|-------|------|-----|
+| `--tint-blue` | `#DCE6FF` | `#1D2B4F` | Active nav, highlights, progress, decorative tiles |
+| `--tint-slate` | `#E6EAF2` | `#222C3F` | Neutral tiles, pending status, warnings |
+| `--tint-green` | `#D3F2E2` | `#123526` | **Success only** |
+| `--tint-red` | `#FCDCDC` | `#3F1A1F` | **Danger only** |
+| `--tint-foreground` | `#0B1220` | `#F4F7FC` | Text on any tint (>= 12.5:1 both themes) |
+
+Strong calls to action use solid `--primary` (Earnio Blue, white text). Decorative color never uses green or red, so those always mean status.
 
 ### Outlines and hard shadows
 
@@ -124,11 +125,11 @@ Key classes:
 | `.btn-secondary` | Bordered white pill |
 | `.landing-btn-dark` | Ink-dark pill (secondary on landing) |
 | `.creator-panel` / `.creator-panel-lg` | Solid outlined card for app content |
-| `.creator-hero-card` | Hero card with solid lime top-bar |
+| `.creator-hero-card` | Hero card with solid soft-blue top-bar |
 | `.stat-card` | Dashboard stat panel, hard shadow grows on hover |
 | `.auth-card` | Solid outlined auth container |
 | `.pop-outline` / `.pop-shadow` / `.pop-press` | Sticker outline, hard shadow, tactile press |
-| `.bg-pop-*` | Solid pop fill with ink text |
+| `.bg-tint-*` | Calm tint fill with matching text |
 | `.font-display` | Apply Space Grotesk |
 | `.font-mono-stat` | Apply JetBrains Mono for numbers |
 

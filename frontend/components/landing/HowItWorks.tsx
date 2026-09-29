@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { Reveal } from '@/components/ui/reveal';
 import type { LandingContent } from '@/lib/landing/content';
 
-const STEP_TONES = ['bg-pop-sky', 'bg-pop-lilac', 'bg-pop-sun', 'bg-pop-lime'];
+const STEP_TONES = ['bg-tint-blue', 'bg-tint-slate'];
 
 export function HowItWorks({
   content,
@@ -27,7 +27,7 @@ export function HowItWorks({
             <Reveal key={step.title} delay={i * 0.08} className="h-full">
               <li className="landing-feature-card flex h-full flex-col rounded-3xl p-6">
                 <span
-                  className={`flex size-12 items-center justify-center rounded-2xl border-2 border-pop-foreground font-mono text-lg font-bold text-pop-foreground shadow-hard-sm ${STEP_TONES[i % STEP_TONES.length]}`}
+                  className={`flex size-12 items-center justify-center rounded-2xl border-2 border-outline font-mono text-lg font-bold text-tint-foreground shadow-hard-sm ${STEP_TONES[i % STEP_TONES.length]}`}
                 >
                   {String(i + 1).padStart(2, '0')}
                 </span>

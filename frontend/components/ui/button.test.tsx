@@ -13,7 +13,7 @@ describe('Button', () => {
   });
 
   it('supports the pop and danger variants', () => {
-    expect(buttonVariants({ variant: 'pop' })).toContain('bg-pop-lime');
+    expect(buttonVariants({ variant: 'pop' })).toContain('bg-primary');
     expect(buttonVariants({ variant: 'danger' })).toContain('bg-destructive-fill');
   });
 

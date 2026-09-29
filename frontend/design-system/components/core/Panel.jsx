@@ -20,7 +20,7 @@ export function Panel({ variant = 'card', padding = 20, className = '', style, c
       {...rest}
     >
       {variant === 'hero' ? (
-        <span aria-hidden style={{ position: 'absolute', insetInlineStart: 0, top: 0, width: '100%', height: 6, background: 'var(--pop-lime)', borderBottom: 'var(--border-width) solid var(--outline)' }} />
+        <span aria-hidden style={{ position: 'absolute', insetInlineStart: 0, top: 0, width: '100%', height: 6, background: 'var(--tint-blue)', borderBottom: 'var(--border-width) solid var(--outline)' }} />
       ) : null}
       {children}
     </div>

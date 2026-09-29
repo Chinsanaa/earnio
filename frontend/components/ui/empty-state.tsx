@@ -22,7 +22,7 @@ export function EmptyState({
         className
       )}
     >
-      <span className="flex size-14 rotate-[-4deg] items-center justify-center rounded-2xl border-2 border-pop-foreground bg-pop-sun text-pop-foreground shadow-hard-sm">
+      <span className="flex size-14 rotate-[-4deg] items-center justify-center rounded-2xl border-2 border-outline bg-tint-slate text-tint-foreground shadow-hard-sm">
         <Icon className="size-6" aria-hidden />
       </span>
       <h3 className="mt-4 font-display text-lg font-bold tracking-tight text-foreground">{title}</h3>

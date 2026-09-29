@@ -292,7 +292,7 @@ export default function WalletPage() {
                             key={chip.label}
                             type="button"
                             onClick={() => setQuickAmount(chip.fraction)}
-                            className="rounded-full border-2 border-outline bg-card px-3 py-1 text-xs font-bold text-foreground transition-colors hover:bg-pop-lime hover:text-pop-foreground"
+                            className="rounded-full border-2 border-outline bg-card px-3 py-1 text-xs font-bold text-foreground transition-colors hover:bg-tint-blue hover:text-tint-foreground"
                           >
                             {chip.label}
                           </button>

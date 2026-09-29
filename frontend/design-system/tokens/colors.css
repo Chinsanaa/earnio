@@ -1,7 +1,7 @@
 /* ============================================================
    Earnio — Color tokens
-   "Solid Pop": Earnio Blue #2E5BFF on warm paper, ink outlines,
-   flat pop accents (lime/sun/coral/lilac/mint/sky). Solid colors only.
+   "Solid Pop" (calm): Earnio Blue #2E5BFF on warm paper, ink outlines,
+   calm blue/slate tints; green/red only for status. Solid colors only.
 
    Generated from the canonical source: app/globals.css.
    Do not edit values here independently — update app/globals.css
@@ -34,28 +34,27 @@
   --ink-100: #E9EEF6;
   --ink-50:  #F4F7FC;
 
-  /* --- Solid Pop accents (flat fills, always with --pop-foreground ink text).
-         Theme-invariant. NO GRADIENTS anywhere in this system. --- */
-  --pop-lime:       #C6F432;
-  --pop-sun:        #FFD23F;
-  --pop-coral:      #FF6B4A;
-  --pop-lilac:      #B9A6FF;
-  --pop-mint:       #7EE8C4;
-  --pop-sky:        #8FB3FF;
-  --pop-foreground: #0B1220;
+  /* --- Calm tints (the only accent fills besides Earnio Blue; always with
+         --tint-foreground text). Green/red = success/danger only.
+         No neon, no yellow, no gradients. --- */
+  --tint-blue:       #DCE6FF;
+  --tint-slate:      #E6EAF2;
+  --tint-green:      #D3F2E2;
+  --tint-red:        #FCDCDC;
+  --tint-foreground: #0B1220;
 
   /* --- Sticker outline --- */
   --outline:    #0B1220;
   --shadow-ink: #0B1220;
 
   /* === Semantic aliases (light) === */
-  --background:                  #F5F3EE;
+  --background:                  #F6F7F9;
   --foreground:                  #0B1220;
   --card:                        #FFFFFF;
-  --card-muted:                  #EFECE4;
-  --surface:                     #EFECE4;
+  --card-muted:                  #EEF1F5;
+  --surface:                     #EEF1F5;
   --surface-raised:              #FFFFFF;
-  --border:                      #D9D4C7;
+  --border:                      #D5DBE5;
   --border-strong:               #7E8DA6;
   --muted:                       #5A6A85;
   --muted-foreground:            #5A6A85;
@@ -63,14 +62,14 @@
   --primary-hover:               #1F45E5;
   --primary-soft:                #E3EAFF;
   --primary-foreground:          #FFFFFF;
-  --accent:                      #12C2F3;
-  --accent-soft:                 #E0F9FF;
-  --accent-text:                 #0E7490;
+  --accent:                      #5C7DFF;
+  --accent-soft:                 #E3EAFF;
+  --accent-text:                 #1F45E5;
   --success:                     #10B981;
   --success-soft:                #DCFCE7;
   --success-text:                #047857;
-  --warning:                     #F59E0B;
-  --warning-soft:                #FEF3C7;
+  --warning:                     #C2410C;
+  --warning-soft:                #FDE7DA;
   --destructive:                 #F0455A;
   --destructive-fill:            #D11F38;
   --destructive-fill-foreground: #FFFFFF;
@@ -82,10 +81,10 @@
   /* Landing palette — flat paper + ink */
   --landing-fg:        #0B1220;
   --landing-muted:     #5A6A85;
-  --landing-bg-top:    #F5F3EE;
-  --landing-bg-bottom: #F5F3EE;
-  --landing-sky-50:    #EFECE4;
-  --landing-sky-100:   #D9D4C7;
+  --landing-bg-top:    #F6F7F9;
+  --landing-bg-bottom: #F6F7F9;
+  --landing-sky-50:    #EEF1F5;
+  --landing-sky-100:   #D5DBE5;
 
   /* Creator hero — solid Earnio Blue block */
   --hero-bg:       #1F45E5;
@@ -110,14 +109,19 @@
   --primary-hover:               #8DA8FF;
   --primary-soft:                #18233E;
   --primary-foreground:          #0B1220;
-  --accent:                      #3FD6FF;
-  --accent-soft:                 #0D2A3A;
-  --accent-text:                 #3FD6FF;
+  --accent:                      #8DA8FF;
+  --accent-soft:                 #18233E;
+  --accent-text:                 #8DA8FF;
   --success:                     #34D399;
   --success-soft:                #0F2E23;
   --success-text:                #34D399;
-  --warning:                     #FBBF24;
-  --warning-soft:                #3A2A0D;
+  --warning:                     #FB923C;
+  --warning-soft:                #3A1F12;
+  --tint-blue:                   #1D2B4F;
+  --tint-slate:                  #222C3F;
+  --tint-green:                  #123526;
+  --tint-red:                    #3F1A1F;
+  --tint-foreground:             #F4F7FC;
   --destructive:                 #F87171;
   --destructive-fill:            #F87171;
   --destructive-fill-foreground: #0B1220;

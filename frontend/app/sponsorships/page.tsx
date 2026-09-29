@@ -119,7 +119,7 @@ export default function SponsorshipsPage() {
                     onClick={() => setFormat(f)}
                     className={`rounded-full border-2 px-3.5 py-1.5 text-sm font-bold capitalize transition-colors ${
                       active
-                        ? 'border-outline bg-pop-lime text-pop-foreground shadow-hard-sm'
+                        ? 'border-outline bg-tint-blue text-tint-foreground shadow-hard-sm'
                         : 'border-border-strong bg-card text-foreground hover:border-outline'
                     }`}
                   >

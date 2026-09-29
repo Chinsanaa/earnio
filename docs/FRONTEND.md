@@ -41,20 +41,21 @@ Config: `frontend/lib/landing/content.ts`
 
 ### Visual identity (landing + auth)
 
-**"Solid Pop"** (see [`DESIGN_REFRESH_PLAN.md`](./DESIGN_REFRESH_PLAN.md) and `frontend/design-system/MASTER.md`): flat warm paper, ink outlines, hard offset shadows, solid pop accents. **No gradients** anywhere (CI rule 4 in `lib/design/designSystem.test.ts`).
+**"Solid Pop"** (see [`DESIGN_REFRESH_PLAN.md`](./DESIGN_REFRESH_PLAN.md) and `frontend/design-system/MASTER.md`): flat cool off-white, ink outlines, hard offset shadows, and a small calm palette (Earnio Blue + blue/slate tints; green/red only for status; no neon, no yellow). **No gradients** anywhere (CI rule 4 in `lib/design/designSystem.test.ts`).
 
 | Token | Value | Usage |
 |-------|-------|-------|
 | `--landing-fg` | `#0B1220` | Headlines, ink buttons, auth logo |
 | `--landing-muted` | `#5A6A85` | Body copy, labels |
-| `--landing-bg-top` / `--landing-bg-bottom` | `#F5F3EE` | Flat page background (warm paper) |
-| `--pop-lime` / `--pop-sun` / `--pop-coral` / `--pop-lilac` / `--pop-mint` / `--pop-sky` | solid fills | Stickers, bento tiles, status chips (always ink text) |
+| `--landing-bg-top` / `--landing-bg-bottom` | `#F6F7F9` | Flat page background (cool off-white) |
+| `--tint-blue` / `--tint-slate` | calm fills | Tiles, highlights, active states (text: `--tint-foreground`) |
+| `--tint-green` / `--tint-red` | calm fills | Success / danger status only |
 | `--primary` | `#2E5BFF` | Primary CTA buttons, links, active states |
 | `--accent` | `#12C2F3` | Spark cyan — use sparingly as a highlight |
 
-**Buttons:** `.landing-btn-pop` (lime sticker, hero CTA), `.landing-btn-dark` (ink pill), `.landing-btn-light` (white pill). In the app use `Button` from `components/ui/button` (`default`, `pop`, `outline`, `ghost`, `danger`); all press into their hard shadow.
+**Buttons:** `.landing-btn-pop` (solid Earnio Blue, hero CTA), `.landing-btn-dark` (ink pill), `.landing-btn-light` (white pill). In the app use `Button` from `components/ui/button` (`default`, `pop`, `outline`, `ghost`, `danger`); all press into their hard shadow.
 
-**Landing sections:** sticker eyebrow + `.landing-display` headline, `Marquee` (lime band), `HowItWorks` (color-coded steps), `CreatorFeatures` (bento), `CreatorTestimonials` (sticker cards), `CreatorFaq` (lime when open). Section entrances use `components/ui/reveal.tsx`.
+**Landing sections:** sticker eyebrow + `.landing-display` headline, `Marquee` (soft-blue band), `HowItWorks` (color-coded steps), `CreatorFeatures` (bento), `CreatorTestimonials` (sticker cards), `CreatorFaq` (soft blue when open). Section entrances use `components/ui/reveal.tsx`.
 
 ---
 
@@ -219,7 +220,7 @@ Creator path                    Brand path
 
 ## App shell (post-login)
 
-Authenticated pages use `CreatorAppShell` (creator and sponsor): top nav with a lime active pill, a Cmd/Ctrl+K command palette (`CommandPalette`), notifications, profile menu, and a bottom tab bar under 768px. Toasts (Sonner) and tooltips are mounted in `app/layout.tsx`.
+Authenticated pages use `CreatorAppShell` (creator and sponsor): top nav with a soft-blue active pill, a Cmd/Ctrl+K command palette (`CommandPalette`), notifications, profile menu, and a bottom tab bar under 768px. Toasts (Sonner) and tooltips are mounted in `app/layout.tsx`.
 
 ---
 
@@ -227,9 +228,9 @@ Authenticated pages use `CreatorAppShell` (creator and sponsor): top nav with a 
 
 | Surface | Palette | Primary CTA |
 |---------|---------|-------------|
-| Landing `/`, `/brands` | Flat paper `#F5F3EE`, ink `#0B1220`, pop accents | `.landing-btn-pop` (lime) |
+| Landing `/`, `/brands` | Cool off-white `#F6F7F9`, ink `#0B1220`, calm blue tints | `.landing-btn-pop` (Earnio Blue) |
 | Auth `/login/*`, `/signup/*` | Same as landing | `.btn-primary` |
-| App dashboard+ | Flat paper, solid Earnio Blue hero `#1F45E5`, pop tiles | `Button` `pop` / `default` |
+| App dashboard+ | Cool off-white, solid Earnio Blue hero `#1F45E5`, calm tint tiles | `Button` `default` / `pop` (both Earnio Blue) |
 
 ---
 

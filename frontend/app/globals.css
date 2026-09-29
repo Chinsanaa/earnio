@@ -28,37 +28,36 @@
   --ink-100: #E9EEF6;
   --ink-50:  #F4F7FC;
 
-  /* Solid Pop accents — flat fills, always paired with --pop-foreground (ink) text.
-     Same values in both themes. No gradients anywhere: see designSystem.test.ts rule 4. */
-  --pop-lime:       #C6F432;
-  --pop-sun:        #FFD23F;
-  --pop-coral:      #FF6B4A;
-  --pop-lilac:      #B9A6FF;
-  --pop-mint:       #7EE8C4;
-  --pop-sky:        #8FB3FF;
-  --pop-foreground: #0B1220;
+  /* Calm tints — the only accent fills besides Earnio Blue. Always paired with
+     --tint-foreground text. Green and red are reserved for success and danger.
+     No neon, no yellow, no gradients (designSystem.test.ts rule 4). */
+  --tint-blue:       #DCE6FF;
+  --tint-slate:      #E6EAF2;
+  --tint-green:      #D3F2E2;
+  --tint-red:        #FCDCDC;
+  --tint-foreground: #0B1220;
 
   /* Semantic — same variable names for Tailwind/component compat */
-  --background:         #F5F3EE;
+  --background:         #F6F7F9;
   --foreground:         #0B1220;
   --card:               #FFFFFF;
-  --card-muted:         #EFECE4;
-  --surface:            #EFECE4;
-  --border:             #D9D4C7;
+  --card-muted:         #EEF1F5;
+  --surface:            #EEF1F5;
+  --border:             #D5DBE5;
   --muted:              #5A6A85;
   --muted-foreground:   #5A6A85;
   --primary:            #2E5BFF;
   --primary-hover:      #1F45E5;
   --primary-soft:       #E3EAFF;
   --primary-foreground: #FFFFFF;
-  --accent:             #12C2F3;
-  --accent-soft:        #E0F9FF;
-  --accent-text:        #0E7490;
+  --accent:             #5C7DFF;
+  --accent-soft:        #E3EAFF;
+  --accent-text:        #1F45E5;
   --success:            #10B981;
   --success-soft:       #DCFCE7;
   --success-text:       #047857;
-  --warning:            #F59E0B;
-  --warning-soft:       #FEF3C7;
+  --warning:            #C2410C;
+  --warning-soft:       #FDE7DA;
   --destructive:        #F0455A;
   --destructive-fill:   #D11F38;
   --destructive-fill-foreground: #FFFFFF;
@@ -101,10 +100,10 @@
   /* Landing palette — flat paper + ink */
   --landing-fg:               #0B1220;
   --landing-muted:            #5A6A85;
-  --landing-bg-top:           #F5F3EE;
-  --landing-bg-bottom:        #F5F3EE;
-  --landing-sky-50:           #EFECE4;
-  --landing-sky-100:          #D9D4C7;
+  --landing-bg-top:           #F6F7F9;
+  --landing-bg-bottom:        #F6F7F9;
+  --landing-sky-50:           #EEF1F5;
+  --landing-sky-100:          #D5DBE5;
   --landing-card-shadow:      var(--shadow-hard);
   --landing-btn-shadow:       var(--shadow-hard-sm);
   --landing-btn-light-shadow: var(--shadow-hard-sm);
@@ -112,19 +111,19 @@
   --landing-surface-strong:   #FFFFFF;
   --landing-feature-bg:       #FFFFFF;
   --landing-feature-border:   #0B1220;
-  --landing-menu-hover-bg:    #EFECE4;
+  --landing-menu-hover-bg:    #EEF1F5;
   --landing-btn-solid-bg:     #0B1220;
   --landing-btn-solid-fg:     #FFFFFF;
   --landing-btn-solid-hover:  #27324A;
   --landing-btn-soft-bg:      #FFFFFF;
   --landing-btn-soft-fg:      #0B1220;
-  --landing-btn-soft-hover:   #EFECE4;
+  --landing-btn-soft-hover:   #EEF1F5;
 
   /* Solid surfaces (formerly translucent "glass") */
-  --glass-soft:           #FAF8F4;
+  --glass-soft:           #FAFBFC;
   --glass-medium:         #FFFFFF;
   --glass-strong:         #FFFFFF;
-  --glass-border-soft:    #D9D4C7;
+  --glass-border-soft:    #D5DBE5;
   --glass-border-medium:  #0B1220;
   --glass-border-strong:  #0B1220;
   --chrome-blur:          #FFFFFF;
@@ -138,9 +137,9 @@
   --hero-fg-muted:    #DCE6FF;
   --hero-fg-faint:    #DCE6FF;
   --hero-divider:     #5C7DFF;
-  --hero-trend-up-bg:    #C6F432;
+  --hero-trend-up-bg:    #D3F2E2;
   --hero-trend-up-fg:    #0B1220;
-  --hero-trend-down-bg:  #FF6B4A;
+  --hero-trend-down-bg:  #FCDCDC;
   --hero-trend-down-fg:  #0B1220;
 
   /* Neutral darkening scrims — same in both themes, sit behind modals/drawers */
@@ -166,14 +165,14 @@
   --primary-hover:      #8DA8FF;
   --primary-soft:       #18233E;
   --primary-foreground: #0B1220;
-  --accent:             #3FD6FF;
-  --accent-soft:        #0D2A3A;
-  --accent-text:        #3FD6FF;
+  --accent:             #8DA8FF;
+  --accent-soft:        #18233E;
+  --accent-text:        #8DA8FF;
   --success:            #34d399;
   --success-soft:       #0F2E23;
   --success-text:       #34d399;
-  --warning:            #FBBF24;
-  --warning-soft:       #3A2A0D;
+  --warning:            #FB923C;
+  --warning-soft:       #3A1F12;
   --destructive:        #F87171;
   --destructive-fill:   #F87171;
   --destructive-fill-foreground: #0B1220;
@@ -185,6 +184,11 @@
   --ring:               #8DA8FF;
   --outline:            #606F8A;
   --shadow-ink:         #3C4A66;
+  --tint-blue:          #1D2B4F;
+  --tint-slate:         #222C3F;
+  --tint-green:         #123526;
+  --tint-red:           #3F1A1F;
+  --tint-foreground:    #F4F7FC;
   --landing-fg:               #F4F7FC;
   --landing-muted:            #AEB9CC;
   --landing-bg-top:           #0B1220;
@@ -304,12 +308,10 @@ html.apple-platform textarea {
   box-shadow: none;
 }
 
-.bg-pop-lime { background-color: var(--pop-lime); color: var(--pop-foreground); }
-.bg-pop-sun { background-color: var(--pop-sun); color: var(--pop-foreground); }
-.bg-pop-coral { background-color: var(--pop-coral); color: var(--pop-foreground); }
-.bg-pop-lilac { background-color: var(--pop-lilac); color: var(--pop-foreground); }
-.bg-pop-mint { background-color: var(--pop-mint); color: var(--pop-foreground); }
-.bg-pop-sky { background-color: var(--pop-sky); color: var(--pop-foreground); }
+.bg-tint-blue { background-color: var(--tint-blue); color: var(--tint-foreground); }
+.bg-tint-slate { background-color: var(--tint-slate); color: var(--tint-foreground); }
+.bg-tint-green { background-color: var(--tint-green); color: var(--tint-foreground); }
+.bg-tint-red { background-color: var(--tint-red); color: var(--tint-foreground); }
 
 :focus-visible {
   outline: 2px solid var(--ring);
@@ -841,7 +843,7 @@ html.apple-platform textarea {
 }
 
 .not-found-hero {
-  background: var(--pop-sun);
+  background: var(--tint-slate);
 }
 
 .not-found-ghost-number {
@@ -974,15 +976,15 @@ html.apple-platform textarea {
 }
 
 .creator-sidebar-link-active {
-  background: var(--pop-lime);
-  color: var(--pop-foreground);
+  background: var(--tint-blue);
+  color: var(--tint-foreground);
   font-weight: 700;
   box-shadow: inset 0 0 0 var(--border-width) var(--outline), var(--shadow-hard-sm);
 }
 
 .creator-sidebar-link-active:hover {
-  background: var(--pop-lime);
-  color: var(--pop-foreground);
+  background: var(--tint-blue);
+  color: var(--tint-foreground);
 }
 
 .creator-sidebar-logout {
@@ -1067,15 +1069,15 @@ html.apple-platform textarea {
 }
 
 .creator-topbar-nav-link-active {
-  background: var(--pop-lime);
-  color: var(--pop-foreground);
+  background: var(--tint-blue);
+  color: var(--tint-foreground);
   font-weight: 700;
   box-shadow: inset 0 0 0 var(--border-width) var(--outline);
 }
 
 .creator-topbar-nav-link-active:hover {
-  background: var(--pop-lime);
-  color: var(--pop-foreground);
+  background: var(--tint-blue);
+  color: var(--tint-foreground);
 }
 
 .creator-topbar-actions {
@@ -1252,8 +1254,8 @@ html.apple-platform textarea {
 }
 
 .creator-bottom-link-active {
-  color: var(--pop-foreground);
-  background: var(--pop-lime);
+  color: var(--tint-foreground);
+  background: var(--tint-blue);
   border-radius: 0.75rem;
   font-weight: 700;
   box-shadow: inset 0 0 0 var(--border-width) var(--outline);
@@ -1337,7 +1339,7 @@ html.apple-platform textarea {
   padding: 0.25rem 0.625rem;
   font-size: 0.75rem;
   font-weight: 700;
-  border: 1.5px solid var(--pop-foreground);
+  border: 1.5px solid var(--tint-foreground);
 }
 
 .creator-trend-badge-up {
@@ -1423,7 +1425,7 @@ html.apple-platform textarea {
   inset: 0 auto auto 0;
   width: 100%;
   height: 6px;
-  background: var(--pop-lime);
+  background: var(--tint-blue);
   border-bottom: var(--border-width) solid var(--outline);
 }
 
@@ -1471,7 +1473,7 @@ html.apple-platform textarea {
 .creator-progress-fill {
   height: 100%;
   border-radius: var(--radius-full);
-  background: var(--pop-lime);
+  background: var(--tint-blue);
   transition: width 0.3s var(--ease-out);
 }
 
@@ -1614,32 +1616,16 @@ html.apple-platform textarea {
 .creator-gig-thumb {
   position: relative;
   height: 9rem;
-  background: var(--pop-sky);
+  background: var(--tint-blue);
   border-bottom: var(--border-width) solid var(--outline);
 }
 
-.creator-gig-thumb[data-tone='sky'] {
-  background: var(--pop-sky);
+.creator-gig-thumb[data-tone='blue'] {
+  background: var(--tint-blue);
 }
 
-.creator-gig-thumb[data-tone='lilac'] {
-  background: var(--pop-lilac);
-}
-
-.creator-gig-thumb[data-tone='mint'] {
-  background: var(--pop-mint);
-}
-
-.creator-gig-thumb[data-tone='sun'] {
-  background: var(--pop-sun);
-}
-
-.creator-gig-thumb[data-tone='coral'] {
-  background: var(--pop-coral);
-}
-
-.creator-gig-thumb[data-tone='lime'] {
-  background: var(--pop-lime);
+.creator-gig-thumb[data-tone='slate'] {
+  background: var(--tint-slate);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1713,39 +1699,39 @@ html.apple-platform textarea {
 
 .badge-pill {
   @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider;
-  background: var(--pop-lime);
-  color: var(--pop-foreground);
-  border: 1.5px solid var(--pop-foreground);
+  background: var(--tint-blue);
+  color: var(--tint-foreground);
+  border: 1.5px solid var(--tint-foreground);
 }
 
 /* Status badges — one definition per status, themed via dark: pairs.
    Use instead of one-off bg-{color}-100/text-{color}-800 combinations. */
 .badge-status-success {
   @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold;
-  background: var(--pop-mint);
-  color: var(--pop-foreground);
-  border: 1.5px solid var(--pop-foreground);
+  background: var(--tint-green);
+  color: var(--tint-foreground);
+  border: 1.5px solid var(--tint-foreground);
 }
 
 .badge-status-pending {
   @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold;
-  background: var(--pop-sun);
-  color: var(--pop-foreground);
-  border: 1.5px solid var(--pop-foreground);
+  background: var(--tint-slate);
+  color: var(--tint-foreground);
+  border: 1.5px solid var(--tint-foreground);
 }
 
 .badge-status-danger {
   @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold;
-  background: var(--pop-coral);
-  color: var(--pop-foreground);
-  border: 1.5px solid var(--pop-foreground);
+  background: var(--tint-red);
+  color: var(--tint-foreground);
+  border: 1.5px solid var(--tint-foreground);
 }
 
 .badge-status-info {
   @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold;
-  background: var(--pop-sky);
-  color: var(--pop-foreground);
-  border: 1.5px solid var(--pop-foreground);
+  background: var(--tint-blue);
+  color: var(--tint-foreground);
+  border: 1.5px solid var(--tint-foreground);
 }
 
 .badge-status-neutral {
@@ -1771,7 +1757,10 @@ html.apple-platform textarea {
 }
 
 .alert-warning {
-  @apply rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200;
+  @apply rounded-xl px-4 py-3 text-sm font-medium;
+  background: var(--tint-slate);
+  color: var(--tint-foreground);
+  border: var(--border-width) solid var(--outline);
 }
 
 /* Forms */
@@ -1806,8 +1795,8 @@ html.apple-platform textarea {
 
 .btn-accent {
   @apply inline-flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold transition duration-200 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60;
-  background: var(--pop-lime);
-  color: var(--pop-foreground);
+  background: var(--tint-blue);
+  color: var(--tint-foreground);
   border: var(--border-width) solid var(--outline);
   box-shadow: var(--shadow-hard-sm);
 }
@@ -1868,9 +1857,9 @@ html.apple-platform textarea {
 /* Landing marquee band — solid lime, ink type, seamless CSS loop */
 .pop-marquee {
   overflow: hidden;
-  border-block: var(--border-width) solid var(--pop-foreground);
-  background: var(--pop-lime);
-  color: var(--pop-foreground);
+  border-block: var(--border-width) solid var(--tint-foreground);
+  background: var(--tint-blue);
+  color: var(--tint-foreground);
 }
 
 .pop-marquee-track {
@@ -1936,22 +1925,23 @@ html.apple-platform textarea {
 }
 
 .landing-faq-item[open] {
-  background: var(--pop-lime);
-  color: var(--pop-foreground);
+  background: var(--tint-blue);
+  color: var(--tint-foreground);
 }
 
 /* Primary landing CTA: solid lime sticker with ink outline */
 .landing-btn-pop {
   @apply inline-flex cursor-pointer items-center justify-center rounded-full font-bold transition;
-  background: var(--pop-lime);
-  color: var(--pop-foreground);
-  border: var(--border-width) solid var(--pop-foreground);
-  box-shadow: 4px 4px 0 0 var(--pop-foreground);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: var(--border-width) solid var(--outline);
+  box-shadow: var(--shadow-hard);
 }
 
 .landing-btn-pop:hover {
+  background: var(--primary-hover);
   transform: translate(-1px, -1px);
-  box-shadow: 6px 6px 0 0 var(--pop-foreground);
+  box-shadow: var(--shadow-hard-lg);
 }
 
 .landing-btn-pop:active {

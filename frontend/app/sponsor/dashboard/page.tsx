@@ -120,7 +120,7 @@ function SponsorDashboardBody({ user }: { user: AuthUser }) {
             <div
               className={`flex flex-col justify-between rounded-3xl border-2 p-6 ${
                 stats.pendingApplications > 0
-                  ? 'border-pop-foreground bg-pop-lilac text-pop-foreground shadow-hard'
+                  ? 'border-outline bg-tint-blue text-tint-foreground shadow-hard'
                   : 'border-outline bg-card text-foreground shadow-hard-sm'
               }`}
             >
@@ -202,9 +202,9 @@ function ApplicationStatusLegend({
   t: (key: string) => string;
 }) {
   const items = [
-    { key: 'pending', label: t('pending_short'), value: data.pending, color: 'var(--pop-sun)' },
-    { key: 'approved', label: t('approved_short'), value: data.approved, color: 'var(--pop-mint)' },
-    { key: 'rejected', label: t('rejected_short'), value: data.rejected, color: 'var(--pop-coral)' },
+    { key: 'pending', label: t('pending_short'), value: data.pending, color: 'var(--muted)' },
+    { key: 'approved', label: t('approved_short'), value: data.approved, color: 'var(--success)' },
+    { key: 'rejected', label: t('rejected_short'), value: data.rejected, color: 'var(--destructive)' },
   ];
 
   return (

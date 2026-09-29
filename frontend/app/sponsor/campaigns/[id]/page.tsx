@@ -463,7 +463,7 @@ function ApplicationCard({
             <Button
               disabled={busy}
               onClick={() => onApprove(notes.trim() || undefined)}
-              className="bg-pop-mint text-pop-foreground hover:bg-pop-mint"
+              className="bg-tint-green text-tint-foreground hover:bg-tint-green"
             >
               <Check className="size-4" aria-hidden />
               {busy ? '…' : t('approve')}

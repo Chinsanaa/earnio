@@ -32,7 +32,7 @@ export function BrandLandingPage() {
       <main>
         <section className="mx-auto grid max-w-7xl items-center gap-12 px-6 pb-16 pt-12 lg:grid-cols-2 lg:gap-8 lg:px-10 lg:pb-24 lg:pt-16">
           <div className="max-w-xl">
-            <p className="animate-fade-up mb-6 inline-flex -rotate-2 items-center gap-2 rounded-full border-2 border-pop-foreground bg-pop-lilac px-4 py-1.5 text-sm font-bold text-pop-foreground shadow-hard-sm">
+            <p className="animate-fade-up mb-6 inline-flex -rotate-2 items-center gap-2 rounded-full border-2 border-outline bg-tint-blue px-4 py-1.5 text-sm font-bold text-tint-foreground shadow-hard-sm">
               ✦ {t('for_brands')}
             </p>
             <h1 className="landing-display animate-fade-up animate-fade-up-delay-1">

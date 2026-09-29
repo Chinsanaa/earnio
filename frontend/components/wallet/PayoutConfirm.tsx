@@ -33,7 +33,7 @@ export function PayoutConfirm({
 
   const body = (
     <>
-      <div className="mt-5 rounded-2xl border-2 border-outline bg-pop-lime p-5 text-pop-foreground">
+      <div className="mt-5 rounded-2xl border-2 border-outline bg-tint-blue p-5 text-tint-foreground">
         <p className="text-sm font-semibold">{t('amount')}</p>
         <p className="mt-1 font-mono text-3xl font-bold tracking-tight">{formatMnt(amountMnt)}</p>
       </div>

@@ -2,6 +2,17 @@
 
 > Status: **Implemented** (all phases). Written September 2026. Open questions resolved with defaults (see section 7).
 
+## Revision (2026-09-29): calm palette
+
+Feedback: "too many colors; tone it down to a few primary colors; no neon or yellow."
+
+- Removed lime, yellow (sun), coral, lilac, mint and the neon cyan accent.
+- Palette is now **Earnio Blue + ink + cool off-white neutrals + four calm tints**: `--tint-blue`, `--tint-slate` (decorative), `--tint-green`, `--tint-red` (status only). Tints are theme-aware (dark variants in `.dark`).
+- Background moved from warm beige paper `#F5F3EE` to cool off-white `#F6F7F9`.
+- Strong CTAs (`Button` `pop`, `.landing-btn-pop`) are solid Earnio Blue.
+- New CI checks: no yellow/lime token values, no Tailwind `yellow-*`/`amber-*`/`lime-*`.
+- The palette table in section 2.2 below is **superseded**; see `frontend/design-system/MASTER.md`.
+
 ## Progress
 
 - [x] Phase 0: gradient guardrail (rule 4 in `designSystem.test.ts`)

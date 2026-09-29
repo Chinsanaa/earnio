@@ -129,17 +129,15 @@ describe('design system: token contrast (WCAG AA)', () => {
     ['outline on card (sticker border)', 'outline', 'card', WCAG_AA_UI_BOUNDARY],
     ['outline on background', 'outline', 'background', WCAG_AA_UI_BOUNDARY],
     ['landing-btn-solid-fg on landing-btn-solid-bg', 'landing-btn-solid-fg', 'landing-btn-solid-bg', WCAG_AA_NORMAL_TEXT],
+    ['tint-foreground on tint-blue', 'tint-foreground', 'tint-blue', WCAG_AA_NORMAL_TEXT],
+    ['tint-foreground on tint-slate', 'tint-foreground', 'tint-slate', WCAG_AA_NORMAL_TEXT],
+    ['tint-foreground on tint-green', 'tint-foreground', 'tint-green', WCAG_AA_NORMAL_TEXT],
+    ['tint-foreground on tint-red', 'tint-foreground', 'tint-red', WCAG_AA_NORMAL_TEXT],
+    ['accent-text on background', 'accent-text', 'background', WCAG_AA_NORMAL_TEXT],
   ];
 
-  // Solid Pop fills and the hero block are theme-invariant (defined once in :root),
-  // so they are checked once against their paired foreground.
+  // The hero block is theme-invariant (defined once in :root), so it is checked once.
   const THEME_INVARIANT_CHECKS: Array<[string, string, string, number]> = [
-    ['pop-foreground on pop-lime', 'pop-foreground', 'pop-lime', WCAG_AA_NORMAL_TEXT],
-    ['pop-foreground on pop-sun', 'pop-foreground', 'pop-sun', WCAG_AA_NORMAL_TEXT],
-    ['pop-foreground on pop-coral', 'pop-foreground', 'pop-coral', WCAG_AA_NORMAL_TEXT],
-    ['pop-foreground on pop-lilac', 'pop-foreground', 'pop-lilac', WCAG_AA_NORMAL_TEXT],
-    ['pop-foreground on pop-mint', 'pop-foreground', 'pop-mint', WCAG_AA_NORMAL_TEXT],
-    ['pop-foreground on pop-sky', 'pop-foreground', 'pop-sky', WCAG_AA_NORMAL_TEXT],
     ['hero-fg on hero-bg', 'hero-fg', 'hero-bg', WCAG_AA_NORMAL_TEXT],
     ['hero-fg-muted on hero-bg', 'hero-fg-muted', 'hero-bg', WCAG_AA_NORMAL_TEXT],
     ['hero-trend-up-fg on hero-trend-up-bg', 'hero-trend-up-fg', 'hero-trend-up-bg', WCAG_AA_NORMAL_TEXT],
@@ -291,5 +289,41 @@ describe('design system: solid colors only, no gradients', () => {
       }
     }
     expect(offenders, `Gradients are banned, use a solid token instead:\n${offenders.join('\n')}`).toEqual([]);
+  });
+});
+
+describe('design system: calm palette, no yellow', () => {
+  /** Returns hue (0-360) and chroma (0-1, how colorful) for a #rrggbb color. */
+  function hueChroma(hex: string): { h: number; c: number } {
+    const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const c = max - min;
+    if (c === 0) return { h: 0, c: 0 };
+    let h = max === r ? ((g - b) / c) % 6 : max === g ? (b - r) / c + 2 : (r - g) / c + 4;
+    h = (h * 60 + 360) % 360;
+    return { h, c };
+  }
+
+  it('no yellow or lime token values in :root or .dark', () => {
+    const css = readGlobalsCss();
+    const offenders: string[] = [];
+    for (const block of ['\\:root', '\\.dark'] as const) {
+      for (const [name, value] of Object.entries(parseTokenBlock(css, block))) {
+        const m = value.match(/^#([0-9a-fA-F]{6})$/);
+        if (!m) continue;
+        const { h, c } = hueChroma(value);
+        // Yellow through lime/chartreuse (~40-100 deg) with visible color (chroma > 0.15).
+        if (h >= 40 && h <= 100 && c > 0.15) offenders.push(`${block}: --${name}: ${value}`);
+      }
+    }
+    expect(offenders, `Yellow/lime is not part of the palette:\n${offenders.join('\n')}`).toEqual([]);
+  });
+
+  it('no yellow, amber or lime Tailwind utilities in app/ and components/', () => {
+    const files = [...listSourceFiles(APP_DIR), ...listSourceFiles(COMPONENTS_DIR)];
+    const re = /\b(?:bg|text|border|fill|stroke|ring|from|to|via)-(?:yellow|amber|lime)-\d{2,3}\b/;
+    const offenders = files.filter((f) => re.test(fs.readFileSync(f, 'utf8'))).map((f) => path.basename(f));
+    expect(offenders).toEqual([]);
   });
 });

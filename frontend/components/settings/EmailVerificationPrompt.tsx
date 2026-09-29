@@ -151,17 +151,17 @@ export function EmailVerificationPrompt() {
   return (
     <>
       {showBanner && !showModal ? (
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border-2 border-pop-foreground bg-pop-sky px-4 py-3 text-sm font-medium text-pop-foreground shadow-hard-sm">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border-2 border-outline bg-tint-blue px-4 py-3 text-sm font-medium text-tint-foreground shadow-hard-sm">
           <p>{t('verify_email_banner')}</p>
           <div className="flex items-center gap-3">
             <button
               type="button"
-              className="font-bold text-pop-foreground underline"
+              className="font-bold text-tint-foreground underline"
               onClick={() => setShowModal(true)}
             >
               {t('verify_email')}
             </button>
-            <button type="button" className="text-pop-foreground underline" onClick={dismissBanner}>
+            <button type="button" className="text-tint-foreground underline" onClick={dismissBanner}>
               {t('dismiss')}
             </button>
           </div>

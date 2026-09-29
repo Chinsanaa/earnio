@@ -41,7 +41,7 @@ export function GettingStartedPlan({ tasks, title }: { tasks: PlanTask[]; title:
         {tasks.map((task) => (
           <span
             key={task.id}
-            className={`h-3 rounded-full border-2 border-outline ${task.done ? 'bg-pop-lime' : 'bg-card'}`}
+            className={`h-3 rounded-full border-2 border-outline ${task.done ? 'bg-tint-blue' : 'bg-card'}`}
           />
         ))}
       </div>
@@ -55,14 +55,14 @@ export function GettingStartedPlan({ tasks, title }: { tasks: PlanTask[]; title:
                 href={task.href}
                 className={`pop-press flex h-full items-start gap-3 rounded-xl border-2 p-4 ${
                   isNext
-                    ? 'border-pop-foreground bg-pop-lime text-pop-foreground shadow-hard-sm'
+                    ? 'border-outline bg-tint-blue text-tint-foreground shadow-hard-sm'
                     : 'border-border bg-card text-landing-fg'
                 }`}
                 aria-current={isNext ? 'step' : undefined}
               >
                 <span
                   className={`flex size-7 shrink-0 items-center justify-center rounded-full border-2 font-mono text-xs font-bold ${
-                    task.done ? 'border-outline bg-pop-mint text-pop-foreground' : 'border-current'
+                    task.done ? 'border-outline bg-tint-green text-tint-foreground' : 'border-current'
                   }`}
                   aria-hidden
                 >
