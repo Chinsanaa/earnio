@@ -1,20 +1,24 @@
 /* ============================================================
    Earnio — Effects: shadows, motion, focus
-   Shadows are cool navy-tinted (not grey). Glow reserved for primary CTAs.
+   "Solid Pop": hard offset shadows with zero blur (sticker depth).
    ============================================================ */
 
 :root {
-  /* Shadows — navy-tinted */
-  --shadow-sm: 0 2px 6px rgba(11, 18, 32, 0.06), 0 1px 2px rgba(11, 18, 32, 0.04);
-  --shadow-md: 0 8px 20px -6px rgba(11, 18, 32, 0.10), 0 2px 6px rgba(11, 18, 32, 0.05);
-  --shadow-lg: 0 18px 40px -12px rgba(11, 18, 32, 0.16);
-  --shadow-glow:  0 20px 50px -20px rgba(46, 91, 255, 0.35); /* primary CTA */
-  --shadow-brand: 0 14px 30px -10px rgba(46, 91, 255, 0.45); /* hero spotlight */
+  /* Hard offset shadows (no blur) */
+  --border-width:   2px;
+  --press-offset:   2px;
+  --shadow-hard-sm: 2px 2px 0 0 var(--shadow-ink);
+  --shadow-hard:    4px 4px 0 0 var(--shadow-ink);
+  --shadow-hard-lg: 6px 6px 0 0 var(--shadow-ink);
+  --shadow-sm:    var(--shadow-hard-sm);
+  --shadow-md:    var(--shadow-hard);
+  --shadow-lg:    var(--shadow-hard-lg);
+  --shadow-glow:  var(--shadow-hard);
+  --shadow-brand: var(--shadow-hard);
 
-  /* Surface shadows for landing/app glass cards */
-  --landing-card-shadow:      0 8px 32px rgba(11, 18, 32, 0.08);
-  --landing-btn-shadow:       0 2px 8px rgba(46, 91, 255, 0.25);
-  --landing-btn-light-shadow: 0 2px 4px rgba(11, 18, 32, 0.08);
+  --landing-card-shadow:      var(--shadow-hard);
+  --landing-btn-shadow:       var(--shadow-hard-sm);
+  --landing-btn-light-shadow: var(--shadow-hard-sm);
 
   /* Motion */
   --ease-out:    cubic-bezier(0.22, 1, 0.36, 1); /* @kind other */
@@ -24,17 +28,8 @@
   --dur-slow: 360ms; /* @kind other */
 
   /* Focus ring */
-  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--primary) 28%, transparent);
+  --focus-ring: 0 0 0 3px var(--ring);
 }
 
-.dark {
-  /* Navy-tinted shadows read as almost-invisible on a near-black page — switch
-     to a true-black base at higher alpha so elevation is still perceptible. */
-  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.25);
-  --shadow-md: 0 8px 22px -6px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.30);
-  --shadow-glow:              0 20px 60px -15px rgba(92, 125, 255, 0.25);
-  --shadow-brand:             0 14px 34px -10px rgba(92, 125, 255, 0.35);
-  --landing-card-shadow:      0 10px 40px rgba(0, 0, 0, 0.45);
-  --landing-btn-shadow:       0 4px 14px rgba(0, 0, 0, 0.45);
-  --landing-btn-light-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
-}
+/* Dark theme only swaps --shadow-ink / --outline (see colors.css); the hard
+   shadows above re-resolve automatically. */

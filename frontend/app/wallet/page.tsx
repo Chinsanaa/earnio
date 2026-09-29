@@ -5,6 +5,13 @@ import { CreatorPageHeader } from '@/components/creator/CreatorPageHeader';
 import { DashboardShell } from '@/components/dashboard/DashboardShell';
 import { BalanceTrend } from '@/components/wallet/BalanceTrend';
 import { WalletSkeleton } from '@/components/wallet/WalletSkeleton';
+import { PayoutConfirm } from '@/components/wallet/PayoutConfirm';
+import { Button } from '@/components/ui/button';
+import { EmptyState } from '@/components/ui/empty-state';
+import { FieldError, Input, Label } from '@/components/ui/input';
+import { NumberTicker } from '@/components/ui/number-ticker';
+import { Receipt } from 'lucide-react';
+import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ApiError } from '@/lib/api/client';
 import {
@@ -64,8 +71,10 @@ export default function WalletPage() {
   const [payoutAmount, setPayoutAmount] = useState('');
   const [payoutBankId, setPayoutBankId] = useState('');
   const [payoutError, setPayoutError] = useState<string | null>(null);
-  const [payoutSuccess, setPayoutSuccess] = useState<string | null>(null);
   const [payoutPending, setPayoutPending] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
+  const payoutAmountMnt = Number(payoutAmount.replace(/\D/g, '')) || 0;
 
   const load = useCallback(async () => {
     setError(null);
@@ -146,6 +155,7 @@ export default function WalletPage() {
         setAsDefault: bankAccounts.length === 0,
       });
       setAccountNumber('');
+      toast.success(t('bank_added'));
       await load();
     } catch (err) {
       setBankError(err instanceof ApiError ? err.message : 'Failed to add account');
@@ -154,19 +164,43 @@ export default function WalletPage() {
     }
   }
 
-  async function handlePayout(e: FormEvent) {
+  function validatePayout(amount: number): string | null {
+    if (!summary) return null;
+    if (amount < summary.minPayoutMnt) {
+      return t('amount_below_min').replace('{min}', formatMnt(summary.minPayoutMnt));
+    }
+    if (amount > summary.availableBalanceMnt) {
+      return t('amount_above_balance').replace('{max}', formatMnt(summary.availableBalanceMnt));
+    }
+    return null;
+  }
+
+  function handleReviewPayout(e: FormEvent) {
     e.preventDefault();
+    const problem = validatePayout(payoutAmountMnt);
+    setPayoutError(problem);
+    if (!problem) setConfirmOpen(true);
+  }
+
+  function setQuickAmount(fraction: number) {
+    if (!summary) return;
     setPayoutError(null);
-    setPayoutSuccess(null);
+    setPayoutAmount(String(Math.floor(summary.availableBalanceMnt * fraction)));
+  }
+
+  async function handlePayout() {
     setPayoutPending(true);
     try {
-      const amount = Number(payoutAmount.replace(/\D/g, ''));
-      const result = await requestPayout(amount, payoutBankId);
-      setPayoutSuccess(result.message);
+      const result = await requestPayout(payoutAmountMnt, payoutBankId);
+      toast.success(result.message);
       setPayoutAmount('');
+      setConfirmOpen(false);
       await load();
     } catch (err) {
-      setPayoutError(err instanceof ApiError ? err.message : 'Payout failed');
+      const message = err instanceof ApiError ? err.message : 'Payout failed';
+      setPayoutError(message);
+      toast.error(message);
+      setConfirmOpen(false);
     } finally {
       setPayoutPending(false);
     }
@@ -190,7 +224,11 @@ export default function WalletPage() {
             <div className="creator-hero">
               <div className="creator-hero-body">
                 <p className="creator-hero-label">{t('available_to_withdraw')}</p>
-                <div className="creator-hero-amount">{formatMnt(summary.availableBalanceMnt)}</div>
+                <NumberTicker
+                  className="creator-hero-amount block"
+                  value={summary.availableBalanceMnt}
+                  format={formatMnt}
+                />
 
                 <div className="creator-hero-divider" />
 
@@ -217,37 +255,55 @@ export default function WalletPage() {
 
             <div className="grid gap-6 lg:grid-cols-2">
               <section className="creator-panel-lg">
-                <h2 className="text-base font-semibold tracking-tight text-landing-fg">
+                <h2 className="font-display text-xl font-bold tracking-tight text-landing-fg">
                   {t('request_payout')}
                 </h2>
                 <p className="mt-1 text-sm text-landing-muted">
                   {t('minimum_payout_note').replace('{min}', formatMnt(summary.minPayoutMnt))}
                 </p>
                 {bankAccounts.length === 0 ? (
-                  <p className="mt-4 text-sm text-amber-700 dark:text-amber-300">
-                    {t('add_bank_account_first')}
-                  </p>
+                  <p className="alert-warning mt-4">{t('add_bank_account_first')}</p>
                 ) : (
-                  <form onSubmit={handlePayout} className="mt-5 space-y-4">
+                  <form onSubmit={handleReviewPayout} className="mt-5 space-y-4" noValidate>
                     <div>
-                      <label className="mb-2 block text-sm font-medium text-landing-fg">
-                        {t('amount_mnt')}
-                      </label>
-                      <input
+                      <Label htmlFor="payout-amount">{t('amount_mnt')}</Label>
+                      <Input
+                        id="payout-amount"
                         type="text"
                         inputMode="numeric"
                         required
-                        value={payoutAmount}
-                        onChange={(e) => setPayoutAmount(e.target.value)}
+                        value={payoutAmountMnt ? payoutAmountMnt.toLocaleString('en-US') : payoutAmount}
+                        onChange={(e) => {
+                          setPayoutError(null);
+                          setPayoutAmount(e.target.value);
+                        }}
                         placeholder={t('payout_amount_placeholder')}
-                        className="auth-input"
+                        aria-invalid={payoutError ? true : undefined}
+                        aria-describedby={payoutError ? 'payout-error' : undefined}
+                        className="font-mono text-lg font-semibold"
                       />
+                      <div className="mt-2 flex gap-2">
+                        {[
+                          { label: '25%', fraction: 0.25 },
+                          { label: '50%', fraction: 0.5 },
+                          { label: t('amount_max'), fraction: 1 },
+                        ].map((chip) => (
+                          <button
+                            key={chip.label}
+                            type="button"
+                            onClick={() => setQuickAmount(chip.fraction)}
+                            className="rounded-full border-2 border-outline bg-card px-3 py-1 text-xs font-bold text-foreground transition-colors hover:bg-tint-blue hover:text-tint-foreground"
+                          >
+                            {chip.label}
+                          </button>
+                        ))}
+                      </div>
+                      <FieldError id="payout-error">{payoutError}</FieldError>
                     </div>
                     <div>
-                      <label className="mb-2 block text-sm font-medium text-landing-fg">
-                        {t('bank_account')}
-                      </label>
+                      <Label htmlFor="payout-bank">{t('bank_account')}</Label>
                       <select
+                        id="payout-bank"
                         value={payoutBankId}
                         onChange={(e) => setPayoutBankId(e.target.value)}
                         className="auth-input"
@@ -260,23 +316,15 @@ export default function WalletPage() {
                         ))}
                       </select>
                     </div>
-                    {payoutError && <p className="text-sm text-red-600 dark:text-red-400">{payoutError}</p>}
-                    {payoutSuccess && (
-                      <p className="text-sm text-emerald-700 dark:text-emerald-300">{payoutSuccess}</p>
-                    )}
-                    <button
-                      type="submit"
-                      disabled={payoutPending}
-                      className="landing-btn-dark px-6 py-2.5 text-sm disabled:opacity-60"
-                    >
-                      {payoutPending ? t('submitting') : t('request_payout')}
-                    </button>
+                    <Button type="submit" size="lg" disabled={payoutPending || !payoutAmountMnt}>
+                      {t('review_payout')}
+                    </Button>
                   </form>
                 )}
               </section>
 
               <section className="creator-panel-lg">
-                <h2 className="text-base font-semibold tracking-tight text-landing-fg">
+                <h2 className="font-display text-xl font-bold tracking-tight text-landing-fg">
                   {t('bank_accounts')}
                 </h2>
                 {bankAccounts.length > 0 && (
@@ -290,7 +338,7 @@ export default function WalletPage() {
                           </p>
                         </div>
                         {b.is_default ? (
-                          <span className="text-xs font-medium text-landing-fg">{t('default_label')}</span>
+                          <span className="badge-status-success">{t('default_label')}</span>
                         ) : (
                           <button
                             type="button"
@@ -306,7 +354,7 @@ export default function WalletPage() {
                 )}
                 <form
                   onSubmit={handleAddBank}
-                  className="mt-5 space-y-3 border-t border-sky-100 pt-5"
+                  className="mt-5 space-y-3 border-t-2 border-[color:var(--border)] pt-5"
                 >
                   <p className="text-sm font-medium text-landing-fg">{t('add_account')}</p>
                   <select
@@ -334,22 +382,26 @@ export default function WalletPage() {
                     onChange={(e) => setAccountHolderName(e.target.value)}
                     className="auth-input"
                   />
-                  {bankError && <p className="text-sm text-red-600 dark:text-red-400">{bankError}</p>}
-                  <button
-                    type="submit"
-                    disabled={bankPending}
-                    className="landing-btn-light px-5 py-2.5 text-sm disabled:opacity-60"
-                  >
+                  <FieldError>{bankError}</FieldError>
+                  <Button type="submit" variant="outline" disabled={bankPending}>
                     {bankPending ? t('adding') : t('add_bank_account')}
-                  </button>
+                  </Button>
                 </form>
               </section>
             </div>
 
             <section className="creator-panel-lg">
-              <h2 className="text-base font-semibold tracking-tight text-landing-fg">
+              <h2 className="font-display text-xl font-bold tracking-tight text-landing-fg">
                 {t('transaction_history')}
               </h2>
+              {transactions.length === 0 ? (
+                <EmptyState
+                  className="mt-5"
+                  icon={Receipt}
+                  title={t('no_transactions_title')}
+                  description={t('no_transactions_desc')}
+                />
+              ) : (
               <div className="creator-table-wrap mt-5">
                 <table className="creator-table">
                   <thead>
@@ -375,8 +427,8 @@ export default function WalletPage() {
                           {tx.description?.replace(/^\[Demo\]\s*/, '')}
                         </td>
                         <td
-                          className={`text-right font-medium ${
-                            isCredit(tx.type) ? 'text-emerald-700 dark:text-emerald-300' : 'text-landing-fg'
+                          className={`text-right font-mono font-semibold ${
+                            isCredit(tx.type) ? 'text-success-text' : 'text-landing-fg'
                           }`}
                         >
                           {isCredit(tx.type) ? '+' : '−'}
@@ -387,21 +439,29 @@ export default function WalletPage() {
                   </tbody>
                 </table>
               </div>
+              )}
               {txHasMore && (
                 <div className="mt-4 flex justify-center">
-                  <button
-                    type="button"
-                    onClick={loadMoreTransactions}
-                    disabled={txLoadingMore}
-                    className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-surface disabled:opacity-60"
-                  >
+                  <Button variant="outline" onClick={loadMoreTransactions} disabled={txLoadingMore}>
                     {txLoadingMore ? t('loading') : t('load_more')}
-                  </button>
+                  </Button>
                 </div>
               )}
             </section>
           </div>
         )}
+
+        {summary ? (
+          <PayoutConfirm
+            open={confirmOpen}
+            onOpenChange={setConfirmOpen}
+            amountMnt={payoutAmountMnt}
+            availableMnt={summary.availableBalanceMnt}
+            bank={bankAccounts.find((b) => b.id === payoutBankId)}
+            pending={payoutPending}
+            onConfirm={handlePayout}
+          />
+        ) : null}
       </div>
     </DashboardShell>
   );

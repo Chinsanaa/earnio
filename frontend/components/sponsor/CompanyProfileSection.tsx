@@ -113,7 +113,7 @@ export function CompanyProfileSection() {
           ) : null}
 
           {success ? (
-            <p className="rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700 dark:text-green-300" role="status">
+            <p className="alert-success" role="status">
               {t('company_profile_updated')}
             </p>
           ) : null}

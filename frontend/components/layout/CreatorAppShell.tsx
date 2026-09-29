@@ -1,11 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { LogOut, Moon, Settings, Sun } from 'lucide-react';
 import { EarnioLogo } from '@/components/brand/EarnioLogo';
 import { CREATOR_SIDEBAR_NAV, isCreatorNavActive, type CreatorNavItem } from '@/components/layout/creator-nav';
 import { NotificationBell } from '@/components/notifications/NotificationBell';
+import { CommandPalette, type CommandItem } from '@/components/layout/CommandPalette';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/lib/theme/ThemeProvider';
@@ -20,6 +22,8 @@ interface CreatorAppShellProps {
   navItems?: CreatorNavItem[];
   isNavActive?: (pathname: string, href: string) => boolean;
   settingsHref?: string;
+  /** Extra role-specific actions for the command palette (e.g. "Request payout"). */
+  commandActions?: Array<{ id: string; labelKey: string; href: string; icon?: React.ReactNode }>;
 }
 
 function SettingsIcon() {
@@ -84,8 +88,10 @@ export function CreatorAppShell({
   navItems = CREATOR_SIDEBAR_NAV,
   isNavActive,
   settingsHref = '/settings',
+  commandActions = [],
 }: CreatorAppShellProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [accountOpen, setAccountOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const { t } = useLanguage();
@@ -115,6 +121,48 @@ export function CreatorAppShell({
       window.removeEventListener('keydown', onKeyDown);
     };
   }, [accountOpen]);
+
+  const commandItems = useMemo<CommandItem[]>(
+    () => [
+      ...navItems.map((item) => ({
+        id: item.href,
+        label: t(item.labelKey),
+        group: 'pages' as const,
+        icon: item.icon,
+        onSelect: () => router.push(item.href),
+      })),
+      {
+        id: settingsHref,
+        label: t('account_settings'),
+        group: 'pages' as const,
+        icon: <Settings className="size-5" />,
+        onSelect: () => router.push(settingsHref),
+      },
+      ...commandActions.map((action) => ({
+        id: action.id,
+        label: t(action.labelKey),
+        group: 'actions' as const,
+        icon: action.icon,
+        onSelect: () => router.push(action.href),
+      })),
+      {
+        id: 'toggle-theme',
+        label: isDark ? t('switch_to_light') : t('switch_to_dark'),
+        group: 'actions' as const,
+        icon: isDark ? <Sun className="size-5" /> : <Moon className="size-5" />,
+        keywords: ['theme', 'dark', 'light'],
+        onSelect: toggleTheme,
+      },
+      {
+        id: 'log-out',
+        label: t('log_out'),
+        group: 'actions' as const,
+        icon: <LogOut className="size-5" />,
+        onSelect: onLogout,
+      },
+    ],
+    [navItems, commandActions, settingsHref, isDark, toggleTheme, onLogout, router, t]
+  );
 
   function navActive(href: string, match?: (p: string) => boolean) {
     if (match) return match(pathname);
@@ -147,6 +195,7 @@ export function CreatorAppShell({
           </nav>
 
           <div className="creator-topbar-actions">
+            <CommandPalette items={commandItems} />
             <LanguageSwitcher />
             <NotificationBell tone="creator" />
 
@@ -229,7 +278,11 @@ export function CreatorAppShell({
 
         <main className="creator-main creator-app-shell-content flex-1">{children}</main>
 
-        <nav className="creator-bottom-nav" aria-label="Mobile navigation">
+        <nav
+          className="creator-bottom-nav"
+          aria-label="Mobile navigation"
+          style={{ gridTemplateColumns: `repeat(${navItems.length}, minmax(0, 1fr))` }}
+        >
           {navItems.map((item) => {
             const active = navActive(item.href, item.match);
             return (

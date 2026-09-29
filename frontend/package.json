@@ -26,16 +26,21 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
     "lucide-react": "^1.21.0",
+    "motion": "^13.4.4",
     "next": "^16.2.9",
+    "radix-ui": "^1.6.7",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-markdown": "^10.1.0",
     "recharts": "^3.8.1",
     "remark-gfm": "^4.0.1",
+    "sonner": "^2.0.8",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vaul": "^1.1.2"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",

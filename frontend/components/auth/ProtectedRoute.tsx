@@ -52,7 +52,7 @@ export function ProtectedRoute({
   if (loading || !isAuthorized) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-sm text-gray-500">{t('loading')}</p>
+        <p className="text-sm text-muted-foreground">{t('loading')}</p>
       </div>
     );
   }

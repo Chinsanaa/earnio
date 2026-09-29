@@ -390,4 +390,59 @@ export const translations: Record<string, string> = {
   // OAuth / Auth errors
   oauth_error: 'Нийгмийн сүлжээгээр нэвтрэх боломжгүй байна. Дахин оролдоно уу.',
   error_refresh_message: 'Гэнэтийн алдаа гарлаа. Хуудсыг шинэчилж үзнэ үү.',
+
+  // Command palette
+  command_search: 'Хайх',
+  command_placeholder: 'Хуудас, үйлдэл хайх…',
+  command_pages: 'Хуудсууд',
+  command_actions: 'Үйлдлүүд',
+  command_no_results: 'Илэрц олдсонгүй.',
+
+  // Dashboard (Solid Pop)
+  your_platforms: 'Таны платформууд',
+  share_of_earnings: 'орлогын хувь',
+  earnings_performance: 'Орлогын явц',
+  view_all: 'Бүгдийг харах',
+  withdraw: 'Мөнгө татах',
+  getting_started_title: 'Анхны орлогоо аваарай',
+  steps_complete: '{total} алхмаас {done} дууссан',
+  step_connect_title: 'Платформ холбох',
+  step_connect_desc: 'Орлогоо синк хийхийн тулд TikTok, YouTube эсвэл Instagram холбоно уу.',
+  step_apply_title: 'Ивээн тэтгэлэгт хүсэлт гаргах',
+  step_apply_desc: 'Үзэгчиддээ тохирох брэндийн санал олоорой.',
+  step_payout_title: 'Төлбөр хүсэх',
+  step_payout_desc: 'MNT үлдэгдлээ банкны данс руугаа шилжүүлээрэй.',
+  add_platform: 'Платформ нэмэх',
+  this_month_short: 'Энэ сар',
+  available: 'Боломжит',
+  pending: 'Хүлээгдэж буй',
+  connected: 'Холбогдсон',
+  platforms_count: '{count} платформ',
+
+  // Wallet (Solid Pop)
+  review_payout: 'Төлбөрийг шалгах',
+  confirm_payout_title: 'Төлбөр баталгаажуулах',
+  confirm_payout_desc: 'Мөнгө илгээхээс өмнө мэдээллээ шалгана уу.',
+  confirm_payout: 'Баталгаажуулах',
+  payout_to: 'Хүлээн авагч',
+  remaining_balance: 'Үлдэх үлдэгдэл',
+  fees_already_deducted: 'Орлого орох үед 20% платформын шимтгэл аль хэдийн суутгагдсан тул та бүтэн дүнг авна.',
+  amount_below_min: 'Хамгийн бага төлбөр {min}.',
+  amount_above_balance: 'Та {max} хүртэл татах боломжтой.',
+  amount_max: 'Бүгд',
+  no_transactions_title: 'Гүйлгээ алга',
+  no_transactions_desc: 'Орлого болон төлбөрүүд энд харагдана.',
+  bank_added: 'Банкны данс нэмэгдлээ.',
+
+  // Explore (Solid Pop)
+  apply_by: '{date} хүртэл хүсэлт гаргах',
+  filter_by_format: 'Форматаар шүүх',
+
+  // Sponsor (Solid Pop)
+  review_shortcut_hint: 'Товчлол: картыг сонгоод A дарж зөвшөөрөх, R дарж татгалзах.',
+  application_approved_toast: 'Өргөдлийг зөвшөөрлөө.',
+  application_rejected_toast: 'Өргөдлөөс татгалзлаа.',
+  review_now: 'Одоо шалгах',
+  applications_waiting: '{count} өргөдөл шалгахыг хүлээж байна',
+  all_caught_up: 'Бүгдийг шалгасан. Хүлээгдэж буй өргөдөл алга.',
 };

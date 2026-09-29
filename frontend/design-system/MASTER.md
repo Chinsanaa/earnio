@@ -2,7 +2,7 @@
 
 → UI routes & landing: [../../docs/FRONTEND.md](../../docs/FRONTEND.md) · Frontend folder: [../README.md](../README.md)
 
-**Style:** Electric blue fintech-for-creators · Gen Z · Clean & airy  
+**Style:** "Solid Pop" (calm) · Earnio Blue on cool off-white · ink outlines · a few calm tints · no neon, no yellow  
 **Mode:** Light + dark (full parity)
 
 ## Brand identity
@@ -14,8 +14,8 @@ Earnio uses a single electric-blue identity: **Earnio Blue `#2E5BFF`** (azure) p
 | Token | Light | Dark |
 |-------|-------|------|
 | Primary | `#2E5BFF` (Earnio Blue) | `#5C7DFF` |
-| Accent / spark | `#12C2F3` (cyan) | `#3FD6FF` |
-| Background | `#F7FAFF` | `#0B1220` |
+| Accent | `#5C7DFF` (light Earnio Blue) | `#8DA8FF` |
+| Background | `#F6F7F9` (cool off-white) | `#0B1220` |
 | Surface / card | `#FFFFFF` | `#141C2C` |
 | Foreground / ink | `#0B1220` | `#F4F7FC` |
 | Muted text | `#5A6A85` | `#8492A8` |
@@ -27,7 +27,7 @@ Earnio uses a single electric-blue identity: **Earnio Blue `#2E5BFF`** (azure) p
 
 | Text token | Light | Dark | Use instead of |
 |------------|-------|------|-----------------|
-| `--accent-text` | `#0E7490` | `#3FD6FF` (= accent) | `--accent` as text color |
+| `--accent-text` | `#1F45E5` | `#8DA8FF` (= accent) | `--accent` as text color |
 | `--success-text` | `#047857` | `#34D399` (= success) | `--success` as text color |
 | `--destructive-text` | `#D11F38` | `#F87171` (= destructive) | `--destructive` as text color |
 | `--primary-foreground` | `#FFFFFF` | `#0B1220` | text/icons placed *on* a `--primary` fill |
@@ -35,15 +35,37 @@ Earnio uses a single electric-blue identity: **Earnio Blue `#2E5BFF`** (azure) p
 
 Note the dark values above mostly equal the fill color as-is (it's already light enough to read as text on a dark card); the light values are the real correction. All pairs are verified with `lib/design/contrast.ts` and enforced by `lib/design/designSystem.test.ts` — see CLAUDE.md's "Design system rules."
 
-### Gradients
+### Solid colors only (no gradients)
 
-- **Brand:** `linear-gradient(135deg, #4D74FF 0%, #2E5BFF 45%, #1736B8 100%)`
-- **Spark:** `linear-gradient(115deg, #2E5BFF 0%, #12C2F3 100%)`
-- **Ink:** `linear-gradient(160deg, #161E2E 0%, #0B1220 100%)`
+**Gradients are banned** everywhere: CSS `*-gradient()`, Tailwind `bg-gradient-*` / `from-*` / `via-*` / `to-*`, gradient text (`bg-clip-text`), and SVG `<linearGradient>` / `<radialGradient>` (including Recharts). Rule 4 in `lib/design/designSystem.test.ts` enforces this in CI. Blur/frosted glass is also retired: every surface is one flat color.
 
-### Atmospheric mesh (backgrounds)
+### Calm palette (a few colors only)
 
-Blue-tinted radial gradients using `--mesh-1` (`#DCE6FF`), `--mesh-2` (`#CFEBFF`), `--mesh-3` (`#E6ECFF`). Applied via `.mesh-bg` class on `<body>`.
+The palette is deliberately small: **Earnio Blue** (`--primary`), **ink**, cool **off-white neutrals**, and four calm tints. **No neon, no yellow** (CI rule in `designSystem.test.ts` rejects yellow/lime tokens and Tailwind `yellow-*`/`amber-*`/`lime-*`).
+
+| Token | Light | Dark | Use |
+|-------|-------|------|-----|
+| `--tint-blue` | `#DCE6FF` | `#1D2B4F` | Active nav, highlights, progress, decorative tiles |
+| `--tint-slate` | `#E6EAF2` | `#222C3F` | Neutral tiles, pending status, warnings |
+| `--tint-green` | `#D3F2E2` | `#123526` | **Success only** |
+| `--tint-red` | `#FCDCDC` | `#3F1A1F` | **Danger only** |
+| `--tint-foreground` | `#0B1220` | `#F4F7FC` | Text on any tint (>= 12.5:1 both themes) |
+
+Strong calls to action use solid `--primary` (Earnio Blue, white text). Decorative color never uses green or red, so those always mean status.
+
+### Outlines and hard shadows
+
+Depth is "sticker" style: a 2px outline plus a **zero-blur offset shadow**.
+
+| Token | Light | Dark |
+|-------|-------|------|
+| `--outline` | `#0B1220` | `#606F8A` |
+| `--shadow-ink` | `#0B1220` | `#3C4A66` |
+| `--shadow-hard-sm` / `--shadow-hard` / `--shadow-hard-lg` | `2px` / `4px` / `6px` offset | same offsets |
+| `--border-width` | `2px` | `2px` |
+| `--press-offset` | `2px` (buttons translate into their shadow on press) | same |
+
+Tables and dense lists keep 1px `--border` dividers and no hard shadow.
 
 ## Typography
 
@@ -98,14 +120,16 @@ Key classes:
 
 | Class | Role |
 |-------|------|
-| `.mesh-bg` | Atmospheric blue mesh on `<body>` |
+| `.mesh-bg` | Flat page background on `<body>` (legacy name) |
 | `.btn-primary` | Earnio Blue pill button |
 | `.btn-secondary` | Bordered white pill |
 | `.landing-btn-dark` | Ink-dark pill (secondary on landing) |
-| `.creator-panel` / `.creator-panel-lg` | Glass card for app content |
-| `.creator-hero-card` | Elevated hero card with blue/cyan gradient top-bar |
-| `.stat-card` | Dashboard stat panel with hover border |
-| `.auth-card` | Frosted auth container |
+| `.creator-panel` / `.creator-panel-lg` | Solid outlined card for app content |
+| `.creator-hero-card` | Hero card with solid soft-blue top-bar |
+| `.stat-card` | Dashboard stat panel, hard shadow grows on hover |
+| `.auth-card` | Solid outlined auth container |
+| `.pop-outline` / `.pop-shadow` / `.pop-press` | Sticker outline, hard shadow, tactile press |
+| `.bg-tint-*` | Calm tint fill with matching text |
 | `.font-display` | Apply Space Grotesk |
 | `.font-mono-stat` | Apply JetBrains Mono for numbers |
 
@@ -125,19 +149,20 @@ Platform icons (TikTok / YouTube / Instagram) use official brand glyphs in brand
 
 The Earnio mark is a **rising-trend arrow** — a geometric path going up-right with a cyan circle at the base. Defined in `components/brand/EarnioLogo.tsx` (`EarnioMark` component). Also available as static SVGs in `public/logo/`:
 
-- `earnio-mark.svg` — gradient tile version
+- `earnio-mark.svg` — tile version
 - `earnio-mark-mono.svg` — `currentColor` monochrome
 
 ## Keeping this system correct
 
 - **`app/globals.css` is canonical.** This file (`design-system/`) mirrors it for standalone handoff. When a token value changes in `globals.css`, update it here too.
-- **A CI-blocking test enforces dark-mode correctness** — see `frontend/lib/design/designSystem.test.ts` and CLAUDE.md's "Design system rules." It checks token contrast, bans hardcoded colors outside `:root`/`.dark`, and flags light-mode-only Tailwind utilities missing a `dark:` pair. Run `cd frontend && npm test` before shipping a design change.
+- **A CI-blocking test enforces dark-mode correctness** — see `frontend/lib/design/designSystem.test.ts` and CLAUDE.md's "Design system rules." It checks token contrast, bans hardcoded colors outside `:root`/`.dark`, flags light-mode-only Tailwind utilities missing a `dark:` pair, and bans gradients. Run `cd frontend && npm test` before shipping a design change.
 
 ## Anti-patterns
 
 - Rose / pink / coral as primary (removed in this rebrand)
 - Purple-on-white generic SaaS look
-- Warm / sepia background tints
+- Gradients of any kind (CSS, Tailwind, SVG, charts)
+- Frosted glass / backdrop blur
 - Emoji as icons
 - Mixing Lucide with other icon families
 

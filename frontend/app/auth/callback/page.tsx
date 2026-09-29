@@ -99,7 +99,7 @@ function AuthCallbackContent() {
     return (
       <>
         <h1 className="text-xl font-semibold text-landing-fg">Sign-in failed</h1>
-        <p className="mt-3 text-sm text-red-700 dark:text-red-300">{error}</p>
+        <p className="mt-3 text-sm text-destructive-text">{error}</p>
         <Link href="/login" className="auth-link mt-6 inline-block text-sm">
           Back to sign in
         </Link>

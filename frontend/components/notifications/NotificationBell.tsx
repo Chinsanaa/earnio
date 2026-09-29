@@ -147,14 +147,14 @@ export function NotificationBell({ tone = 'default' }: { tone?: 'default' | 'cre
         <div
           className={
             isCreator
-              ? 'absolute right-0 z-[100] mt-2 w-80 overflow-hidden rounded-xl border border-sky-100 bg-white shadow-lg dark:border-border dark:bg-background sm:w-96'
+              ? 'absolute right-0 z-[100] mt-2 w-80 overflow-hidden rounded-xl border-2 border-outline bg-card shadow-hard sm:w-96'
               : 'absolute right-0 z-50 mt-2 w-80 overflow-hidden rounded-xl border border-border bg-card shadow-lg dark:border-border dark:bg-background sm:w-96'
           }
         >
           <div
             className={
               isCreator
-                ? 'flex items-center justify-between border-b border-sky-100 px-4 py-3 dark:border-border'
+                ? 'flex items-center justify-between border-b-2 border-[color:var(--outline)] px-4 py-3'
                 : 'flex items-center justify-between border-b border-border px-4 py-3 dark:border-border'
             }
           >
@@ -191,8 +191,8 @@ export function NotificationBell({ tone = 'default' }: { tone?: 'default' | 'cre
                 key={n.id}
                 className={
                   isCreator
-                    ? `border-b border-sky-50 px-4 py-3 last:border-0 dark:border-border/60 ${
-                        !n.read_at ? 'bg-sky-50/80 dark:bg-primary-subtle/40' : ''
+                    ? `border-b border-[color:var(--border)] px-4 py-3 last:border-0 ${
+                        !n.read_at ? 'bg-primary-soft' : ''
                       }`
                     : `border-b border-border/60 px-4 py-3 last:border-0 dark:border-border/60 ${
                         !n.read_at ? 'bg-primary-subtle/50 dark:bg-primary-subtle' : ''

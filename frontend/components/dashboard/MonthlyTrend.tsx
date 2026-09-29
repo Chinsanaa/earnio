@@ -9,12 +9,6 @@ export function MonthlyTrend({ data }: { data: MonthlyEarnings[] }) {
     <div className="h-56 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-          <defs>
-            <linearGradient id="earningsFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.45} />
-              <stop offset="100%" stopColor="var(--primary)" stopOpacity={0.02} />
-            </linearGradient>
-          </defs>
           <XAxis
             dataKey="label"
             axisLine={false}
@@ -35,7 +29,8 @@ export function MonthlyTrend({ data }: { data: MonthlyEarnings[] }) {
             labelFormatter={(label) => String(label ?? '')}
             contentStyle={{
               borderRadius: 12,
-              border: '1px solid var(--border)',
+              border: '2px solid var(--outline)',
+              boxShadow: 'var(--shadow-hard-sm)',
               background: 'var(--card)',
               color: 'var(--foreground)',
               fontSize: 12,
@@ -45,8 +40,9 @@ export function MonthlyTrend({ data }: { data: MonthlyEarnings[] }) {
             type="monotone"
             dataKey="amountMnt"
             stroke="var(--primary)"
-            strokeWidth={2.5}
-            fill="url(#earningsFill)"
+            strokeWidth={3}
+            fill="var(--primary-soft)"
+            fillOpacity={1}
             dot={false}
             activeDot={{ r: 4 }}
             isAnimationActive={false}

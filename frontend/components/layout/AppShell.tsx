@@ -49,7 +49,7 @@ export function AppShell({
 
   return (
     <div className="flex min-h-full flex-col">
-      <header className="sticky top-0 z-40 border-b border-[color:var(--border)]/60 bg-[color:var(--card)]/85 backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b-2 border-[color:var(--outline)] bg-card">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
           <div className="flex min-w-0 items-center gap-3">
             <button
@@ -131,7 +131,7 @@ export function AppShell({
       </main>
 
       <nav
-        className="fixed bottom-0 left-0 right-0 z-40 border-t border-[color:var(--border)]/80 bg-[color:var(--card)]/90 backdrop-blur-xl md:hidden"
+        className="fixed bottom-0 left-0 right-0 z-40 border-t-2 border-[color:var(--outline)] bg-card md:hidden"
         aria-label="Mobile navigation"
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >

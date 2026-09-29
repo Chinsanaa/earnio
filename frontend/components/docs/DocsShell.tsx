@@ -6,7 +6,7 @@ import { DocsNav } from '@/components/docs/DocsNav';
 export function DocsShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="bg-ambient flex min-h-full flex-col">
-      <header className="sticky top-0 z-40 border-b border-border/60 bg-card/80 backdrop-blur-md">
+      <header className="sticky top-0 z-40 border-b-2 border-[color:var(--outline)] bg-card">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
           <div className="flex items-center gap-4">
             <Link href="/">

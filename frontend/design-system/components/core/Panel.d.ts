@@ -8,5 +8,5 @@ export interface PanelProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
 }
 
-/** Rounded surface container — cards, glass panels, and the gradient-topped hero card. */
+/** Rounded surface container — cards, solid panels, and the lime-topped hero card. */
 export function Panel(props: PanelProps): React.JSX.Element;

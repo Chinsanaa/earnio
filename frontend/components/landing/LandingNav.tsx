@@ -85,7 +85,7 @@ export function LandingNav({ content }: { content: LandingContent }) {
   const navLinkClass =
     'flex cursor-pointer items-center gap-1 rounded-lg px-3 py-2 text-[14px] font-medium text-landing-fg/80 transition-colors hover:text-landing-fg';
   const mobileNavLinkClass =
-    'flex w-full items-center rounded-xl px-4 py-3 text-[15px] font-medium text-landing-fg transition-colors hover:bg-sky-50 dark:hover:bg-white/5';
+    'flex w-full items-center rounded-xl px-4 py-3 text-[15px] font-semibold text-landing-fg transition-colors hover:bg-tint-blue hover:text-tint-foreground';
 
   return (
     <header className="landing-nav sticky top-0 z-50">
@@ -170,7 +170,7 @@ export function LandingNav({ content }: { content: LandingContent }) {
                   />
                 ))}
               </nav>
-              <div className="border-t border-sky-100 p-4 dark:border-border">
+              <div className="border-t-2 border-[color:var(--border)] p-4">
                 <Link
                   href={content.switchAudience.href}
                   className={`${mobileNavLinkClass} gap-2`}

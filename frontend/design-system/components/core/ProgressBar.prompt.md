@@ -2,8 +2,8 @@ A rounded track-and-fill bar for onboarding progress, platform-revenue shares, a
 
 ```jsx
 <ProgressBar value={2} max={3} />
-<ProgressBar value={68} gradient />
+<ProgressBar value={68} pop />
 <ProgressBar value={40} color="var(--success)" height={6} />
 ```
 
-Default fill is Earnio Blue; `gradient` uses the spark blue→cyan. Override `color`/`trackColor` for platform breakdowns (e.g. brand colors per platform).
+Default fill is Earnio Blue; `pop` uses solid lime. Override `color`/`trackColor` for platform breakdowns (e.g. brand colors per platform).

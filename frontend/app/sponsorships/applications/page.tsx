@@ -4,6 +4,10 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { CreatorPageHeader } from '@/components/creator/CreatorPageHeader';
 import { DashboardShell } from '@/components/dashboard/DashboardShell';
+import { buttonVariants } from '@/components/ui/button';
+import { EmptyState } from '@/components/ui/empty-state';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { Send } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ApiError } from '@/lib/api/client';
 import { listMyApplications, submitDeliverable } from '@/lib/api/sponsorships';
@@ -62,26 +66,32 @@ export default function MyApplicationsPage() {
           title={t('my_applications')}
           subtitle={t('track_sponsorships')}
           action={
-            <Link href="/sponsorships" className="landing-btn-light px-5 py-2.5 text-sm">
+            <Link href="/sponsorships" className={buttonVariants({ variant: 'outline' })}>
               ← {t('explore')}
             </Link>
           }
         />
 
-        {loading && <p className="text-sm text-landing-muted">{t('loading')}</p>}
+        {loading && (
+          <div className="space-y-4" aria-label={t('loading')}>
+            <Skeleton className="h-36 rounded-2xl" />
+            <Skeleton className="h-36 rounded-2xl" />
+          </div>
+        )}
         {error && (
           <p className="alert-error">{error}</p>
         )}
 
         {!loading && !error && applications.length === 0 && (
-          <div className="creator-panel text-center">
-            <p className="text-sm text-landing-muted">
-              {t('no_applications_yet')}
-            </p>
-            <Link href="/sponsorships" className="landing-btn-dark mt-5 inline-flex px-6 py-2.5 text-sm">
-              {t('browse_opportunities')}
-            </Link>
-          </div>
+          <EmptyState
+            icon={Send}
+            title={t('no_applications_yet')}
+            action={
+              <Link href="/sponsorships" className={buttonVariants({ variant: 'pop' })}>
+                {t('browse_opportunities')}
+              </Link>
+            }
+          />
         )}
 
         <ul className="space-y-4">
@@ -89,7 +99,7 @@ export default function MyApplicationsPage() {
             <li key={app.id} className="creator-panel-lg">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <h2 className="font-semibold text-landing-fg">
+                  <h2 className="font-display text-lg font-bold tracking-tight text-landing-fg">
                     {app.sponsorship?.title.replace(/^\[Demo\]\s*/, '') ?? 'Sponsorship'}
                   </h2>
                   <p className="mt-1 text-sm text-landing-muted">
@@ -101,7 +111,7 @@ export default function MyApplicationsPage() {
                 </span>
               </div>
               {app.sponsorship && (
-                <p className="mt-3 text-lg font-semibold text-landing-fg">
+                <p className="mt-3 font-mono text-xl font-bold text-landing-fg">
                   {formatMnt(app.sponsorship.payment_amount_mnt)}
                 </p>
               )}

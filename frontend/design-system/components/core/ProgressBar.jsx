@@ -2,9 +2,9 @@ import React from 'react';
 
 /**
  * Track + fill progress bar. Used for onboarding plans, platform shares, and
- * campaign budgets. `gradient` switches the fill to the spark gradient.
+ * campaign budgets. `pop` switches the fill to solid lime (Solid Pop, no gradients).
  */
-export function ProgressBar({ value = 0, max = 100, height = 8, gradient = false, color, trackColor, className = '', style, ...rest }) {
+export function ProgressBar({ value = 0, max = 100, height = 8, pop = false, color, trackColor, className = '', style, ...rest }) {
   const pct = Math.max(0, Math.min(100, (value / max) * 100));
   return (
     <div
@@ -19,7 +19,7 @@ export function ProgressBar({ value = 0, max = 100, height = 8, gradient = false
       <div
         style={{
           width: `${pct}%`, height: '100%', borderRadius: 'var(--radius-full)',
-          background: gradient ? 'var(--gradient-spark)' : (color || 'var(--primary)'),
+          background: pop ? 'var(--tint-blue)' : (color || 'var(--primary)'),
           transition: 'width var(--dur-slow) var(--ease-out)',
         }}
       />

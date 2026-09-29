@@ -5,6 +5,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { SponsorShell } from '@/components/sponsor/SponsorShell';
 import { ApplicationStatusChart } from '@/components/sponsor/ApplicationStatusChart';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { buttonVariants } from '@/components/ui/button';
+import { NumberTicker } from '@/components/ui/number-ticker';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { ArrowRight, Inbox, Plus } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ApiError } from '@/lib/api/client';
@@ -42,24 +47,26 @@ function SponsorDashboardBody({ user }: { user: AuthUser }) {
 
   return (
     <>
-      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground">
-            {t('greeting').replace('{name}', firstNameOf(user.name))}
-          </h1>
-          <p className="mt-1 text-muted">
-            {t('sponsor_dashboard_subtitle')}
-          </p>
-        </div>
-        <Link
-          href="/sponsor/campaigns/new"
-          className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
-        >
-          {t('new_campaign')}
-        </Link>
-      </div>
+      <PageHeader
+        title={t('greeting').replace('{name}', firstNameOf(user.name))}
+        description={t('sponsor_dashboard_subtitle')}
+        actions={
+          <Link href="/sponsor/campaigns/new" className={buttonVariants({ variant: 'pop' })}>
+            <Plus className="size-4" aria-hidden />
+            {t('new_campaign')}
+          </Link>
+        }
+      />
 
-      {loading && <p className="text-sm text-muted">{t('loading_stats')}</p>}
+      {loading && (
+        <div className="space-y-6" aria-label={t('loading_stats')}>
+          <Skeleton className="h-56 rounded-2xl" />
+          <div className="grid gap-4 lg:grid-cols-[3fr_2fr]">
+            <Skeleton className="h-72 rounded-2xl" />
+            <Skeleton className="h-72 rounded-2xl" />
+          </div>
+        </div>
+      )}
 
       {error && (
         <p className="alert-error">
@@ -72,7 +79,7 @@ function SponsorDashboardBody({ user }: { user: AuthUser }) {
           <div className="creator-hero">
             <div className="creator-hero-body">
               <p className="creator-hero-label">{t('active_campaign_budget')}</p>
-              <div className="creator-hero-amount">{formatMnt(stats.totalBudgetMnt)}</div>
+              <NumberTicker className="creator-hero-amount block" value={stats.totalBudgetMnt} format={formatMnt} />
 
               <div className="creator-hero-divider" />
 
@@ -110,16 +117,32 @@ function SponsorDashboardBody({ user }: { user: AuthUser }) {
               <ApplicationStatusLegend data={stats.statusBreakdown} t={t} />
             </div>
 
-            <div className="creator-panel-lg p-6">
-              <p className="font-display text-lg font-bold text-[color:var(--foreground)]">
-                {t('total_applications')}
-              </p>
-              <p className="mt-4 text-3xl font-bold text-[color:var(--foreground)]">
-                {stats.totalApplications}
-              </p>
-              <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                {stats.pendingApplications} {t('pending_short')}
-              </p>
+            <div
+              className={`flex flex-col justify-between rounded-3xl border-2 p-6 ${
+                stats.pendingApplications > 0
+                  ? 'border-outline bg-tint-blue text-tint-foreground shadow-hard'
+                  : 'border-outline bg-card text-foreground shadow-hard-sm'
+              }`}
+            >
+              <div>
+                <span className="flex size-12 items-center justify-center rounded-2xl border-2 border-current bg-[color:var(--card)] text-[color:var(--foreground)]">
+                  <Inbox className="size-6" aria-hidden />
+                </span>
+                <p className="mt-5 font-display text-2xl font-bold leading-tight tracking-tight">
+                  {stats.pendingApplications > 0
+                    ? t('applications_waiting').replace('{count}', String(stats.pendingApplications))
+                    : t('all_caught_up')}
+                </p>
+                <p className="mt-2 text-sm font-medium opacity-80">
+                  {t('total_applications')}: <span className="font-mono font-bold">{stats.totalApplications}</span>
+                </p>
+              </div>
+              {stats.pendingApplications > 0 ? (
+                <Link href="/sponsor/campaigns" className={buttonVariants({ variant: 'outline', className: 'mt-6 self-start' })}>
+                  {t('review_now')}
+                  <ArrowRight className="size-4" aria-hidden />
+                </Link>
+              ) : null}
             </div>
           </div>
         </>
@@ -151,7 +174,7 @@ export default function SponsorDashboardPage() {
   if (authLoading || !user) {
     return (
       <SponsorShell>
-        <p className="text-sm text-zinc-500">{t('loading')}</p>
+        <p className="text-sm text-muted-foreground">{t('loading')}</p>
       </SponsorShell>
     );
   }
@@ -159,7 +182,7 @@ export default function SponsorDashboardPage() {
   if (user.userType !== 'sponsor') {
     return (
       <SponsorShell>
-        <p className="text-sm text-zinc-500">{t('sponsor_account_required')}</p>
+        <p className="text-sm text-muted-foreground">{t('sponsor_account_required')}</p>
       </SponsorShell>
     );
   }
@@ -179,7 +202,7 @@ function ApplicationStatusLegend({
   t: (key: string) => string;
 }) {
   const items = [
-    { key: 'pending', label: t('pending_short'), value: data.pending, color: '#f59e0b' },
+    { key: 'pending', label: t('pending_short'), value: data.pending, color: 'var(--muted)' },
     { key: 'approved', label: t('approved_short'), value: data.approved, color: 'var(--success)' },
     { key: 'rejected', label: t('rejected_short'), value: data.rejected, color: 'var(--destructive)' },
   ];
@@ -189,7 +212,7 @@ function ApplicationStatusLegend({
       {items.map((item) => (
         <div key={item.key} className="flex items-center gap-2 text-sm text-[color:var(--muted-foreground)]">
           <span
-            className="h-2.5 w-2.5 rounded-full"
+            className="size-3 rounded-full border-2 border-[color:var(--outline)]"
             style={{ backgroundColor: item.color }}
           />
           {item.label}: <span className="font-semibold text-[color:var(--foreground)]">{item.value}</span>

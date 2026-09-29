@@ -6,6 +6,8 @@ import { HeroIllustration } from '@/components/landing/HeroIllustration';
 import { HowItWorks } from '@/components/landing/HowItWorks';
 import { LandingFooter } from '@/components/landing/LandingFooter';
 import { LandingNav } from '@/components/landing/LandingNav';
+import { Marquee } from '@/components/landing/Marquee';
+import { ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 /** Brand landing — original hero + sections layout */
@@ -30,15 +32,19 @@ export function BrandLandingPage() {
       <main>
         <section className="mx-auto grid max-w-7xl items-center gap-12 px-6 pb-16 pt-12 lg:grid-cols-2 lg:gap-8 lg:px-10 lg:pb-24 lg:pt-16">
           <div className="max-w-xl">
-            <h1 className="text-[2.5rem] font-semibold leading-[1.08] tracking-[-0.03em] text-landing-fg sm:text-5xl lg:text-[3.25rem]">
+            <p className="animate-fade-up mb-6 inline-flex -rotate-2 items-center gap-2 rounded-full border-2 border-outline bg-tint-blue px-4 py-1.5 text-sm font-bold text-tint-foreground shadow-hard-sm">
+              ✦ {t('for_brands')}
+            </p>
+            <h1 className="landing-display animate-fade-up animate-fade-up-delay-1">
               {t('reach_mongolian_creators')}
             </h1>
-            <p className="mt-6 text-lg leading-relaxed text-landing-muted sm:text-xl">
+            <p className="animate-fade-up animate-fade-up-delay-2 mt-6 text-lg leading-relaxed text-landing-muted sm:text-xl">
               {t('reach_mongolian_creators_subtitle')}
             </p>
-            <div className="mt-10">
-              <Link href={content.signupHref} className="landing-btn-dark px-8 py-3.5 text-[15px]">
+            <div className="animate-fade-up animate-fade-up-delay-3 mt-10">
+              <Link href={content.signupHref} className="landing-btn-pop gap-2 px-8 py-3.5 text-[15px]">
                 {t('get_started')}
+                <ArrowRight className="size-4" aria-hidden />
               </Link>
             </div>
           </div>
@@ -47,6 +53,10 @@ export function BrandLandingPage() {
             <HeroIllustration metrics={content.illustrationMetrics} />
           </div>
         </section>
+
+        <Marquee
+          items={['TikTok', 'YouTube', 'Instagram', t('post_a_campaign'), t('review_applications'), t('track_results')]}
+        />
 
         <HowItWorks
           content={{

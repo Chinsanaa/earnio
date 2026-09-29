@@ -133,12 +133,12 @@ export function EmailVerificationPrompt() {
         </form>
       ) : null}
       {error ? (
-        <p className="text-sm text-red-600 dark:text-red-400" role="alert">
+        <p className="text-sm text-destructive-text" role="alert">
           {error}
         </p>
       ) : null}
       {done ? (
-        <p className="text-sm text-emerald-700 dark:text-emerald-300" role="status">
+        <p className="text-sm text-success-text" role="status">
           {t('email_verified_success')}
         </p>
       ) : null}
@@ -151,17 +151,17 @@ export function EmailVerificationPrompt() {
   return (
     <>
       {showBanner && !showModal ? (
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-landing-fg dark:border-sky-900/50 dark:bg-sky-950/40">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border-2 border-outline bg-tint-blue px-4 py-3 text-sm font-medium text-tint-foreground shadow-hard-sm">
           <p>{t('verify_email_banner')}</p>
           <div className="flex items-center gap-3">
             <button
               type="button"
-              className="font-semibold text-[color:var(--earnio-blue,#2E5BFF)] underline"
+              className="font-bold text-tint-foreground underline"
               onClick={() => setShowModal(true)}
             >
               {t('verify_email')}
             </button>
-            <button type="button" className="text-landing-muted underline" onClick={dismissBanner}>
+            <button type="button" className="text-tint-foreground underline" onClick={dismissBanner}>
               {t('dismiss')}
             </button>
           </div>

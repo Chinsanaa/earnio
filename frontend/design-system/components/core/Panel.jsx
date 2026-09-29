@@ -1,14 +1,14 @@
 import React from 'react';
 
 const VARIANTS = {
-  card: { borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', background: 'var(--card)', boxShadow: 'var(--shadow-sm)', backdropFilter: 'none' },
-  elevated: { borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', background: 'var(--card)', boxShadow: 'var(--shadow-md)', backdropFilter: 'none' },
-  glass: { borderRadius: 'var(--radius-xl)', border: '1px solid color-mix(in srgb, #fff 85%, transparent)', background: 'color-mix(in srgb, #fff 78%, transparent)', boxShadow: 'var(--landing-btn-light-shadow)', backdropFilter: 'blur(10px)' },
-  hero: { borderRadius: 'var(--radius-2xl)', border: '1px solid color-mix(in srgb, #fff 90%, transparent)', background: 'color-mix(in srgb, #fff 88%, transparent)', boxShadow: 'var(--landing-card-shadow)', backdropFilter: 'blur(12px)' },
+  card: { borderRadius: 'var(--radius-lg)', border: 'var(--border-width) solid var(--outline)', background: 'var(--card)', boxShadow: 'var(--shadow-hard-sm)' },
+  elevated: { borderRadius: 'var(--radius-lg)', border: 'var(--border-width) solid var(--outline)', background: 'var(--card)', boxShadow: 'var(--shadow-hard)' },
+  glass: { borderRadius: 'var(--radius-xl)', border: 'var(--border-width) solid var(--outline)', background: 'var(--card)', boxShadow: 'var(--shadow-hard-sm)' },
+  hero: { borderRadius: 'var(--radius-2xl)', border: 'var(--border-width) solid var(--outline)', background: 'var(--card)', boxShadow: 'var(--shadow-hard)' },
 };
 
 /**
- * Surface container. `hero` adds the blue→cyan gradient top-bar used on the
+ * Surface container (solid fills only). `hero` adds the solid lime top-bar used on the
  * dashboard greeting card.
  */
 export function Panel({ variant = 'card', padding = 20, className = '', style, children, ...rest }) {
@@ -20,7 +20,7 @@ export function Panel({ variant = 'card', padding = 20, className = '', style, c
       {...rest}
     >
       {variant === 'hero' ? (
-        <span aria-hidden style={{ position: 'absolute', insetInlineStart: 0, top: 0, width: '100%', height: 3, background: 'linear-gradient(90deg, var(--primary), var(--accent))', opacity: 0.85 }} />
+        <span aria-hidden style={{ position: 'absolute', insetInlineStart: 0, top: 0, width: '100%', height: 6, background: 'var(--tint-blue)', borderBottom: 'var(--border-width) solid var(--outline)' }} />
       ) : null}
       {children}
     </div>

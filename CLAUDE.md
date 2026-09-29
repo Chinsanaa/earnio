@@ -152,11 +152,12 @@ npm run dev
 
 `frontend/app/globals.css` is the **single source of truth** for design tokens (colors, radii, shadows, motion). `frontend/design-system/` is a mirrored, standalone copy for handoff — when you change a token's value in `globals.css`, mirror the same change there (and in `design-system/MASTER.md`'s docs if it's a documented value) so the two never diverge again.
 
-A CI-blocking Vitest suite (`npm test` in `frontend/`) enforces three rules. Violating any of them fails the build:
+A CI-blocking Vitest suite (`npm test` in `frontend/`) enforces four rules. Violating any of them fails the build:
 
 1. **Every themed foreground/background token pair must meet its WCAG AA contrast threshold** (4.5:1 normal text, 3:1 large text/UI boundaries) in **both** `:root` (light) and `.dark`. Add a new checked pair to `CONTRAST_CHECKS` in `designSystem.test.ts` when you add a token that carries text or a border.
 2. **No hardcoded hex/`rgb()`/`rgba()` color literal in `globals.css` outside the `:root { }` / `.dark { }` token blocks.** Every component rule must resolve color through a `var(--token)`. If a value is genuinely theme-invariant (e.g. `--hero-*`, `--overlay-scrim*`), give it its own token in both blocks rather than inlining it.
 3. **No light-mode-only Tailwind color utility** (`bg-white`, `bg-red-50`, `text-gray-900`, etc.) in a `.tsx` file without a `dark:` variant in the same class string — or, preferably, route it through a semantic token (`bg-card`, `text-foreground`, `text-destructive-text`, `.badge-status-*`, `.alert-*`) instead of a raw Tailwind color.
+4. **No gradients, anywhere ("Solid Pop").** No CSS `linear-/radial-/conic-gradient(` in `globals.css` or `design-system/`, no Tailwind `bg-gradient-*` / `from-*` / `via-*` / `to-*` / `bg-clip-text` / `text-gradient`, and no SVG `<linearGradient>` / `<radialGradient>` (Recharts included). Use solid tokens (`--pop-*`, `--primary`, `--primary-soft`) instead.
 
 When fixing a dark-mode bug, verify the new/changed color pair numerically (`contrastRatio` in `lib/design/contrast.ts`) rather than eyeballing a screenshot — several past bugs (e.g. a button whose background equaled the dark-mode page background, contrast 1.0) were invisible to a quick look but obvious once measured.
 

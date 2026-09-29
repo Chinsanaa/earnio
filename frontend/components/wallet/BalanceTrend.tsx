@@ -12,6 +12,7 @@ function deltaFor(tx: WalletTransaction): number {
   return 0;
 }
 
+/** Running balance sparkline, drawn for the solid blue wallet hero (solid fills only). */
 export function BalanceTrend({ transactions }: { transactions: WalletTransaction[] }) {
   const chronological = [...transactions].sort(
     (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
@@ -25,7 +26,7 @@ export function BalanceTrend({ transactions }: { transactions: WalletTransaction
 
   if (points.length === 0) {
     return (
-      <div className="flex h-32 items-center justify-center text-sm text-landing-muted">
+      <div className="flex h-32 items-center justify-center text-sm text-[color:var(--hero-fg-muted)]">
         No transaction history yet
       </div>
     );
@@ -53,22 +54,16 @@ export function BalanceTrend({ transactions }: { transactions: WalletTransaction
         preserveAspectRatio="none"
         className="h-32 w-full overflow-visible"
       >
-        <defs>
-          <linearGradient id="balance-trend-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="var(--primary)" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <path d={areaPath} fill="url(#balance-trend-fill)" />
+        <path d={areaPath} fill="var(--hero-divider)" />
         <path
           d={linePath}
           fill="none"
-          stroke="var(--primary)"
-          strokeWidth="2"
+          stroke="var(--tint-blue)"
+          strokeWidth="3"
           vectorEffect="non-scaling-stroke"
         />
       </svg>
-      <div className="mt-2 flex justify-between text-xs text-landing-muted">
+      <div className="mt-2 flex justify-between font-mono text-xs text-[color:var(--hero-fg-muted)]">
         <span>{formatMnt(min)}</span>
         <span>{formatMnt(max)}</span>
       </div>

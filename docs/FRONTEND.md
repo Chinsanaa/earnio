@@ -41,18 +41,21 @@ Config: `frontend/lib/landing/content.ts`
 
 ### Visual identity (landing + auth)
 
-Airy blue/white landing palette (`.landing-page` in `globals.css`):
+**"Solid Pop"** (see [`DESIGN_REFRESH_PLAN.md`](./DESIGN_REFRESH_PLAN.md) and `frontend/design-system/MASTER.md`): flat cool off-white, ink outlines, hard offset shadows, and a small calm palette (Earnio Blue + blue/slate tints; green/red only for status; no neon, no yellow). **No gradients** anywhere (CI rule 4 in `lib/design/designSystem.test.ts`).
 
 | Token | Value | Usage |
 |-------|-------|-------|
 | `--landing-fg` | `#0B1220` | Headlines, ink buttons, auth logo |
 | `--landing-muted` | `#5A6A85` | Body copy, labels |
-| `--landing-bg-top` | `#EEF3FF` | Gradient start (pale Earnio Blue) |
-| `--landing-bg-bottom` | `#FFFFFF` | Gradient end |
+| `--landing-bg-top` / `--landing-bg-bottom` | `#F6F7F9` | Flat page background (cool off-white) |
+| `--tint-blue` / `--tint-slate` | calm fills | Tiles, highlights, active states (text: `--tint-foreground`) |
+| `--tint-green` / `--tint-red` | calm fills | Success / danger status only |
 | `--primary` | `#2E5BFF` | Primary CTA buttons, links, active states |
 | `--accent` | `#12C2F3` | Spark cyan — use sparingly as a highlight |
 
-**Buttons:** `.btn-primary` (Earnio Blue `#2E5BFF`, primary), `.landing-btn-dark` (ink pill, secondary). `.landing-btn-light` for tertiary white pill. All pill-shaped (`border-radius: full`).
+**Buttons:** `.landing-btn-pop` (solid Earnio Blue, hero CTA), `.landing-btn-dark` (ink pill), `.landing-btn-light` (white pill). In the app use `Button` from `components/ui/button` (`default`, `pop`, `outline`, `ghost`, `danger`); all press into their hard shadow.
+
+**Landing sections:** sticker eyebrow + `.landing-display` headline, `Marquee` (soft-blue band), `HowItWorks` (color-coded steps), `CreatorFeatures` (bento), `CreatorTestimonials` (sticker cards), `CreatorFaq` (soft blue when open). Section entrances use `components/ui/reveal.tsx`.
 
 ---
 
@@ -95,7 +98,7 @@ No “free trial” copy. Creator CTAs use **Get started**; brand uses **Get sta
 
 ## Authentication flows
 
-Auth uses the landing gradient background (`.landing-page.auth-layout`) and `.auth-card` styling.
+Auth uses the flat landing background (`.landing-page.auth-layout`) and `.auth-card` styling.
 
 ```
 Creator path                    Brand path
@@ -124,7 +127,7 @@ Creator path                    Brand path
 
 | Class | Role |
 |-------|------|
-| `.auth-card` | Frosted white card (matches landing feature cards) |
+| `.auth-card` | Solid card with ink outline and hard shadow |
 | `.auth-input` | Sky-bordered inputs, dark focus ring |
 | `.auth-link` | Near-black text links |
 | `.landing-btn-dark.auth-submit` | Full-width submit button |
@@ -217,7 +220,7 @@ Creator path                    Brand path
 
 ## App shell (post-login)
 
-Authenticated pages use `AppShell` with warm coral theme (`--primary: #e85d4c`). This is intentional: marketing/auth = cool sky; product UI = warm coral.
+Authenticated pages use `CreatorAppShell` (creator and sponsor): top nav with a soft-blue active pill, a Cmd/Ctrl+K command palette (`CommandPalette`), notifications, profile menu, and a bottom tab bar under 768px. Toasts (Sonner) and tooltips are mounted in `app/layout.tsx`.
 
 ---
 
@@ -225,9 +228,9 @@ Authenticated pages use `AppShell` with warm coral theme (`--primary: #e85d4c`).
 
 | Surface | Palette | Primary CTA |
 |---------|---------|-------------|
-| Landing `/`, `/brands` | Blue gradient (`#EEF3FF → #FFF`), ink `#0B1220` text | `.btn-primary` (Earnio Blue `#2E5BFF`) |
+| Landing `/`, `/brands` | Cool off-white `#F6F7F9`, ink `#0B1220`, calm blue tints | `.landing-btn-pop` (Earnio Blue) |
 | Auth `/login/*`, `/signup/*` | Same as landing | `.btn-primary` |
-| App dashboard+ | White/pale blue `#F7FAFF`, Earnio Blue `#2E5BFF` | `.btn-primary` |
+| App dashboard+ | Cool off-white, solid Earnio Blue hero `#1F45E5`, calm tint tiles | `Button` `default` / `pop` (both Earnio Blue) |
 
 ---
 
@@ -279,7 +282,7 @@ Authenticated pages use `AppShell` with warm coral theme (`--primary: #e85d4c`).
 - [ ] Creator **Log in** / **Get started** → `/login/creator` and `/signup/creator`
 - [ ] Creator nav scrolls to `#how-it-works`, `#features`, `#faq`
 - [ ] Brand **Log in** / **Get Started** → `/login/sponsor` and `/signup/sponsor`
-- [ ] Auth pages match landing sky gradient and dark pill submit button
+- [ ] Auth pages match the flat landing background and sticker card style
 - [ ] Auth back links return to correct landing (`/` or `/brands`)
 - [ ] `/login` and `/signup` redirect to creator flows
 

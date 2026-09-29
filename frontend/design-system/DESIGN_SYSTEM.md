@@ -39,16 +39,16 @@ How Earnio writes.
 
 ## Visual foundations
 
-- **Color:** a single electric-blue identity — **Earnio Blue `#2E5BFF`** (azure family), supported by a cool **slate-navy ink ramp** (`#0B1220` → `#F4F7FC`) and a **spark cyan `#12C2F3`** highlight. Money-green `#10B981` for positive/earnings states. The palette is cool throughout; no warm neutrals, no purple. Full **dark theme** under `.dark`.
-- **Gradients:** used sparingly and only on hero/feature surfaces — `--gradient-brand` (blue→deep-blue), `--gradient-spark` (blue→cyan, the text-gradient & accent bars), `--gradient-ink` (navy depth for CTAs/footers). Never as a default page background.
-- **Backgrounds:** the signature is an **atmospheric mesh** (`.mesh-bg`) — soft blue-tinted radial glows on near-white. No photography, no textures, no hand illustration; charts and product cards are the imagery.
+- **Color:** a small palette: **Earnio Blue `#2E5BFF`**, an ink ramp (`#0B1220` → `#F4F7FC`), cool off-white neutrals, and calm tints (soft blue, slate; green/red reserved for success/danger). No neon, no yellow. Full **dark theme** under `.dark`.
+- **No gradients, ever.** Solid colors only ("Solid Pop"). Enforced by rule 4 in `lib/design/designSystem.test.ts`.
+- **Backgrounds:** flat cool off-white `#F6F7F9` (light) / ink `#0B1220` (dark). Accent color comes from Earnio Blue plus a few calm tints (`--tint-blue`, `--tint-slate`; `--tint-green`/`--tint-red` for status only). No neon, no yellow.
 - **Type:** **Space Grotesk** for display/headings (bold, geometric, characterful; tight tracking around −0.02em to −0.035em), **Plus Jakarta Sans** for body & UI, **JetBrains Mono** for all numerals/currency (tabular figures). All three are genuine Google Fonts — the live app loads them via `next/font/google` in `app/layout.tsx`; `tokens/fonts.css` mirrors the same three families for standalone use.
 - **Corner radii:** soft but not pill-everywhere — inputs 8px, buttons/rows 12px, cards 16px, panels 20px, hero cards 28px. Pills (`9999px`) are reserved for landing CTAs and chips/badges.
-- **Cards:** white surface, 1px `--border` (cool slate), navy-tinted shadow. App cards are solid (`.card` / `.stat-card`); over the mesh, panels go **frosted glass** (`.creator-panel`, `.creator-hero-card` — translucent white + `backdrop-filter: blur`). The hero card carries a blue→cyan gradient top-bar.
-- **Shadows:** cool **navy-tinted**, never grey. `sm` for resting cards, `md` for elevated/hover, `lg` for popovers. A blue **glow** (`--shadow-glow`) is reserved for primary CTAs only.
-- **Hover / press:** primary buttons darken (`--primary` → `--primary-hover`) and lift `translateY(-1px)`; press squeezes to `scale(0.98)`. Secondary/ghost shift background tint. Stat cards lift their border to Earnio Blue on hover. Transitions are quick (140–220ms) on the `--ease-out` curve.
+- **Cards:** solid white (light) / `#141C2C` (dark) with a **2px `--outline`** and a **hard offset shadow** (`--shadow-hard-sm`, zero blur). The hero card carries a solid soft-blue top-bar.
+- **Shadows:** hard offset only: `2px`/`4px`/`6px` in `--shadow-ink`. No blur, no glow.
+- **Hover / press:** buttons lift `-1px` and grow their hard shadow on hover, then **press into the shadow** (`translate(2px, 2px)`, shadow removed). Transitions are quick (140–220ms) on the `--ease-out` curve.
 - **Motion:** restrained. A gentle `fade-up` entrance and an infinite `landing-float` on hero accents — **gated behind `prefers-reduced-motion: no-preference` with a visible base state** so content never hides. Easing `cubic-bezier(0.22,1,0.36,1)`; an optional spring for playful accents.
-- **Transparency & blur:** used only for frosted panels over the mesh and the sticky nav (`backdrop-filter: blur`). Solid surfaces inside the app shell.
+- **Transparency & blur:** retired. Only the modal scrim (`--overlay-scrim`) is translucent.
 - **Spacing & layout:** 4px base unit. Landing max-width 1280px, app content 1152px. Generous 88–96px section rhythm on marketing; 28px gutters in-app.
 
 ---

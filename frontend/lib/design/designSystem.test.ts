@@ -4,7 +4,7 @@
  * This suite exists so a dark-mode regression fails CI instead of shipping.
  * See CLAUDE.md "Design system rules" and frontend/design-system/MASTER.md.
  *
- * It enforces three things:
+ * It enforces four things:
  *  1. Every themed foreground/background token pair meets its WCAG contrast
  *     threshold, in both the light (:root) and dark (.dark) theme.
  *  2. app/globals.css has no hardcoded hex/rgb/rgba color literal outside the
@@ -13,6 +13,9 @@
  *  3. No `.tsx` file under app/ or components/ uses a one-off light-mode-only
  *     Tailwind color utility (e.g. `bg-white`, `bg-red-50`, `text-gray-900`)
  *     without a `dark:` variant in the same class string.
+ *  4. No gradients anywhere ("Solid Pop" rule): no CSS `*-gradient(` in
+ *     globals.css or design-system/, no Tailwind gradient utilities or
+ *     gradient text, and no SVG <linearGradient>/<radialGradient> in source.
  *
  * Adding a token: add a row to CONTRAST_CHECKS below. Adding a legitimately
  * theme-invariant literal (e.g. a fixed-dark spotlight card): add its token
@@ -77,6 +80,32 @@ function findTokenBlockSpans(css: string): Array<[number, number]> {
   return spans;
 }
 
+function listSourceFiles(dir: string): string[] {
+  const out: string[] = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (entry.name.startsWith('.')) continue;
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      out.push(...listSourceFiles(full));
+    } else if (entry.isFile() && (entry.name.endsWith('.tsx') || entry.name.endsWith('.ts'))) {
+      if (entry.name.endsWith('.test.ts') || entry.name.endsWith('.test.tsx')) continue;
+      out.push(full);
+    }
+  }
+  return out;
+}
+
+/** Splits file text into quoted/template-literal string segments — the places class names live. */
+function extractStringSegments(text: string): string[] {
+  const segments: string[] = [];
+  const re = /`([^`]*)`|"([^"]*)"|'([^']*)'/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) {
+    segments.push(m[1] ?? m[2] ?? m[3] ?? '');
+  }
+  return segments;
+}
+
 describe('design system: token contrast (WCAG AA)', () => {
   const css = readGlobalsCss();
   const light = parseTokenBlock(css, '\\:root');
@@ -94,7 +123,33 @@ describe('design system: token contrast (WCAG AA)', () => {
     ['destructive-text on card', 'destructive-text', 'card', WCAG_AA_NORMAL_TEXT],
     ['destructive-fill-foreground on destructive-fill', 'destructive-fill-foreground', 'destructive-fill', WCAG_AA_NORMAL_TEXT],
     ['border-strong on card', 'border-strong', 'card', WCAG_AA_UI_BOUNDARY],
+    ['foreground on card-muted', 'foreground', 'card-muted', WCAG_AA_NORMAL_TEXT],
+    ['muted-foreground on background', 'muted-foreground', 'background', WCAG_AA_NORMAL_TEXT],
+    ['landing-muted on background', 'landing-muted', 'background', WCAG_AA_NORMAL_TEXT],
+    ['outline on card (sticker border)', 'outline', 'card', WCAG_AA_UI_BOUNDARY],
+    ['outline on background', 'outline', 'background', WCAG_AA_UI_BOUNDARY],
+    ['landing-btn-solid-fg on landing-btn-solid-bg', 'landing-btn-solid-fg', 'landing-btn-solid-bg', WCAG_AA_NORMAL_TEXT],
+    ['tint-foreground on tint-blue', 'tint-foreground', 'tint-blue', WCAG_AA_NORMAL_TEXT],
+    ['tint-foreground on tint-slate', 'tint-foreground', 'tint-slate', WCAG_AA_NORMAL_TEXT],
+    ['tint-foreground on tint-green', 'tint-foreground', 'tint-green', WCAG_AA_NORMAL_TEXT],
+    ['tint-foreground on tint-red', 'tint-foreground', 'tint-red', WCAG_AA_NORMAL_TEXT],
+    ['accent-text on background', 'accent-text', 'background', WCAG_AA_NORMAL_TEXT],
   ];
+
+  // The hero block is theme-invariant (defined once in :root), so it is checked once.
+  const THEME_INVARIANT_CHECKS: Array<[string, string, string, number]> = [
+    ['hero-fg on hero-bg', 'hero-fg', 'hero-bg', WCAG_AA_NORMAL_TEXT],
+    ['hero-fg-muted on hero-bg', 'hero-fg-muted', 'hero-bg', WCAG_AA_NORMAL_TEXT],
+    ['hero-trend-up-fg on hero-trend-up-bg', 'hero-trend-up-fg', 'hero-trend-up-bg', WCAG_AA_NORMAL_TEXT],
+    ['hero-trend-down-fg on hero-trend-down-bg', 'hero-trend-down-fg', 'hero-trend-down-bg', WCAG_AA_NORMAL_TEXT],
+  ];
+
+  for (const [label, fgKey, bgKey, threshold] of THEME_INVARIANT_CHECKS) {
+    it(`both themes: ${label} >= ${threshold}:1`, () => {
+      const ratio = contrastRatio(light[fgKey], light[bgKey]);
+      expect(ratio, `${fgKey} (${light[fgKey]}) vs ${bgKey} (${light[bgKey]}) = ${ratio.toFixed(2)}`).toBeGreaterThanOrEqual(threshold);
+    });
+  }
 
   for (const [label, fgKey, bgKey, threshold] of CONTRAST_CHECKS) {
     it(`light: ${label} >= ${threshold}:1`, () => {
@@ -151,33 +206,9 @@ describe('design system: no unpaired light-mode-only Tailwind color utilities', 
     /\bbg-(red|amber|emerald|sky|green|blue|slate|gray|neutral|zinc)-(50|100|200)\b/,
     /\btext-(gray|slate|neutral|zinc)-(800|900)\b/,
     /\bborder-(gray|slate|neutral|zinc)-(100|200)\b/,
+    // White text only works on a fill that stays dark in both themes; use a *-foreground token.
+    /\btext-white\b/,
   ];
-
-  function listSourceFiles(dir: string): string[] {
-    const out: string[] = [];
-    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      if (entry.name.startsWith('.')) continue;
-      const full = path.join(dir, entry.name);
-      if (entry.isDirectory()) {
-        out.push(...listSourceFiles(full));
-      } else if (entry.isFile() && (entry.name.endsWith('.tsx') || entry.name.endsWith('.ts'))) {
-        if (entry.name.endsWith('.test.ts') || entry.name.endsWith('.test.tsx')) continue;
-        out.push(full);
-      }
-    }
-    return out;
-  }
-
-  /** Splits file text into quoted/template-literal string segments — the places class names live. */
-  function extractStringSegments(text: string): string[] {
-    const segments: string[] = [];
-    const re = /`([^`]*)`|"([^"]*)"|'([^']*)'/g;
-    let m: RegExpExecArray | null;
-    while ((m = re.exec(text))) {
-      segments.push(m[1] ?? m[2] ?? m[3] ?? '');
-    }
-    return segments;
-  }
 
   const files = [...listSourceFiles(APP_DIR), ...listSourceFiles(COMPONENTS_DIR)];
 
@@ -204,5 +235,95 @@ describe('design system: no unpaired light-mode-only Tailwind color utilities', 
         ? `Found light-mode-only color utility with no dark: pair — add one, or use a semantic token (bg-card, text-foreground, etc.):\n${offenders.join('\n')}`
         : undefined
     ).toEqual([]);
+  });
+});
+
+describe('design system: solid colors only, no gradients', () => {
+  const FRONTEND_DIR = path.resolve(__dirname, '../..');
+  const DESIGN_SYSTEM_DIR = path.resolve(FRONTEND_DIR, 'design-system');
+  const CSS_GRADIENT = /\b(?:repeating-)?(?:linear|radial|conic)-gradient\(/;
+  const TAILWIND_GRADIENT = [
+    /\bbg-(?:gradient|linear|radial|conic)-/,
+    /(?:^|\s)(?:[\w-]+:)*(?:from|via|to)-(?:[a-z]+-\d{2,3}|primary|accent|card|background|foreground|transparent|white|black|\[)/,
+    /\bbg-clip-text\b/,
+    /\btext-gradient\b/,
+  ];
+  const SVG_GRADIENT = /<(?:linearGradient|radialGradient)\b/;
+
+  function listFiles(dir: string, exts: string[]): string[] {
+    const out: string[] = [];
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (entry.name.startsWith('.') || entry.name === 'node_modules') continue;
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) out.push(...listFiles(full, exts));
+      else if (exts.some((ext) => entry.name.endsWith(ext)) && !/\.test\.tsx?$/.test(entry.name)) out.push(full);
+    }
+    return out;
+  }
+
+  const rel = (file: string) => path.relative(FRONTEND_DIR, file);
+
+  it('no CSS gradient functions in globals.css or design-system/', () => {
+    const files = [GLOBALS_CSS_PATH, ...listFiles(DESIGN_SYSTEM_DIR, ['.css', '.jsx', '.tsx', '.js', '.html'])];
+    const offenders: string[] = [];
+    for (const file of files) {
+      fs.readFileSync(file, 'utf8').split('\n').forEach((line, i) => {
+        if (CSS_GRADIENT.test(line)) offenders.push(`${rel(file)}:${i + 1}: ${line.trim().slice(0, 120)}`);
+      });
+    }
+    expect(offenders, `Gradients are banned, use a solid token instead:\n${offenders.join('\n')}`).toEqual([]);
+  });
+
+  it('no gradient utilities, gradient text, or SVG gradients in app/ and components/', () => {
+    const files = [...listSourceFiles(APP_DIR), ...listSourceFiles(COMPONENTS_DIR)];
+    const offenders: string[] = [];
+    for (const file of files) {
+      const text = fs.readFileSync(file, 'utf8');
+      if (SVG_GRADIENT.test(text)) offenders.push(`${rel(file)}: SVG gradient element`);
+      if (CSS_GRADIENT.test(text)) offenders.push(`${rel(file)}: inline CSS gradient`);
+      for (const segment of extractStringSegments(text)) {
+        if (segment.length > 400) continue;
+        if (TAILWIND_GRADIENT.some((re) => re.test(segment))) {
+          offenders.push(`${rel(file)}: "${segment.slice(0, 120)}"`);
+        }
+      }
+    }
+    expect(offenders, `Gradients are banned, use a solid token instead:\n${offenders.join('\n')}`).toEqual([]);
+  });
+});
+
+describe('design system: calm palette, no yellow', () => {
+  /** Returns hue (0-360) and chroma (0-1, how colorful) for a #rrggbb color. */
+  function hueChroma(hex: string): { h: number; c: number } {
+    const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const c = max - min;
+    if (c === 0) return { h: 0, c: 0 };
+    let h = max === r ? ((g - b) / c) % 6 : max === g ? (b - r) / c + 2 : (r - g) / c + 4;
+    h = (h * 60 + 360) % 360;
+    return { h, c };
+  }
+
+  it('no yellow or lime token values in :root or .dark', () => {
+    const css = readGlobalsCss();
+    const offenders: string[] = [];
+    for (const block of ['\\:root', '\\.dark'] as const) {
+      for (const [name, value] of Object.entries(parseTokenBlock(css, block))) {
+        const m = value.match(/^#([0-9a-fA-F]{6})$/);
+        if (!m) continue;
+        const { h, c } = hueChroma(value);
+        // Yellow through lime/chartreuse (~40-100 deg) with visible color (chroma > 0.15).
+        if (h >= 40 && h <= 100 && c > 0.15) offenders.push(`${block}: --${name}: ${value}`);
+      }
+    }
+    expect(offenders, `Yellow/lime is not part of the palette:\n${offenders.join('\n')}`).toEqual([]);
+  });
+
+  it('no yellow, amber or lime Tailwind utilities in app/ and components/', () => {
+    const files = [...listSourceFiles(APP_DIR), ...listSourceFiles(COMPONENTS_DIR)];
+    const re = /\b(?:bg|text|border|fill|stroke|ring|from|to|via)-(?:yellow|amber|lime)-\d{2,3}\b/;
+    const offenders = files.filter((f) => re.test(fs.readFileSync(f, 'utf8'))).map((f) => path.basename(f));
+    expect(offenders).toEqual([]);
   });
 });
