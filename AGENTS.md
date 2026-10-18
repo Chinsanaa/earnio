@@ -12,7 +12,6 @@ Monorepo with three `package.json` files (root, `frontend/`, `backend/`). Run `n
 |---------|-----------|-------------|------|
 | Frontend (Next.js 16) | `frontend/` | `npm run dev` | 3000 |
 | Backend (Express 5) | `backend/` | `npm run dev` | 3001 |
-| iOS (Capacitor) | `ios/` | `npm run ios:open` | — (macOS + Xcode) |
 
 ### Key commands
 

@@ -10,19 +10,9 @@
     "dev:frontend": "npm run dev --prefix frontend",
     "lint": "npm run lint --prefix frontend",
     "smoke": "node scripts/smoke-test.mjs",
-    "seed:demo": "node scripts/seed-demo.mjs",
-    "cap:sync": "npx cap sync ios",
-    "cap:copy": "npx cap copy ios",
-    "ios:open": "npx cap open ios"
+    "seed:demo": "node scripts/seed-demo.mjs"
   },
   "dependencies": {
-    "@capacitor/app": "^7.1.2",
-    "@capacitor/browser": "^7.0.5",
-    "@capacitor/cli": "^7.6.6",
-    "@capacitor/core": "^7.6.6",
-    "@capacitor/ios": "^7.6.6",
-    "@capacitor/splash-screen": "^7.0.5",
-    "@capacitor/status-bar": "^7.0.6",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.105.4",
     "bcrypt": "^6.0.0",

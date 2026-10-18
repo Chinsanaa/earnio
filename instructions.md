@@ -27,7 +27,9 @@ All specs are in `docs/Earnio_6_Documents.pdf`. Don't invent anything. Always re
 4. **UI/UX Brief** — Dark mode, Earnio Blue #2E5BFF, Space Grotesk/Plus Jakarta Sans, 8px base radius — see `frontend/design-system/MASTER.md` for full spec
 5. **Database Schema** — 8 tables, platform enums (tiktok|youtube|instagram), RLS
 6. **Implementation Plan** — 12 phases, week-by-week
-**Done:** Creator signup → apply → approval → payout works end-to-end. Sponsor campaign creation → review → approval works. Both live on Vercel + Railway.
+**Done:** Creator signup → apply → approval → payout works end-to-end. Sponsor campaign creation → review → approval works. Both live on Vercel + Render.
+
+**Current plan (Oct 2026):** [docs/SHIP_PLAN.md](./docs/SHIP_PLAN.md). Goal is a polished portfolio demo. Mocks are final: there is no platform OAuth code, and none should be added.
 ---
 ## Timeline: 12 Weeks (3 Months)
 ### Phase 1–2 (Weeks 1–2): Setup + Database
@@ -52,7 +54,7 @@ All specs are in `docs/Earnio_6_Documents.pdf`. Don't invent anything. Always re
 - **Done:** Payout request creates transaction record
 ### Phase 11–12 (Weeks 10–12): Polish + Deploy
 - Mobile responsive, dark mode, loading states, error handling
-- Deploy frontend to Vercel, backend to Railway
+- Deploy frontend to Vercel, backend to Render
 - **Done:** Both live, end-to-end flow works, no console errors
 ---
 ## Key Decisions (Locked)
@@ -89,7 +91,7 @@ All specs are in `docs/Earnio_6_Documents.pdf`. Don't invent anything. Always re
 ---
 ## What to Check Before Shipping
 1. **End-to-end flow works:** Can you signup → apply → get approved → request payout without errors?
-2. **Both deploys live:** Vercel (frontend) + Railway (backend) running and talking to each other?
+2. **Both deploys live:** Vercel (frontend) + Render (backend) running and talking to each other?
 3. **No console errors:** Open DevTools on every page. Zero errors.
 4. **Demo works:** Can you walk through the entire Maybee Pop&Joy campaign flow in 5 minutes?
 5. **Env vars correct:** Supabase, Resend, API URLs all pointing to production?
@@ -102,7 +104,7 @@ All specs are in `docs/Earnio_6_Documents.pdf`. Don't invent anything. Always re
 | Database | PostgreSQL (Supabase) |
 | Auth | Supabase Auth (JWT) |
 | Email | Resend (test mode) |
-| Hosting | Vercel (frontend) + Railway (backend) |
+| Hosting | Vercel (frontend) + Render (backend) |
 ---
 ## File Structure
 

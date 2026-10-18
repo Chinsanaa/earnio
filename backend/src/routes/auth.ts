@@ -3,12 +3,8 @@ import { ipKeyGenerator, rateLimit } from 'express-rate-limit';
 import authService from '../services/authService';
 import passwordResetService from '../services/passwordResetService';
 import emailVerificationService from '../services/emailVerificationService';
-import tiktokOAuthService from '../services/tiktokOAuthService';
-import youtubeOAuthService from '../services/youtubeOAuthService';
-import instagramOAuthService from '../services/instagramOAuthService';
 import { verifyToken, AuthRequest } from '../proxy/authProxy';
 import { logServerError } from '../utils/serverLog';
-import crypto from 'crypto';
 
 const router = express.Router();
 
@@ -26,6 +22,19 @@ function setRefreshTokenCookie(res: Response, refreshToken: string): void {
 const authRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => `${ipKeyGenerator(req.ip ?? '')}:${req.method}:${req.path}`,
+  message: { error: 'Too many auth attempts. Please try again later.' },
+});
+
+// Refresh runs on every page load without an access token, so it gets a looser
+// budget than login. Guessing a refresh token is not feasible, so this only
+// guards against floods.
+const REFRESH_RATE_LIMIT = 30;
+const refreshRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: REFRESH_RATE_LIMIT,
   standardHeaders: true,
   legacyHeaders: false,
   keyGenerator: (req) => `${ipKeyGenerator(req.ip ?? '')}:${req.method}:${req.path}`,
@@ -184,12 +193,14 @@ router.post('/logout', async (req: AuthRequest, res: Response) => {
   res.json({ message: 'Logged out successfully' });
 });
 
-router.post('/refresh', authRateLimiter, async (req: AuthRequest, res: Response) => {
+router.post('/refresh', refreshRateLimiter, async (req: AuthRequest, res: Response) => {
   try {
     const refreshToken = req.cookies.refreshToken;
 
+    // No cookie just means "not signed in": answer without an error status so
+    // anonymous page loads don't log a failed request in the browser console.
     if (!refreshToken) {
-      res.status(401).json({ error: 'Refresh token not found' });
+      res.status(204).end();
       return;
     }
 
@@ -425,165 +436,5 @@ router.post(
     }
   }
 );
-
-// TikTok OAuth routes for platform connection
-router.get('/tiktok/authorize', async (req: AuthRequest, res: Response) => {
-  try {
-    const state = crypto.randomBytes(16).toString('hex');
-    // Store state in session (for basic CSRF protection)
-    // In production, store in cache/DB with expiry
-    res.cookie('tiktok_oauth_state', state, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 10 * 60 * 1000, // 10 minutes
-    });
-
-    const authUrl = tiktokOAuthService.generateAuthorizationUrl(state);
-    res.json({ authUrl });
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Failed to generate TikTok auth URL';
-    res.status(400).json({ error: message });
-  }
-});
-
-router.post('/tiktok/callback', verifyToken, async (req: AuthRequest, res: Response) => {
-  try {
-    const { code } = req.body as { code?: string };
-
-    if (!code?.trim()) {
-      res.status(400).json({ error: 'Authorization code is required' });
-      return;
-    }
-
-    const state = req.cookies.tiktok_oauth_state;
-    if (!state) {
-      res.status(400).json({ error: 'Invalid OAuth session. Please try again.' });
-      return;
-    }
-
-    // Clear the state cookie
-    res.clearCookie('tiktok_oauth_state');
-
-    // Connect TikTok platform account
-    const account = await tiktokOAuthService.connectAccount(
-      req.userId!,
-      req.token!,
-      code.trim()
-    );
-
-    res.json({
-      message: 'TikTok account connected successfully',
-      account,
-    });
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Failed to connect TikTok account';
-    res.status(400).json({ error: message });
-  }
-});
-
-// YouTube OAuth routes
-router.get('/youtube/authorize', async (req: AuthRequest, res: Response) => {
-  try {
-    const state = crypto.randomBytes(16).toString('hex');
-    res.cookie('youtube_oauth_state', state, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 10 * 60 * 1000,
-    });
-
-    const authUrl = youtubeOAuthService.generateAuthorizationUrl(state);
-    res.json({ authUrl });
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Failed to generate YouTube auth URL';
-    res.status(400).json({ error: message });
-  }
-});
-
-router.post('/youtube/callback', verifyToken, async (req: AuthRequest, res: Response) => {
-  try {
-    const { code } = req.body as { code?: string };
-
-    if (!code?.trim()) {
-      res.status(400).json({ error: 'Authorization code is required' });
-      return;
-    }
-
-    const state = req.cookies.youtube_oauth_state;
-    if (!state) {
-      res.status(400).json({ error: 'Invalid OAuth session. Please try again.' });
-      return;
-    }
-
-    res.clearCookie('youtube_oauth_state');
-
-    const account = await youtubeOAuthService.connectAccount(
-      req.userId!,
-      req.token!,
-      code.trim()
-    );
-
-    res.json({
-      message: 'YouTube account connected successfully',
-      account,
-    });
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Failed to connect YouTube account';
-    res.status(400).json({ error: message });
-  }
-});
-
-// Instagram OAuth routes
-router.get('/instagram/authorize', async (req: AuthRequest, res: Response) => {
-  try {
-    const state = crypto.randomBytes(16).toString('hex');
-    res.cookie('instagram_oauth_state', state, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 10 * 60 * 1000,
-    });
-
-    const authUrl = instagramOAuthService.generateAuthorizationUrl(state);
-    res.json({ authUrl });
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Failed to generate Instagram auth URL';
-    res.status(400).json({ error: message });
-  }
-});
-
-router.post('/instagram/callback', verifyToken, async (req: AuthRequest, res: Response) => {
-  try {
-    const { code } = req.body as { code?: string };
-
-    if (!code?.trim()) {
-      res.status(400).json({ error: 'Authorization code is required' });
-      return;
-    }
-
-    const state = req.cookies.instagram_oauth_state;
-    if (!state) {
-      res.status(400).json({ error: 'Invalid OAuth session. Please try again.' });
-      return;
-    }
-
-    res.clearCookie('instagram_oauth_state');
-
-    const account = await instagramOAuthService.connectAccount(
-      req.userId!,
-      req.token!,
-      code.trim()
-    );
-
-    res.json({
-      message: 'Instagram account connected successfully',
-      account,
-    });
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Failed to connect Instagram account';
-    res.status(400).json({ error: message });
-  }
-});
 
 export default router;

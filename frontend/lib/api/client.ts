@@ -9,7 +9,8 @@ import type {
   SignupRequest,
 } from '../types/auth';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
+// "/" means same origin: Next rewrites /api/* to the API (see next.config.ts).
+const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001').replace(/\/$/, '');
 
 export const API_NOT_FOUND_CODE = 'NOT_FOUND';
 
@@ -97,7 +98,8 @@ export async function refreshAccessToken(): Promise<boolean> {
       method: 'POST',
       credentials: 'include',
     });
-    if (!res.ok) return false;
+    // 204 = no refresh cookie (not signed in).
+    if (!res.ok || res.status === 204) return false;
     const data = (await res.json()) as { accessToken: string };
     setAccessToken(data.accessToken);
     return true;

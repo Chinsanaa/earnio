@@ -25,7 +25,10 @@ import { secureCompareStrings } from './utils/secureCompare';
 export function createApp(config: EnvConfig): express.Application {
   const app = express();
 
-  app.set('trust proxy', 1);
+  // Number of proxies in front of the API. 1 = the host's load balancer
+  // (Render). Set TRUST_PROXY_HOPS=2 when the frontend also proxies /api/* to
+  // this server (Vercel rewrite) so rate limits key on the visitor's IP.
+  app.set('trust proxy', config.trustProxyHops);
   app.use(securityHeaders);
   app.use(
     cors({

@@ -51,7 +51,7 @@ function authHeaders(token: string) {
 }
 
 test.describe('sponsorship happy path', () => {
-  test('signup → apply → approve → deliverable → pay → wallet credit → payout', async ({
+  test('signup → apply → approve → deliverable → approve deliverable → pay → wallet credit → payout', async ({
     request,
     page,
     context,
@@ -91,14 +91,17 @@ test.describe('sponsorship happy path', () => {
     expect(createRes.ok(), JSON.stringify(createBody)).toBeTruthy();
     const campaignId = createBody.campaign.id as string;
 
-    const publishRes = await request.patch(
-      `${API_URL}/api/sponsor/campaigns/${campaignId}/status`,
-      {
-        headers: authHeaders(sponsor.accessToken),
-        data: { status: 'active' },
-      }
-    );
-    expect(publishRes.ok()).toBeTruthy();
+    // New campaigns go live immediately; only legacy drafts need publishing.
+    if (createBody.campaign.status === 'draft') {
+      const publishRes = await request.patch(
+        `${API_URL}/api/sponsor/campaigns/${campaignId}/status`,
+        {
+          headers: authHeaders(sponsor.accessToken),
+          data: { status: 'active' },
+        }
+      );
+      expect(publishRes.ok()).toBeTruthy();
+    }
 
     const applyRes = await request.post(`${API_URL}/api/sponsorships/${campaignId}/apply`, {
       headers: authHeaders(creator.accessToken),
@@ -125,6 +128,17 @@ test.describe('sponsorship happy path', () => {
       }
     );
     expect(deliverableRes.ok()).toBeTruthy();
+
+    const earlyPayRes = await request.post(`${API_URL}/api/sponsor/campaigns/${campaignId}/payment`, {
+      headers: authHeaders(sponsor.accessToken),
+    });
+    expect(earlyPayRes.status(), 'payment must wait for deliverable approval').toBe(400);
+
+    const approveDeliverableRes = await request.post(
+      `${API_URL}/api/sponsor/applications/${applicationId}/deliverable-approval`,
+      { headers: authHeaders(sponsor.accessToken) }
+    );
+    expect(approveDeliverableRes.ok()).toBeTruthy();
 
     const payRes = await request.post(`${API_URL}/api/sponsor/campaigns/${campaignId}/payment`, {
       headers: authHeaders(sponsor.accessToken),

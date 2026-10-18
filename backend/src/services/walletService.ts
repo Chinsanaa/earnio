@@ -1,4 +1,4 @@
-import { getAuthenticatedClient } from '../database/supabase';
+import { getAuthenticatedClient, supabaseAdmin } from '../database/supabase';
 import notificationService from './notificationService';
 import { toNumber } from '../utils/toNumber';
 import { decrypt, deterministicHash, encrypt } from '../utils/encryption';
@@ -369,9 +369,15 @@ class WalletService {
       throw new Error('Insufficient wallet balance');
     }
 
+    // Clients cannot insert wallet rows (see the integrity hardening migration),
+    // so the payout is written with the service role after the checks above.
+    if (!supabaseAdmin) {
+      throw new Error('Payouts are temporarily unavailable. Please try again later.');
+    }
+
     const maskedAccount = maskStored(bankAccount.account_number, bankAccount.account_number_last4);
 
-    const { data, error } = await client
+    const { data, error } = await supabaseAdmin
       .from('wallet_transactions')
       .insert({
         user_id: userId,

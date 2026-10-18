@@ -85,13 +85,6 @@ frontend/
 ├── contexts/
 │   └── AuthContext.tsx           # User auth state (login, logout, user)
 │
-├── content/
-│   ├── docs/                     # Markdown docs for /docs page
-│   │   ├── deployment.md
-│   │   ├── qa-checklist.md
-│   │   └── launch-plan.md
-│   └── legal/                    # Legal content (terms, privacy)
-│
 ├── middleware.ts                 # Edge middleware (auth redirect, role check)
 ├── proxy.ts                      # Auth middleware (old, edge-based protection)
 └── tailwind.config.ts            # Tailwind config + design tokens
@@ -558,7 +551,9 @@ CREATE TRIGGER on_auth_user_created
    - In-app notification appears
    - Sponsor navigates to /sponsor/campaigns/[id] to review
 6. Sponsor approves application:
-   - Frontend calls POST /api/sponsor/applications/[id]/approve
+   - Frontend calls PATCH /api/sponsor/applications/[id] { status }
+   - After the creator submits a post link: POST /api/sponsor/applications/[id]/deliverable-approval
+   - Then POST /api/sponsor/campaigns/[id]/payment (requires every approved deliverable)
    - Backend:
      - Updates applications row: status='approved'
      - Creates wallet_transaction: type='sponsorship_earned', amount=budget*0.8
@@ -608,7 +603,7 @@ CREATE TRIGGER on_auth_user_created
 
 ### Production
 - Frontend: Vercel → https://earnio.app
-- Backend: Railway/Render → https://api.earnio.app
+- Backend: Render → https://api.earnio.app
 - Database: Supabase (managed PostgreSQL)
 - Email: Resend (transactional email service)
 - Sync: External cron (GitHub Actions, AWS Lambda, etc.)

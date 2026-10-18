@@ -30,7 +30,6 @@ backend/
 │   ├── middleware/security.ts # Rate limits, security headers
 │   ├── jobs/syncScheduler.ts # In-process 6h sync (dev only)
 │   ├── platforms/mockPlatformProvider.ts  # Demo earnings (replace for prod)
-│   ├── services/*OAuthService.ts          # TikTok/YouTube/Instagram (stubbed)
 │   ├── emails/templates.ts
 │   ├── content/legal/    # Privacy & terms markdown (API-served)
 │   ├── config/env.ts     # Typed env config

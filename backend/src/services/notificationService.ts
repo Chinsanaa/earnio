@@ -114,6 +114,45 @@ class NotificationService {
     );
   }
 
+  public async notifyNewApplication(
+    sponsorUserId: string,
+    campaignTitle: string
+  ): Promise<void> {
+    await this.create(
+      sponsorUserId,
+      'application_received',
+      'New application',
+      `A creator applied to "${campaignTitle}". Review it from your campaign page.`,
+      { campaignTitle }
+    );
+  }
+
+  public async notifyDeliverableSubmitted(
+    sponsorUserId: string,
+    campaignTitle: string
+  ): Promise<void> {
+    await this.create(
+      sponsorUserId,
+      'deliverable_submitted',
+      'Deliverable submitted',
+      `A creator submitted their post for "${campaignTitle}". Review and approve it to release payment.`,
+      { campaignTitle }
+    );
+  }
+
+  public async notifyDeliverableApproved(
+    creatorUserId: string,
+    campaignTitle: string
+  ): Promise<void> {
+    await this.create(
+      creatorUserId,
+      'deliverable_approved',
+      'Deliverable approved',
+      `The brand approved your post for "${campaignTitle}". Payment is released when the campaign is marked paid.`,
+      { campaignTitle }
+    );
+  }
+
   public async notifySponsorshipPaid(
     creatorUserId: string,
     campaignTitle: string,

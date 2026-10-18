@@ -4,9 +4,10 @@ import type { ReactNode } from 'react';
 
 const push = vi.fn();
 const refresh = vi.fn();
+const replace = vi.fn();
 
 vi.mock('next/navigation', () => ({
-  useRouter: () => ({ push, refresh }),
+  useRouter: () => ({ push, refresh, replace }),
 }));
 
 vi.mock('@/lib/api/client', () => ({
@@ -76,6 +77,29 @@ describe('AuthProvider', () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false));
     expect(result.current.user).toBeNull();
+  });
+
+  it('restores the session on a login page from the refresh cookie and moves on', async () => {
+    window.history.pushState({}, '', '/login/creator');
+    mocked.getAccessToken.mockReturnValueOnce(null).mockReturnValue('token');
+    mocked.refreshAccessToken.mockResolvedValue(true);
+    mocked.getMe.mockResolvedValue({ user: creator });
+
+    const { result } = renderHook(() => useAuth(), { wrapper });
+
+    await waitFor(() => expect(result.current.user).toEqual(creator));
+    expect(replace).toHaveBeenCalledWith('/dashboard');
+    window.history.pushState({}, '', '/');
+  });
+
+  it('does not redirect when the session is restored outside auth pages', async () => {
+    mocked.getAccessToken.mockReturnValue('token');
+    mocked.getMe.mockResolvedValue({ user: creator });
+
+    const { result } = renderHook(() => useAuth(), { wrapper });
+
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(replace).not.toHaveBeenCalled();
   });
 
   it('navigates to the role home after a successful login', async () => {

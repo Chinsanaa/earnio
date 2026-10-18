@@ -1,4 +1,6 @@
 import { getAuthenticatedClient, supabaseAdmin } from '../database/supabase';
+import { normalizeDeliverableUrl } from '../utils/validate';
+import notificationService from './notificationService';
 import { toNumber } from '../utils/toNumber';
 
 export interface SponsorInfo {
@@ -33,6 +35,7 @@ export interface SponsorshipApplication {
   applied_at: string | null;
   deliverable_url: string | null;
   deliverable_submitted_at: string | null;
+  deliverable_approved_at: string | null;
   sponsorship: {
     id: string;
     title: string;
@@ -187,9 +190,19 @@ class SponsorshipService {
 
     const client = getAuthenticatedClient(accessToken);
 
+    const { data: profile } = await client
+      .from('users')
+      .select('user_type')
+      .eq('id', userId)
+      .single();
+
+    if (profile?.user_type !== 'creator') {
+      throw new Error('Only creator accounts can apply to sponsorships');
+    }
+
     const { data: sponsorship, error: loadError } = await client
       .from('sponsorships')
-      .select('id, status, deadline_apply')
+      .select('id, sponsor_user_id, title, status, deadline_apply, required_followers_min')
       .eq('id', sponsorshipId)
       .single();
 
@@ -207,6 +220,20 @@ class SponsorshipService {
       today.setHours(0, 0, 0, 0);
       if (deadline < today) {
         throw new Error('Application deadline has passed');
+      }
+    }
+
+    if (sponsorship.required_followers_min) {
+      const { data: accounts } = await client
+        .from('platform_accounts')
+        .select('follower_count')
+        .eq('user_id', userId)
+        .eq('status', 'connected');
+      const topFollowers = Math.max(0, ...(accounts ?? []).map((a) => a.follower_count ?? 0));
+      if (topFollowers < sponsorship.required_followers_min) {
+        throw new Error(
+          `This sponsorship requires at least ${sponsorship.required_followers_min.toLocaleString()} followers on one platform`
+        );
       }
     }
 
@@ -240,6 +267,11 @@ class SponsorshipService {
       throw new Error(`Failed to submit application: ${error.message}`);
     }
 
+    await notificationService.notifyNewApplication(
+      sponsorship.sponsor_user_id,
+      sponsorship.title ?? 'Campaign'
+    );
+
     return { id: data.id, status: data.status };
   }
 
@@ -260,6 +292,7 @@ class SponsorshipService {
         applied_at,
         deliverable_url,
         deliverable_submitted_at,
+        deliverable_approved_at,
         sponsorship:sponsorships (
           id,
           title,
@@ -289,6 +322,7 @@ class SponsorshipService {
         applied_at: row.applied_at,
         deliverable_url: row.deliverable_url,
         deliverable_submitted_at: row.deliverable_submitted_at,
+        deliverable_approved_at: row.deliverable_approved_at,
         sponsorship: sponsorship
           ? {
               id: sponsorship.id,
@@ -311,12 +345,16 @@ class SponsorshipService {
     if (!deliverableUrl?.trim()) {
       throw new Error('A deliverable link is required');
     }
+    const normalizedUrl = normalizeDeliverableUrl(deliverableUrl);
+    if (!normalizedUrl) {
+      throw new Error('Deliverable must be an https link to a TikTok, YouTube, or Instagram post');
+    }
 
     const client = getAuthenticatedClient(accessToken);
 
     const { data: application, error: findError } = await client
       .from('sponsorship_applications')
-      .select('id, creator_user_id, status')
+      .select('id, creator_user_id, status, sponsorship_id, deliverable_approved_at')
       .eq('id', applicationId)
       .eq('creator_user_id', userId)
       .single();
@@ -328,11 +366,14 @@ class SponsorshipService {
     if (application.status !== 'approved') {
       throw new Error('Only approved applications can submit a deliverable');
     }
+    if (application.deliverable_approved_at) {
+      throw new Error('This deliverable was already approved and cannot be changed');
+    }
 
     const { data, error } = await client
       .from('sponsorship_applications')
       .update({
-        deliverable_url: deliverableUrl.trim(),
+        deliverable_url: normalizedUrl,
         deliverable_submitted_at: new Date().toISOString(),
       })
       .eq('id', applicationId)
@@ -341,6 +382,20 @@ class SponsorshipService {
 
     if (error) {
       throw new Error(`Failed to submit deliverable: ${error.message}`);
+    }
+
+    if (supabaseAdmin) {
+      const { data: sponsorship } = await supabaseAdmin
+        .from('sponsorships')
+        .select('sponsor_user_id, title')
+        .eq('id', application.sponsorship_id)
+        .single();
+      if (sponsorship) {
+        await notificationService.notifyDeliverableSubmitted(
+          sponsorship.sponsor_user_id,
+          sponsorship.title ?? 'Campaign'
+        );
+      }
     }
 
     return data;

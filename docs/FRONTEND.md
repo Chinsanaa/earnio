@@ -41,7 +41,7 @@ Config: `frontend/lib/landing/content.ts`
 
 ### Visual identity (landing + auth)
 
-**"Solid Pop"** (see [`DESIGN_REFRESH_PLAN.md`](./DESIGN_REFRESH_PLAN.md) and `frontend/design-system/MASTER.md`): flat cool off-white, ink outlines, hard offset shadows, and a small calm palette (Earnio Blue + blue/slate tints; green/red only for status; no neon, no yellow). **No gradients** anywhere (CI rule 4 in `lib/design/designSystem.test.ts`).
+**"Solid Pop"** (see `frontend/design-system/MASTER.md`): flat cool off-white, ink outlines, hard offset shadows, and a small calm palette (Earnio Blue + blue/slate tints; green/red only for status; no neon, no yellow). **No gradients** anywhere (CI rule 4 in `lib/design/designSystem.test.ts`).
 
 | Token | Value | Usage |
 |-------|-------|-------|

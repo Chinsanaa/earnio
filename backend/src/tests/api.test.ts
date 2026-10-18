@@ -10,6 +10,7 @@ const testConfig: EnvConfig = {
   supabaseUrl: 'https://example.supabase.co',
   supabaseAnonKey: 'test-anon-key',
   nodeEnv: 'test',
+  trustProxyHops: 1,
 };
 
 function app() {
@@ -82,12 +83,18 @@ describe('Protected routes', () => {
     assert.equal(res.status, 401);
   });
 
+  it('answers refresh without a cookie with 204, not an error', async () => {
+    const res = await request(app()).post('/api/auth/refresh').send({});
+    assert.equal(res.status, 204);
+  });
+
   it('rate limits repeated refresh attempts', async () => {
     const testApp = app();
 
-    for (let i = 0; i < 5; i += 1) {
+    // One request was already spent by the previous test (shared limiter).
+    for (let i = 0; i < 29; i += 1) {
       const res = await request(testApp).post('/api/auth/refresh').send({});
-      assert.equal(res.status, 401);
+      assert.equal(res.status, 204);
     }
 
     const limited = await request(testApp).post('/api/auth/refresh').send({});

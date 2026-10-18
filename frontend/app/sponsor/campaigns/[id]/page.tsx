@@ -7,10 +7,12 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { SponsorShell } from '@/components/sponsor/SponsorShell';
+import { DeliverableLink } from '@/components/sponsorships/DeliverableLink';
 import { CampaignEditorToolbar } from '@/components/sponsor/CampaignEditorToolbar';
 import { CampaignReadOnly } from '@/components/sponsor/CampaignReadOnly';
 import { ApiError } from '@/lib/api/client';
 import {
+  approveDeliverable,
   closeCampaign,
   deleteSponsorCampaign,
   getSponsorCampaign,
@@ -144,6 +146,24 @@ export default function SponsorCampaignDetailPage() {
     }
   }
 
+  async function handleApproveDeliverable(applicationId: string) {
+    setActionId(applicationId);
+    try {
+      const { deliverable_approved_at } = await approveDeliverable(applicationId);
+      setApplications((prev) =>
+        prev.map((a) => (a.id === applicationId ? { ...a, deliverable_approved_at } : a))
+      );
+      toast.success(t('deliverable_approved_toast'));
+      await reload();
+    } catch (err) {
+      const message = err instanceof ApiError ? err.message : 'Failed to approve deliverable';
+      setError(message);
+      toast.error(message);
+    } finally {
+      setActionId(null);
+    }
+  }
+
   async function handleApplication(
     applicationId: string,
     status: 'approved' | 'rejected',
@@ -257,6 +277,7 @@ export default function SponsorCampaignDetailPage() {
                     busy={actionId === app.id}
                     onApprove={(notes, kb) => handleApplication(app.id, 'approved', notes, kb)}
                     onReject={(notes, kb) => handleApplication(app.id, 'rejected', notes, kb)}
+                    onApproveDeliverable={() => handleApproveDeliverable(app.id)}
                   />
                 ))}
               </ul>
@@ -280,12 +301,13 @@ export default function SponsorCampaignDetailPage() {
                   .replace('{amount}', formatMnt(payment.amountDueMnt))}
               </p>
               <p className="mt-1 text-xs text-[color:var(--muted)]">
-                {payment.submittedCount}/{payment.approvedCount} {t('deliverables_submitted_label')}
+                {payment.submittedCount}/{payment.approvedCount} {t('deliverables_submitted_label')} ·{' '}
+                {payment.deliverablesApprovedCount}/{payment.approvedCount} {t('deliverables_approved_label')}
               </p>
               {!payment.readyToPay && (
                 <p className="mt-2 text-xs text-[color:var(--muted)]">
-                  {!payment.deadlinePassed
-                    ? t('payment_waiting_deadline')
+                  {payment.allSubmitted
+                    ? t('payment_waiting_approval')
                     : t('payment_waiting_deliverables')}
                 </p>
               )}
@@ -363,11 +385,13 @@ function ApplicationCard({
   busy,
   onApprove,
   onReject,
+  onApproveDeliverable,
 }: {
   application: SponsorApplication;
   busy: boolean;
   onApprove: (notes?: string, fromKeyboard?: boolean) => void;
   onReject: (notes?: string, fromKeyboard?: boolean) => void;
+  onApproveDeliverable: () => void;
 }) {
   const [notes, setNotes] = useState('');
   const { t } = useLanguage();
@@ -440,14 +464,29 @@ function ApplicationCard({
           {application.deliverable_url ? (
             <>
               {t('deliverable_submitted')}{' '}
-              <a href={application.deliverable_url} target="_blank" rel="noreferrer" className="link-primary">
-                {application.deliverable_url}
-              </a>
+              <DeliverableLink url={application.deliverable_url} className="link-primary" />
             </>
           ) : (
             t('deliverable_pending')
           )}
         </p>
+      )}
+
+      {approved && application.deliverable_url && (
+        <div className="mt-3">
+          {application.deliverable_approved_at ? (
+            <span className="badge-status-success">{t('deliverable_approved_label')}</span>
+          ) : (
+            <button
+              type="button"
+              disabled={busy}
+              onClick={onApproveDeliverable}
+              className="btn-primary min-h-9 w-auto px-4 py-1.5 text-xs disabled:opacity-50"
+            >
+              {busy ? t('please_wait') : t('approve_deliverable')}
+            </button>
+          )}
+        </div>
       )}
 
       {pending && (

@@ -71,6 +71,16 @@ export async function markCampaignPaid(id: string): Promise<SponsorCampaign> {
   return data.campaign;
 }
 
+export async function approveDeliverable(
+  id: string
+): Promise<{ id: string; deliverable_approved_at: string | null }> {
+  const data = await apiFetch<{ application: { id: string; deliverable_approved_at: string | null } }>(
+    `/api/sponsor/applications/${id}/deliverable-approval`,
+    { method: 'POST' }
+  );
+  return data.application;
+}
+
 export async function updateApplicationStatus(
   id: string,
   status: 'approved' | 'rejected',

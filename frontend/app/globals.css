@@ -226,46 +226,6 @@ body {
   text-size-adjust: 100%;
 }
 
-html.native-app,
-html.apple-platform {
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-right: env(safe-area-inset-right, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --safe-left: env(safe-area-inset-left, 0px);
-}
-
-html.native-app body {
-  padding-top: var(--safe-top);
-  padding-right: var(--safe-right);
-  padding-left: var(--safe-left);
-}
-
-html.native-app .creator-topbar,
-html.native-app header.sticky {
-  padding-top: calc(0.875rem + var(--safe-top));
-}
-
-html.native-app .auth-layout {
-  padding-top: calc(4rem + var(--safe-top));
-  padding-bottom: calc(4rem + var(--safe-bottom));
-}
-
-html.apple-platform button,
-html.apple-platform a,
-html.apple-platform [role='button'],
-html.apple-platform input,
-html.apple-platform select,
-html.apple-platform textarea {
-  touch-action: manipulation;
-}
-
-@media (pointer: fine) and (min-width: 768px) {
-  html.apple-platform .creator-sidebar-link:hover,
-  html.apple-platform .landing-btn-dark:hover {
-    transform: translateY(-1px);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

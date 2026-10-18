@@ -7,7 +7,6 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { OfflineBanner } from "@/components/OfflineBanner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ApplePlatformBootstrap } from "@/components/native/ApplePlatformBootstrap";
 import { EARNIO_SLOGAN } from "@/lib/brand/earnio";
 import "./globals.css";
 
@@ -85,7 +84,6 @@ export default function RootLayout({
           <ThemeProvider>
             <ErrorBoundary>
               <AuthProvider>
-                <ApplePlatformBootstrap />
                 <OfflineBanner />
                 <TooltipProvider>{children}</TooltipProvider>
                 <Toaster />

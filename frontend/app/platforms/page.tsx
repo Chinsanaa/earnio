@@ -13,9 +13,7 @@ import {
   listSyncHistory,
   syncPlatform,
   disconnectPlatform,
-  getTikTokAuthUrl,
-  getYouTubeAuthUrl,
-  getInstagramAuthUrl,
+  connectPlatform,
 } from '@/lib/api/platforms';
 import { formatDate, formatHandle, formatMnt, platformLabel } from '@/lib/format';
 import type { PlatformEarnings } from '@/lib/types/dashboard';
@@ -33,6 +31,7 @@ export default function PlatformsPage() {
   const [earnings, setEarnings] = useState<PlatformEarnings[]>([]);
   const [syncingId, setSyncingId] = useState<string | null>(null);
   const [connectingPlatform, setConnectingPlatform] = useState<string | null>(null);
+  const [usernames, setUsernames] = useState<Record<string, string>>({});
   const [disconnectingId, setDisconnectingId] = useState<string | null>(null);
   const [confirmRemoveId, setConfirmRemoveId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -72,32 +71,21 @@ export default function PlatformsPage() {
     };
   }, [load]);
 
-  async function handleOAuthConnect(platformId: string) {
+  async function handleConnect(platformId: string) {
+    const username = usernames[platformId]?.trim();
+    if (!username) return;
     setConnectingPlatform(platformId);
     setError(null);
     setMessage(null);
     try {
-      let authUrl: string;
-
-      if (platformId === 'tiktok') {
-        const response = await getTikTokAuthUrl();
-        authUrl = response.authUrl;
-      } else if (platformId === 'youtube') {
-        const response = await getYouTubeAuthUrl();
-        authUrl = response.authUrl;
-      } else if (platformId === 'instagram') {
-        const response = await getInstagramAuthUrl();
-        authUrl = response.authUrl;
-      } else {
-        throw new Error('Unknown platform');
-      }
-
-      // Use window.location in a safe way via a microtask
-      void Promise.resolve().then(() => {
-        window.location.href = authUrl;
-      });
+      const account = await connectPlatform(platformId, username);
+      // Pull the simulated stats right away so the card isn't empty.
+      await syncPlatform(account.id).catch(() => undefined);
+      setUsernames((prev) => ({ ...prev, [platformId]: '' }));
+      await load();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : `Failed to initiate ${platformId} connection`);
+      setError(err instanceof ApiError ? err.message : t('failed_to_connect'));
+    } finally {
       setConnectingPlatform(null);
     }
   }
@@ -140,6 +128,8 @@ export default function PlatformsPage() {
           title={t('platforms')}
           subtitle={t('connect_platforms_subtitle')}
         />
+
+        <p className="mb-4 alert-warning">{t('demo_platform_data_notice')}</p>
 
         {message && <p className="mb-4 alert-success">{message}</p>}
         {error && (
@@ -241,14 +231,34 @@ export default function PlatformsPage() {
                     )}
                   </>
                 ) : (
-                  <button
-                    type="button"
-                    disabled={isConnecting}
-                    onClick={() => handleOAuthConnect(platform.id)}
-                    className="landing-btn-dark px-4 py-2 text-xs"
+                  <form
+                    className="flex flex-col gap-2"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      void handleConnect(platform.id);
+                    }}
                   >
-                    {isConnecting ? 'Connecting...' : `${t('connect')} ${platform.label}`}
-                  </button>
+                    <label className="sr-only" htmlFor={`username-${platform.id}`}>
+                      {t('platform_username_label')}
+                    </label>
+                    <input
+                      id={`username-${platform.id}`}
+                      className="auth-input"
+                      placeholder="@username"
+                      maxLength={64}
+                      value={usernames[platform.id] ?? ''}
+                      onChange={(e) =>
+                        setUsernames((prev) => ({ ...prev, [platform.id]: e.target.value }))
+                      }
+                    />
+                    <button
+                      type="submit"
+                      disabled={isConnecting || !usernames[platform.id]?.trim()}
+                      className="landing-btn-dark px-4 py-2 text-xs"
+                    >
+                      {isConnecting ? t('connecting') : `${t('connect')} ${platform.label}`}
+                    </button>
+                  </form>
                 )}
               </div>
             );

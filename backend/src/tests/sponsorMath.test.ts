@@ -43,6 +43,7 @@ function makeApplication(overrides: Partial<SponsorApplication> = {}): SponsorAp
     applied_at: null,
     deliverable_url: null,
     deliverable_submitted_at: null,
+    deliverable_approved_at: null,
     creator: null,
     ...overrides,
   };
@@ -138,15 +139,39 @@ describe('computePaymentStatus', () => {
     );
   });
 
-  it('is readyToPay only when unpaid, past deadline, and all deliverables in', () => {
+  it('is readyToPay only when unpaid and all deliverables approved', () => {
     const campaign = makeCampaign({ deadline_complete: PAST, paymentMarkedPaidAt: null });
     const apps = [
-      makeApplication({ id: 'a1', status: 'approved', deliverable_url: 'http://x/1' }),
+      makeApplication({
+        id: 'a1',
+        status: 'approved',
+        deliverable_url: 'http://x/1',
+        deliverable_approved_at: PAST,
+      }),
     ];
 
     const status = computePaymentStatus(campaign, apps);
 
     assert.equal(status.readyToPay, true);
+    assert.equal(status.deliverablesApprovedCount, 1);
+  });
+
+  it('is not readyToPay while a submitted deliverable awaits approval', () => {
+    const campaign = makeCampaign({ deadline_complete: PAST });
+    const apps = [
+      makeApplication({
+        id: 'a1',
+        status: 'approved',
+        deliverable_url: 'http://x/1',
+        deliverable_approved_at: PAST,
+      }),
+      makeApplication({ id: 'a2', status: 'approved', deliverable_url: 'http://x/2' }),
+    ];
+
+    const status = computePaymentStatus(campaign, apps);
+
+    assert.equal(status.allSubmitted, true);
+    assert.equal(status.readyToPay, false);
   });
 
   it('is not readyToPay once the campaign has been marked paid', () => {
@@ -164,13 +189,18 @@ describe('computePaymentStatus', () => {
     assert.equal(status.paidAt, '2020-05-01T00:00:00.000Z');
   });
 
-  it('is not readyToPay before the deadline even if everything is submitted', () => {
+  it('does not wait for the completion deadline once deliverables are approved', () => {
     const campaign = makeCampaign({ deadline_complete: FUTURE });
     const apps = [
-      makeApplication({ id: 'a1', status: 'approved', deliverable_url: 'http://x/1' }),
+      makeApplication({
+        id: 'a1',
+        status: 'approved',
+        deliverable_url: 'http://x/1',
+        deliverable_approved_at: PAST,
+      }),
     ];
 
-    assert.equal(computePaymentStatus(campaign, apps).readyToPay, false);
+    assert.equal(computePaymentStatus(campaign, apps).readyToPay, true);
   });
 });
 

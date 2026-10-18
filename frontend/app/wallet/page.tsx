@@ -236,6 +236,9 @@ export default function WalletPage() {
                   <div>
                     <p className="creator-hero-stat-label">{t('pending_payouts')}</p>
                     <p className="creator-hero-stat-value">{formatMnt(summary.pendingPayoutMnt)}</p>
+                    {summary.pendingPayoutMnt > 0 && (
+                      <p className="creator-hero-stat-label mt-1">{t('payout_simulated_note')}</p>
+                    )}
                   </div>
                   <div>
                     <p className="creator-hero-stat-label">{t('total_earned')}</p>

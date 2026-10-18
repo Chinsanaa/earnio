@@ -4,6 +4,7 @@ import {
   isValidEmail,
   isValidUsername,
   isValidUuid,
+  normalizeDeliverableUrl,
   parsePositiveInt,
   trimString,
 } from '../utils/validate';
@@ -108,5 +109,35 @@ describe('trimString', () => {
   it('returns null when the trimmed value exceeds maxLength', () => {
     assert.equal(trimString('abcdef', 5), null);
     assert.equal(trimString('abcde', 5), 'abcde');
+  });
+});
+
+describe('normalizeDeliverableUrl', () => {
+  it('accepts https links on supported platforms and subdomains', () => {
+    assert.equal(
+      normalizeDeliverableUrl('https://www.tiktok.com/@demo/video/123'),
+      'https://www.tiktok.com/@demo/video/123'
+    );
+    assert.ok(normalizeDeliverableUrl('  https://youtu.be/abc  '));
+    assert.ok(normalizeDeliverableUrl('https://www.instagram.com/reel/xyz/'));
+    assert.ok(normalizeDeliverableUrl('https://m.youtube.com/watch?v=abc'));
+  });
+
+  it('rejects other schemes', () => {
+    assert.equal(normalizeDeliverableUrl('javascript:alert(1)'), null);
+    assert.equal(normalizeDeliverableUrl('http://www.tiktok.com/@demo/video/1'), null);
+    assert.equal(normalizeDeliverableUrl('data:text/html,hi'), null);
+  });
+
+  it('rejects lookalike hosts and embedded credentials', () => {
+    assert.equal(normalizeDeliverableUrl('https://tiktok.com.evil.example/x'), null);
+    assert.equal(normalizeDeliverableUrl('https://eviltiktok.com/x'), null);
+    assert.equal(normalizeDeliverableUrl('https://user:pw@www.tiktok.com/x'), null);
+  });
+
+  it('rejects empty and non-string input', () => {
+    assert.equal(normalizeDeliverableUrl(''), null);
+    assert.equal(normalizeDeliverableUrl(42), null);
+    assert.equal(normalizeDeliverableUrl('not a url'), null);
   });
 });

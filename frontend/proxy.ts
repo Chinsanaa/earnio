@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { homePathForUserType } from '@/lib/auth/routes';
-import { isCreatorRoute, isProtectedRoute, isSponsorRoute } from '@/lib/auth/paths';
+import { isAuthRoute, isCreatorRoute, isProtectedRoute, isSponsorRoute } from '@/lib/auth/paths';
 import { ACCESS_TOKEN_COOKIE, USER_TYPE_COOKIE } from '@/lib/auth/session';
 import { parseAccessToken } from '@/lib/auth/token';
 import type { UserType } from '@/lib/types/auth';
@@ -18,11 +18,6 @@ export function proxy(request: NextRequest) {
   const userType = session.userType ?? cookieUserType;
   const { pathname } = request.nextUrl;
 
-  const isAuthRoute =
-    pathname === '/login' ||
-    pathname === '/signup' ||
-    pathname.startsWith('/login/') ||
-    pathname.startsWith('/signup/');
 
   if (isProtectedRoute(pathname) && !session.valid) {
     const loginUrl = new URL('/login', request.url);
@@ -39,7 +34,7 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  if (isAuthRoute && session.valid) {
+  if (isAuthRoute(pathname) && session.valid) {
     const home = userType ? homePathForUserType(userType) : '/dashboard';
     return NextResponse.redirect(new URL(home, request.url));
   }

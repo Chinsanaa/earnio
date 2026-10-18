@@ -35,16 +35,6 @@ function AuthCallbackContent() {
       try {
         const result = await completeOAuthSession({ accessToken, refreshToken, userType });
 
-        try {
-          const { Capacitor } = await import('@capacitor/core');
-          if (Capacitor.isNativePlatform()) {
-            const { Browser } = await import('@capacitor/browser');
-            await Browser.close();
-          }
-        } catch {
-          // ignore when browser plugin unavailable
-        }
-
         if (cancelled) return;
 
         setAccessToken(result.accessToken);

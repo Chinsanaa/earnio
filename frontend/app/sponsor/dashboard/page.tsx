@@ -130,7 +130,10 @@ function SponsorDashboardBody({ user }: { user: AuthUser }) {
                 </span>
                 <p className="mt-5 font-display text-2xl font-bold leading-tight tracking-tight">
                   {stats.pendingApplications > 0
-                    ? t('applications_waiting').replace('{count}', String(stats.pendingApplications))
+                    ? t(stats.pendingApplications === 1 ? 'application_waiting' : 'applications_waiting').replace(
+                        '{count}',
+                        String(stats.pendingApplications)
+                      )
                     : t('all_caught_up')}
                 </p>
                 <p className="mt-2 text-sm font-medium opacity-80">

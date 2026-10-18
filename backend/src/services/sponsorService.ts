@@ -90,6 +90,7 @@ export function computeApprovalRate(breakdown: ApplicationStatusBreakdown): numb
 export interface CampaignPaymentStatus {
   approvedCount: number;
   submittedCount: number;
+  deliverablesApprovedCount: number;
   amountDueMnt: number;
   deadlinePassed: boolean;
   allSubmitted: boolean;
@@ -103,16 +104,21 @@ export function computePaymentStatus(
 ): CampaignPaymentStatus {
   const approved = applications.filter((a) => a.status === 'approved');
   const submitted = approved.filter((a) => !!a.deliverable_url);
+  const deliverablesApproved = approved.filter((a) => !!a.deliverable_approved_at);
   const deadlinePassed = !!campaign.deadline_complete && new Date(campaign.deadline_complete) < new Date();
   const allSubmitted = approved.length > 0 && submitted.length === approved.length;
+  const allDeliverablesApproved =
+    approved.length > 0 && deliverablesApproved.length === approved.length;
 
   return {
     approvedCount: approved.length,
     submittedCount: submitted.length,
+    deliverablesApprovedCount: deliverablesApproved.length,
     amountDueMnt: approved.length * campaign.payment_amount_mnt,
     deadlinePassed,
     allSubmitted,
-    readyToPay: !campaign.paymentMarkedPaidAt && deadlinePassed && allSubmitted,
+    // Payment is released on deliverable approval (Collabstr/Insense model), not on the deadline.
+    readyToPay: !campaign.paymentMarkedPaidAt && allDeliverablesApproved,
     paidAt: campaign.paymentMarkedPaidAt,
   };
 }
@@ -144,6 +150,7 @@ export interface SponsorApplication {
   applied_at: string | null;
   deliverable_url: string | null;
   deliverable_submitted_at: string | null;
+  deliverable_approved_at: string | null;
   creator: {
     id: string;
     name: string;
@@ -493,7 +500,7 @@ class SponsorService {
     const { data: apps, error: appsError } = await client
       .from('sponsorship_applications')
       .select(
-        'id, sponsorship_id, status, response_text, sponsor_notes, applied_at, creator_user_id, deliverable_url, deliverable_submitted_at'
+        'id, sponsorship_id, status, response_text, sponsor_notes, applied_at, creator_user_id, deliverable_url, deliverable_submitted_at, deliverable_approved_at'
       )
       .eq('sponsorship_id', campaignId)
       .order('applied_at', { ascending: false });
@@ -524,6 +531,7 @@ class SponsorService {
       applied_at: app.applied_at,
       deliverable_url: app.deliverable_url,
       deliverable_submitted_at: app.deliverable_submitted_at,
+      deliverable_approved_at: app.deliverable_approved_at,
       creator: creatorMap.get(app.creator_user_id) ?? null,
     }));
 
@@ -567,7 +575,7 @@ class SponsorService {
 
     const { data: apps, error: appsError } = await client
       .from('sponsorship_applications')
-      .select('status, deliverable_url, creator_user_id')
+      .select('status, deliverable_url, deliverable_approved_at, creator_user_id')
       .eq('sponsorship_id', campaignId);
 
     if (appsError) {
@@ -581,23 +589,29 @@ class SponsorService {
     if (approved.some((a) => !a.deliverable_url)) {
       throw new Error('All approved applicants must submit their deliverable before paying');
     }
+    if (approved.some((a) => !a.deliverable_approved_at)) {
+      throw new Error('Approve every submitted deliverable before paying');
+    }
 
     if (!supabaseAdmin) {
       throw new Error('Payment processing is temporarily unavailable');
     }
 
-    const { data: existingCredits, error: existingError } = await supabaseAdmin
-      .from('wallet_transactions')
-      .select('id')
-      .eq('reference_type', 'sponsorship')
-      .eq('reference_id', campaignId)
-      .eq('type', 'sponsorship_credit')
-      .limit(1);
+    // Claim the campaign first: only one request can flip payment_marked_paid_at
+    // from null, so concurrent clicks cannot both credit wallets. The unique
+    // index on sponsorship ledger rows is a second line of defence.
+    const { data, error } = await client
+      .from('sponsorships')
+      .update({ payment_marked_paid_at: new Date().toISOString() })
+      .eq('id', campaignId)
+      .is('payment_marked_paid_at', null)
+      .select(CAMPAIGN_COLUMNS)
+      .maybeSingle();
 
-    if (existingError) {
-      throw new Error(`Failed to verify payment ledger: ${existingError.message}`);
+    if (error) {
+      throw new Error(`Failed to mark campaign as paid: ${error.message}`);
     }
-    if (existingCredits && existingCredits.length > 0) {
+    if (!data) {
       throw new Error('Payment has already been marked as paid');
     }
 
@@ -617,23 +631,16 @@ class SponsorService {
       .insert(ledgerRows);
 
     if (ledgerError) {
+      // A unique violation means these creators were already credited, so the
+      // campaign really is paid; keep the claim. Otherwise release it to retry.
+      if (ledgerError.code === '23505') {
+        throw new Error('Payment has already been marked as paid');
+      }
+      await client
+        .from('sponsorships')
+        .update({ payment_marked_paid_at: null })
+        .eq('id', campaignId);
       throw new Error(`Failed to credit creator wallets: ${ledgerError.message}`);
-    }
-
-    const { data, error } = await client
-      .from('sponsorships')
-      .update({ payment_marked_paid_at: new Date().toISOString() })
-      .eq('id', campaignId)
-      .is('payment_marked_paid_at', null)
-      .select(CAMPAIGN_COLUMNS)
-      .single();
-
-    if (error || !data) {
-      throw new Error(
-        error?.message
-          ? `Failed to mark campaign as paid: ${error.message}`
-          : 'Failed to mark campaign as paid'
-      );
     }
 
     const netPerCreator = Math.round(gross * (1 - PLATFORM_FEE_RATE));
@@ -651,6 +658,61 @@ class SponsorService {
       total: apps?.length ?? 0,
       pending: (apps ?? []).filter((a) => a.status === 'pending').length,
     });
+  }
+
+  public async approveDeliverable(
+    userId: string,
+    accessToken: string,
+    applicationId: string
+  ): Promise<{ id: string; deliverable_approved_at: string | null }> {
+    await this.assertSponsor(userId, accessToken);
+    const client = getAuthenticatedClient(accessToken);
+
+    const { data: app, error: findError } = await client
+      .from('sponsorship_applications')
+      .select('id, sponsorship_id, status, creator_user_id, deliverable_url, deliverable_approved_at')
+      .eq('id', applicationId)
+      .single();
+
+    if (findError || !app) {
+      throw new Error('Application not found');
+    }
+
+    const { data: campaign } = await client
+      .from('sponsorships')
+      .select('id, title')
+      .eq('id', app.sponsorship_id)
+      .eq('sponsor_user_id', userId)
+      .single();
+
+    if (!campaign) {
+      throw new Error('Not authorized to manage this application');
+    }
+    if (app.status !== 'approved' || !app.deliverable_url) {
+      throw new Error('There is no submitted deliverable to approve');
+    }
+    if (app.deliverable_approved_at) {
+      throw new Error('This deliverable is already approved');
+    }
+
+    const { data, error } = await client
+      .from('sponsorship_applications')
+      .update({ deliverable_approved_at: new Date().toISOString() })
+      .eq('id', applicationId)
+      .is('deliverable_approved_at', null)
+      .select('id, deliverable_approved_at')
+      .single();
+
+    if (error || !data) {
+      throw new Error(error?.message ? `Failed to approve deliverable: ${error.message}` : 'Failed to approve deliverable');
+    }
+
+    await notificationService.notifyDeliverableApproved(
+      app.creator_user_id,
+      campaign.title ?? 'Campaign'
+    );
+
+    return data;
   }
 
   public async updateApplicationStatus(
@@ -702,7 +764,7 @@ class SponsorService {
       .update(updatePayload)
       .eq('id', applicationId)
       .select(
-        'id, sponsorship_id, status, response_text, sponsor_notes, applied_at, creator_user_id, deliverable_url, deliverable_submitted_at'
+        'id, sponsorship_id, status, response_text, sponsor_notes, applied_at, creator_user_id, deliverable_url, deliverable_submitted_at, deliverable_approved_at'
       )
       .single();
 
@@ -743,6 +805,7 @@ class SponsorService {
       applied_at: data.applied_at,
       deliverable_url: data.deliverable_url,
       deliverable_submitted_at: data.deliverable_submitted_at,
+      deliverable_approved_at: data.deliverable_approved_at,
       creator,
     };
   }

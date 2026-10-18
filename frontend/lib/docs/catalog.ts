@@ -6,14 +6,9 @@ export interface DocEntry {
 
 export const DOCS: DocEntry[] = [
   {
-    slug: 'launch-plan',
-    title: 'Launch plan (Phases 11–15)',
-    description: 'UI polish, testing, deployment, and post-launch iteration.',
-  },
-  {
     slug: 'deployment',
     title: 'Deployment guide',
-    description: 'Vercel, Railway/Render, Supabase, and production env setup.',
+    description: 'Vercel, Render, Supabase, and production env setup.',
   },
   {
     slug: 'qa-checklist',

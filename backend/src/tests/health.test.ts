@@ -10,6 +10,7 @@ const testConfig: EnvConfig = {
   supabaseUrl: process.env.SUPABASE_URL || 'https://example.supabase.co',
   supabaseAnonKey: process.env.SUPABASE_ANON_KEY || 'test-anon-key',
   nodeEnv: 'test',
+  trustProxyHops: 1,
 };
 
 describe('GET /api/health', () => {
