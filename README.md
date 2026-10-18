@@ -82,6 +82,7 @@ See `backend/.env.example` for the full list.
 | Variable | Purpose |
 |----------|---------|
 | `NEXT_PUBLIC_API_URL` | Backend URL (default `http://localhost:3001`) |
+| `API_PROXY_TARGET` | Production only: API origin that `/api/*` is proxied to. Set `NEXT_PUBLIC_API_URL=/` with it ([deploy guide](./docs/DEPLOYMENT.md)) |
 
 ---
 

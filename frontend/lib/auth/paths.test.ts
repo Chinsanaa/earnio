@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { isCreatorRoute, isSponsorRoute, isProtectedRoute } from './paths';
+import { isAuthRoute, isCreatorRoute, isProtectedRoute, isSponsorRoute } from './paths';
 
 describe('isCreatorRoute', () => {
   it('matches creator prefixes exactly and as path segments', () => {
@@ -48,5 +48,18 @@ describe('isProtectedRoute', () => {
     expect(isProtectedRoute('/')).toBe(false);
     expect(isProtectedRoute('/login')).toBe(false);
     expect(isProtectedRoute('/docs')).toBe(false);
+  });
+});
+
+describe('isAuthRoute', () => {
+  it('matches login and signup pages', () => {
+    expect(isAuthRoute('/login')).toBe(true);
+    expect(isAuthRoute('/login/creator')).toBe(true);
+    expect(isAuthRoute('/signup/sponsor')).toBe(true);
+  });
+
+  it('ignores app and lookalike routes', () => {
+    expect(isAuthRoute('/dashboard')).toBe(false);
+    expect(isAuthRoute('/loginx')).toBe(false);
   });
 });

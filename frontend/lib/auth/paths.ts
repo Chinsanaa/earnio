@@ -19,3 +19,12 @@ export function isSponsorRoute(pathname: string): boolean {
 export function isProtectedRoute(pathname: string): boolean {
   return isCreatorRoute(pathname) || isSponsorRoute(pathname);
 }
+
+export function isAuthRoute(pathname: string): boolean {
+  return (
+    pathname === '/login' ||
+    pathname === '/signup' ||
+    pathname.startsWith('/login/') ||
+    pathname.startsWith('/signup/')
+  );
+}

@@ -1,534 +1,117 @@
-# Earnio — Deployment Guide
+# Earnio Deployment Guide
 
-> Production deploy: Vercel + Railway/Render + Supabase. Also rendered at `/docs/deployment`.  
-> Quick start (local): [../README.md](../README.md) · Map: [../context.md](../context.md)  
-> Last updated: June 2026
-
----
-
-## 📋 Prerequisites Checklist
-
-Before deploying to production:
-
-- [ ] GitHub repository with CI passing
-  - [ ] Backend: `npm test` (all tests pass)
-  - [ ] Frontend: `npm run lint && npm run build`
-- [ ] Supabase project created
-  - [ ] All migrations applied to database (including password reset & email verification tables)
-  - [ ] RLS policies reviewed and enabled
-  - [ ] Auth users table with proper constraints
-  - [ ] Service role key generated and secure
-- [ ] Resend account (for email notifications, password reset, email verification)
-  - [ ] Domain verified for production sending
-  - [ ] API key generated
-  - [ ] Email templates tested (signup, password reset, verification code)
-  - [ ] Sender email (`EMAIL_FROM`) verified and configured
-- [ ] Domain names registered
-  - [ ] Frontend domain (e.g., `earnio.app`)
-  - [ ] API domain (e.g., `api.earnio.app`)
-- [ ] Hosting accounts created
-  - [ ] Vercel account for frontend
-  - [ ] Railway or Render account for backend
-  - [ ] Both connected to GitHub repo
+> **Production setup:** Vercel (frontend) + Render (API) + Supabase (database and auth). Also rendered at `/docs/deployment`.
+> Local quick start: [../README.md](../README.md) · Map: [../context.md](../context.md) · Plan: [SHIP_PLAN.md](./SHIP_PLAN.md)
+> Last updated: October 2026
 
 ---
 
-## 🚀 Deployment Architecture
+## How it fits together
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    Production Setup                     │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  earnio.app                   api.earnio.app           │
-│  ├──→ Vercel (frontend)        ├──→ Railway (backend)  │
-│  │    Next.js 16              │    Express 5           │
-│  │    React 19                │    TypeScript          │
-│  │    Tailwind CSS 4          │    Node.js             │
-│  │                             │                       │
-│  └──────────────┬──────────────┘                       │
-│                 │ HTTPS + JWT                          │
-│                 ▼                                        │
-│          ┌──────────────────┐                          │
-│          │   Supabase       │                          │
-│          │  PostgreSQL      │                          │
-│          │  Auth (JWT)      │                          │
-│          │  RLS Policies    │                          │
-│          └──────────────────┘                          │
-│                 │                                        │
-│                 ▼                                        │
-│          ┌──────────────────┐                          │
-│          │   Resend         │                          │
-│          │  Email (SMTP)    │                          │
-│          └──────────────────┘                          │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
+Browser ──► Vercel (Next.js)  ──/api/* rewrite──►  Render (Express API)  ──►  Supabase
+            earnio.vercel.app                       earnio-api.onrender.com
 ```
+
+- **The browser only talks to the Vercel domain.** Next.js rewrites `/api/*` to the Render API (`API_PROXY_TARGET`), so the API's httpOnly refresh cookie is set on the Vercel domain.
+- **Why the rewrite is required:** `*.vercel.app` and `*.onrender.com` are different sites, and `onrender.com` is a public suffix. Without the rewrite, the `SameSite=Strict` refresh cookie is never sent back, and users are logged out every hour when the access token expires.
+- **Free-tier cost:** $0. The trade-off is that the Render free web service sleeps when idle, so the first request after a quiet period is slow. Open `/api/health` a minute before a demo to wake it.
 
 ---
 
-## 🔧 Step 1: Prepare Supabase
+## Step 1: Supabase
 
-### 1.1 Create Project
-
-1. Log in to [supabase.com](https://supabase.com)
-2. Create a new organization and project
-3. Select PostgreSQL version **15+**
-4. Choose region close to your target users (Asia-Pacific recommended for Mongolia)
-
-### 1.2 Apply Migrations
-
-1. Download the Supabase CLI: `npm install -g supabase`
-2. Link your project:
+1. Create a **new** project at [supabase.com](https://supabase.com) for production. Don't reuse a dev project: the old seed migrations (`*_seed_*.sql`) give every user who exists when they run demo money, so run them on an empty database.
+2. Apply migrations from the repo root:
    ```bash
-   supabase link --project-ref <your-project-ref>
+   npx supabase link --project-ref <your-project-ref>
+   npx supabase db push
    ```
-3. Apply migrations:
-   ```bash
-   supabase db push
-   ```
-4. Verify in Supabase dashboard that tables exist:
-   - `users` (linked to `auth.users`)
-   - `platform_accounts`
-   - `earnings`
-   - `sponsorships`
-   - `applications`
-   - `wallet_transactions`
-   - `bank_accounts`
-   - `notifications`
+3. Check **Advisors** (Database → Advisors) for security warnings.
+4. Copy from **Project Settings → API**: Project URL, `anon` key, `service_role` key.
+5. **JWT verification:** leave `SUPABASE_JWT_SECRET` unset on the API. Newer projects sign tokens with asymmetric keys, and the API then verifies them through the project's JWKS. Only set the secret if your project still uses the legacy HS256 shared secret (if every request returns 401, unset it).
+6. Under **Authentication → URL Configuration**, add `https://<your-vercel-domain>/auth/callback` as a redirect URL if you enable Google or Apple sign-in.
 
-### 1.3 Verify RLS Policies
-
-1. In Supabase dashboard, go to **Authentication** → **Policies**
-2. Confirm RLS is **enabled** on all tables
-3. Review policies ensure:
-   - Users can only access their own data
-   - Sponsors can only access their own campaigns/applications
-   - Public reads are restricted (health check endpoints only)
-
-### 1.4 Get Credentials
-
-From Supabase dashboard:
-- Project URL: **Settings** → **API** → **Project URL**
-- Anon key: **Settings** → **API** → **Anon public key**
-- Service role key: **Settings** → **API** → **Service role key** (keep secret!)
-
----
-
-## 🌐 Step 2: Deploy Frontend to Vercel
-
-### 2.1 Import Repository
-
-1. Go to [vercel.com](https://vercel.com)
-2. Click **New Project** → **Import Git Repository**
-3. Select your Earnio repository
-4. Set **Root Directory** to `frontend` (required — the Next.js app lives in this folder, not the repo root)
-5. Confirm framework is detected as **Next.js** (auto-detected from `frontend/package.json`)
-6. Leave **Output Directory** empty — do not set it to `build`. Next.js outputs to `.next`, which Vercel handles automatically
-7. Build command should be `npm run build` (default)
-
-### 2.2 Configure Environment Variables
-
-In Vercel project settings, add environment variables:
-
-| Variable | Value | Notes |
-|----------|-------|-------|
-| `NEXT_PUBLIC_API_URL` | `https://api.yourdomain.com` | Backend API base URL |
-| `NEXT_PUBLIC_SUPABASE_URL` | `https://xxx.supabase.co` | From Supabase dashboard |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `eyJ...` | From Supabase dashboard |
-
-**Important:** These are public and exposed in browser; don't add secrets here.
-
-### 2.3 Deploy
-
-1. Click **Deploy**
-2. Wait for build to complete (5-10 minutes)
-3. Vercel provides a production URL: `earnio-xxx.vercel.app`
-4. Set up custom domain:
-   - Go to **Settings** → **Domains**
-   - Add your domain (e.g., `earnio.app`)
-   - Add CNAME record to your DNS pointing to Vercel
-
-### 2.4 Verify Frontend
-
+**Test migrations before pushing** (needs a local Postgres):
 ```bash
-# Check home page loads
-curl https://earnio.app
-
-# Check login page works
-curl https://earnio.app/login/creator
+PGHOST=/var/run/postgresql PGUSER=postgres supabase/tests/run.sh
 ```
 
 ---
 
-## 🛠 Step 3: Deploy Backend to Railway or Render
+## Step 2: API on Render
 
-### Option A: Railway
+The repo ships a Blueprint: [`render.yaml`](../render.yaml).
 
-1. Go to [railway.app](https://railway.app)
-2. Click **New Project** → **Deploy from GitHub**
-3. Select your Earnio repository
-4. Create **New Service** → **Node**
-5. Configure:
-   - **Root Directory:** `backend`
-   - **Build Command:** `npm install && npm run build`
-   - **Start Command:** `npm start`
-6. Add environment variables (see table below)
-7. Railway auto-deploys on git push; grab the URL
+1. Render dashboard → **New → Blueprint** → select this repo.
+2. Fill in the values it asks for:
 
-### Option B: Render
+| Variable | Value |
+|----------|-------|
+| `FRONTEND_URL` | Your Vercel URL, e.g. `https://earnio.vercel.app` (no trailing slash) |
+| `SUPABASE_URL` | Supabase project URL |
+| `SUPABASE_ANON_KEY` | Supabase `anon` key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase `service_role` key (required in production) |
+| `RESEND_API_KEY`, `EMAIL_FROM` | Optional. Without them, emails are skipped and in-app notifications still work |
 
-1. Go to [render.com](https://render.com)
-2. Click **New** → **Web Service**
-3. Connect your GitHub repo
-4. Configure:
-   - **Name:** `earnio-api`
-   - **Environment:** Node
-   - **Root Directory:** `backend` (if not auto-detected)
-   - **Build Command:** `npm install && npm run build`
-   - **Start Command:** `npm start`
-5. Add environment variables (see table below)
-6. Click **Create Web Service**
+Set automatically by the Blueprint: `NODE_ENV=production`, `ENCRYPTION_KEY` and `SYNC_CRON_SECRET` (generated), `TRUST_PROXY_HOPS=2` (Vercel + Render's load balancer, so rate limits key on the visitor's IP), `ENABLE_SYNC_CRON=false`.
 
-### Backend Environment Variables
+3. Deploy, then check: `curl https://<your-api>.onrender.com/api/health` → `{"status":"ok",...}`.
 
-Set these in your Railway/Render dashboard:
-
-| Variable | Value | Notes |
-|----------|-------|-------|
-| `NODE_ENV` | `production` | Enables production optimizations |
-| `PORT` | `3001` (or let platform auto-assign) | Railway/Render injects this |
-| `FRONTEND_URL` | `https://earnio.app` | CORS origin; no trailing slash |
-| `SUPABASE_URL` | `https://xxx.supabase.co` | From Supabase |
-| `SUPABASE_ANON_KEY` | `eyJ...` | From Supabase |
-| `SUPABASE_SERVICE_ROLE_KEY` | `eyJ...` | **REQUIRED**; keep secret |
-| `RESEND_API_KEY` | `re_xxx...` | From Resend dashboard |
-| `EMAIL_FROM` | `noreply@earnio.app` | Verified sender domain |
-| `ENABLE_SYNC_CRON` | `false` | Disable in-process scheduler; use external cron |
-| `SYNC_CRON_SECRET` | Random 32+ char string | Protects `/api/sync/cron` endpoint |
-
-### Backend Domain Setup
-
-1. Get the API URL from Railway/Render
-2. Create DNS CNAME:
-   - Subdomain: `api.earnio.app`
-   - Points to: (Railway/Render URL)
-3. Wait for DNS propagation (5-30 minutes)
+> **Keep `ENCRYPTION_KEY` stable.** Bank account numbers are encrypted with it; changing it makes existing ones unreadable.
 
 ---
 
-## 📧 Step 4: Configure Resend for Email
+## Step 3: Frontend on Vercel
 
-### 4.1 Set Up Resend Account
+1. Vercel → **Add New → Project** → import this repo, **Root Directory: `frontend`**.
+2. Environment variables (Production):
 
-1. Go to [resend.com](https://resend.com)
-2. Create account and verify email
-3. Go to **Domains** section
-4. Add your domain (e.g., `earnio.app`)
-5. Follow instructions to add DNS records:
-   - Add `CNAME` record for DKIM
-   - Add `MX` record for receiving (if needed)
+| Variable | Value |
+|----------|-------|
+| `API_PROXY_TARGET` | Render API origin, e.g. `https://earnio-api.onrender.com` |
+| `NEXT_PUBLIC_API_URL` | `/` (same origin, goes through the rewrite) |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL (only needed for Google/Apple sign-in) |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase `anon` key (same) |
 
-### 4.2 Verify Domain
+3. Deploy. `NEXT_PUBLIC_*` values are baked in at build time, so redeploy after changing them.
+4. Check `https://<your-vercel-domain>/api/health` returns the API's health JSON. That proves the rewrite works.
 
-Once DNS records are propagated:
-1. Return to Resend → **Domains**
-2. Click **Verify** on your domain
-3. Once verified, status should show **Verified**
+---
 
-### 4.3 Get API Key
+## Step 4: Seed the demo
 
-1. Go to **API Keys**
-2. Create new API key
-3. Copy the key
-4. Add to backend environment variables as `RESEND_API_KEY`
-
-### 4.4 Test Email
-
-After deployment, test via API:
-
+Point the seed script at the deployed site and run it once:
 ```bash
-curl -X POST https://api.earnio.app/api/health \
-  -H "Content-Type: application/json"
+BACKEND_URL=https://<your-vercel-domain> npm run seed:demo
 ```
-
-Should return email provider status in health check.
+It prints the demo sponsor and creator logins.
 
 ---
 
-## 🔐 Step 4.5: Configure Password Reset & Email Verification
+## Step 5: Verify
 
-### 4.5.1 Password Reset Configuration
+- [ ] `/api/health` is `ok` through the Vercel domain
+- [ ] Sign up as a creator and as a sponsor, from a phone and a laptop
+- [ ] Full loop: create campaign → apply → approve → submit post link → approve deliverable → mark paid → wallet credit → payout request
+- [ ] Log in, then remove the `ct-access-token` cookie in DevTools and reload `/dashboard`: you should stay signed in (refresh cookie works)
+- [ ] DevTools console shows zero errors on every page
+- [ ] Manual QA: [QA_MANUAL_CHECKLIST.md](./QA_MANUAL_CHECKLIST.md)
 
-Password reset tokens have configurable expiry via environment variables:
-
-| Variable | Default | Purpose |
-|----------|---------|---------|
-| `PASSWORD_RESET_TOKEN_EXPIRY_MINUTES` | `60` | How long reset link remains valid |
-| `FRONTEND_URL` | (required) | Used in reset link; must match your frontend domain |
-
-**Email template:** Backend sends password reset email from `EMAIL_FROM` with:
-- Reset link: `https://yourfrontend.com/reset-password?token=...&email=...`
-- Token expiry countdown
-- Security notice: "If you didn't request this, ignore it."
-
-**Rate limit:** 3 forgot-password requests per 30 minutes per IP
-
-### 4.5.2 Email Verification Configuration
-
-Email verification uses 6-digit codes sent via Resend:
-
-| Variable | Default | Purpose |
-|----------|---------|---------|
-| `EMAIL_VERIFICATION_CODE_EXPIRY_MINUTES` | `15` | Code validity period |
-| `EMAIL_VERIFICATION_MAX_ATTEMPTS` | `3` | Failed verification attempts before lockout |
-
-**Email template:** Backend sends verification code with:
-- Large 6-digit code (easy to read)
-- Code expiry time
-- Resend link for new code
-- Security notice about not sharing code
-
-**Rate limits:**
-- 5 verification email sends per 15 minutes per IP
-- 5 verification attempts per 15 minutes per IP
-- Unlimited resends (resets attempt counter)
-
-### 4.5.3 Database Tables
-
-Ensure Supabase migrations include:
-
-```sql
--- Password reset tokens
-CREATE TABLE password_reset_tokens (
-  id UUID PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES users(id),
-  token_hash TEXT NOT NULL,
-  expires_at TIMESTAMP WITH TIME ZONE,
-  used_at TIMESTAMP WITH TIME ZONE,
-  created_at TIMESTAMP WITH TIME ZONE
-);
-
--- Email verification
-CREATE TABLE email_verification (
-  id UUID PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES users(id),
-  email TEXT NOT NULL,
-  code TEXT NOT NULL,
-  expires_at TIMESTAMP WITH TIME ZONE,
-  attempts INTEGER DEFAULT 0,
-  created_at TIMESTAMP WITH TIME ZONE
-);
-```
-
-Run migrations:
-```bash
-supabase db push
-```
-
-### 4.5.4 Test Password Reset
-
-After deployment:
-
-```bash
-# Request password reset
-curl -X POST https://api.earnio.app/api/auth/forgot-password \
-  -H "Content-Type: application/json" \
-  -d '{"email":"test@example.com"}'
-
-# Check Resend logs for reset email
-```
-
-### 4.5.5 Test Email Verification
-
-```bash
-# Send verification code (requires authenticated request)
-curl -X POST https://api.earnio.app/api/auth/send-verification-email \
-  -H "Authorization: Bearer <access-token>" \
-  -H "Content-Type: application/json" \
-  -d '{"userId":"<user-id>","email":"test@example.com"}'
-
-# Check Resend logs for verification email
-```
+**Optional platform sync cron.** Not needed for the demo (creators sync from the Platforms page). If you want it, call `POST https://<your-api>/api/sync/cron` with header `x-cron-secret: <SYNC_CRON_SECRET>` from any scheduler.
 
 ---
 
-## 🔄 Step 5: Set Up Platform Sync (External Cron)
+## Troubleshooting
 
-### Option A: GitHub Actions Cron
-
-Create `.github/workflows/sync-cron.yml`:
-
-```yaml
-name: Platform Sync Cron
-
-on:
-  schedule:
-    - cron: '0 */6 * * *'  # Every 6 hours
-
-jobs:
-  sync:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Trigger sync endpoint
-        run: |
-          curl -X POST https://api.earnio.app/api/sync/cron \
-            -H "x-cron-secret: ${{ secrets.SYNC_CRON_SECRET }}" \
-            -H "Content-Type: application/json"
-```
-
-### Option B: External Cron Service
-
-Use EasyCron, AWS EventBridge, Google Cloud Scheduler, or similar:
-
-1. Create cron job with schedule: **Every 6 hours**
-2. URL: `https://api.earnio.app/api/sync/cron`
-3. Method: **POST**
-4. Add header: `x-cron-secret: <your-secret>`
-
----
-
-## ✅ Step 6: Post-Deployment Verification
-
-### 6.1 Health Checks
-
-```bash
-# Frontend loads
-curl https://earnio.app
-
-# API is responding
-curl https://api.earnio.app/api/health
-
-# Health response should show:
-# {
-#   "status": "ok",
-#   "checks": {
-#     "database": "ok",
-#     "serviceRole": "ok",
-#     "email": "ok",
-#     "syncCron": "ok"
-#   }
-# }
-```
-
-### 6.2 Authentication Flow
-
-1. Open https://earnio.app
-2. Click **Get Started** or **/signup/creator**
-3. Create a test account
-4. Verify you receive welcome email
-5. Log in successfully
-6. Navigate to `/dashboard` — should load
-
-### 6.3 API Endpoints
-
-```bash
-# Test authenticated endpoint (use access token from login)
-curl -H "Authorization: Bearer <access-token>" \
-  https://api.earnio.app/api/dashboard/summary
-
-# Should return user earnings data
-```
-
-### 6.4 Database Connection
-
-Verify in Supabase dashboard:
-- **Database** → **Browser** → **users** table shows test account
-- **Auth** → **Users** shows test user with email
-
-### 6.5 Email Delivery
-
-Check Resend dashboard:
-- **Logs** should show email sent to test account
-- Email received in inbox (check spam if needed)
-
-### 6.6 Password Reset Flow
-
-1. Go to `/login/creator`
-2. Click **Forgot password?**
-3. Enter test email; click **Send reset link**
-4. Check email for reset link (Resend logs should show delivery)
-5. Click link; should show password form with countdown timer
-6. Enter new password; submit
-7. Should auto-login and redirect to `/dashboard`
-
-### 6.7 Email Verification Flow
-
-1. Sign up with new email at `/signup/creator`
-2. Should see "Verify your email" prompt
-3. Click **Send code**
-4. Check email for 6-digit code (Resend logs)
-5. Enter code in form (6 digits)
-6. On success, should show "Email verified" message
-7. Try wrong code 3 times; should see "Too many attempts"
-8. Click **Resend code** to unlock
-9. Enter new code; should verify successfully
-
----
-
-## 📊 Step 7: Monitor & Maintenance
-
-### Logging & Alerts
-
-- **Vercel**: Logs in **Deployments** tab; set up error alerts in **Settings**
-- **Railway/Render**: Logs in dashboard; set up webhook alerts
-- **Supabase**: Check **Logs** tab for database errors
-- **Resend**: Monitor **Logs** for email failures
-
-### Health Monitoring
-
-Set up periodic checks (e.g., Uptime Robot):
-
-```
-GET https://earnio.app → Expect 200
-GET https://api.earnio.app/api/health → Expect 200, status="ok"
-```
-
-### Backup & Disaster Recovery
-
-- Supabase: Automated backups (check **Settings** → **Backups**)
-- GitHub: Always backed up; commits are immutable
-- Secrets: Store in LastPass/1Password; never commit `.env` files
-
----
-
-## 🚨 Troubleshooting
-
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| `No Output Directory named "build" found` | Root Directory is repo root (`.`) instead of `frontend`, or Output Directory is set to `build` | In Vercel → **Settings** → **General**: set **Root Directory** to `frontend`, set **Framework Preset** to **Next.js**, and clear **Output Directory** (leave blank) |
-| `Cannot find module '@tailwindcss/postcss'` | Tailwind is in `devDependencies`; Vercel production installs skip dev deps | Keep `@tailwindcss/postcss` and `tailwindcss` in `dependencies`, or set `installCommand` to `npm install --include=dev` in `frontend/vercel.json` |
-| TypeScript missing during build | `typescript` / `@types/*` in `devDependencies` skipped by production install | Keep `typescript` and `@types/*` in `dependencies`, or use `npm install --include=dev` |
-| Frontend build fails | Missing env vars | Verify `NEXT_PUBLIC_API_URL` in Vercel |
-| 502 Bad Gateway | Backend not running | Check Railway/Render logs; restart service |
-| 401 on all API calls | Wrong `FRONTEND_URL` | Ensure no trailing slash; matches Vercel domain |
-| CORS errors | Wrong CORS origin | Check backend `FRONTEND_URL` env var |
-| Email not sending | Resend domain not verified | Verify domain in Resend dashboard |
-| Sync cron fails | Wrong secret | Ensure `SYNC_CRON_SECRET` matches in env |
-| Database errors | RLS policies broken | Check Supabase → **Logs** for details |
-
----
-
-## 🎉 You're Live!
-
-Once all steps pass:
-
-1. Create test sponsor account
-2. Create test campaign
-3. Apply as creator to campaign
-4. Approve as sponsor
-5. Request payout in wallet
-6. Verify all notifications received
-
-For detailed manual QA, see [QA_MANUAL_CHECKLIST.md](./QA_MANUAL_CHECKLIST.md).
-
----
-
-## 📚 Additional Resources
-
-- [Vercel Docs](https://vercel.com/docs)
-- [Railway Docs](https://docs.railway.app)
-- [Supabase Docs](https://supabase.com/docs)
-- [Resend Docs](https://resend.com/docs)
-- [Express Deployment](https://expressjs.com/en/advanced/best-practice-performance.html)
-- [Next.js Production Deployment](https://nextjs.org/docs/deployment)
+| Symptom | Likely cause | Fix |
+|---------|--------------|-----|
+| Every API call returns 401 | `SUPABASE_JWT_SECRET` set on a project that uses asymmetric signing keys | Unset it on Render and redeploy |
+| Logged out after about an hour | Browser is calling the Render domain directly | Set `NEXT_PUBLIC_API_URL=/` and `API_PROXY_TARGET`, then redeploy Vercel |
+| `/api/health` on Vercel is a 404 | `API_PROXY_TARGET` missing at build time | Add it and redeploy |
+| First request takes a long time | Render free instance was asleep | Expected on the free plan; warm it before demos |
+| CORS error | Browser bypasses the rewrite, or `FRONTEND_URL` doesn't match | Use the rewrite; set `FRONTEND_URL` exactly (no trailing slash) |
+| Mark paid fails | Missing service role key, or a deliverable isn't approved yet | Set `SUPABASE_SERVICE_ROLE_KEY`; approve each submitted deliverable |
+| Payout request fails with "temporarily unavailable" | Missing service role key | Set `SUPABASE_SERVICE_ROLE_KEY` |
+| No emails | Resend not configured | Set `RESEND_API_KEY` and `EMAIL_FROM` (optional) |
+| Too many auth attempts (429) for everyone | `TRUST_PROXY_HOPS` too low, so all users share one IP | Keep `TRUST_PROXY_HOPS=2` with the Vercel rewrite |

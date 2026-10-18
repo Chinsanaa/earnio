@@ -1,0 +1,41 @@
+# Render Blueprint for the Express API (docs/DEPLOYMENT.md).
+# Render → New → Blueprint → pick this repo. Values marked `sync: false` are
+# asked for once when the Blueprint is created.
+services:
+  - type: web
+    name: earnio-api
+    runtime: docker
+    plan: free
+    # Closest Render region to Mongolia. Cannot be changed after creation.
+    region: singapore
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /api/health
+    autoDeployTrigger: checksPass
+    buildFilter:
+      paths:
+        - backend/**
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: FRONTEND_URL
+        sync: false # e.g. https://earnio.vercel.app (no trailing slash)
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: ENCRYPTION_KEY
+        generateValue: true
+      - key: SYNC_CRON_SECRET
+        generateValue: true
+      - key: RESEND_API_KEY
+        sync: false # optional; emails are skipped when empty
+      - key: EMAIL_FROM
+        sync: false # optional, e.g. Earnio <onboarding@resend.dev>
+      # Vercel proxies /api/* here, so there are two proxies in front of the app.
+      - key: TRUST_PROXY_HOPS
+        value: "2"
+      - key: ENABLE_SYNC_CRON
+        value: "false"

@@ -9,7 +9,8 @@ import type {
   SignupRequest,
 } from '../types/auth';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
+// "/" means same origin: Next rewrites /api/* to the API (see next.config.ts).
+const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001').replace(/\/$/, '');
 
 export const API_NOT_FOUND_CODE = 'NOT_FOUND';
 

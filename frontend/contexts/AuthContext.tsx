@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import * as api from '@/lib/api/client';
 import { homePathForUserType } from '@/lib/auth/routes';
 import { getNextPathFromWindow } from '@/lib/auth/navigation';
+import { isAuthRoute } from '@/lib/auth/paths';
 import {
   clearSessionCookies,
   getAccessToken,
@@ -37,6 +38,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
   const refreshSeq = useRef(0);
+  // Read through a ref so the mount-only session restore doesn't re-run when
+  // the router object changes identity.
+  const routerRef = useRef(router);
+  useEffect(() => {
+    routerRef.current = router;
+  }, [router]);
 
   const refreshUser = useCallback(async (): Promise<AuthUser | null> => {
     const seq = ++refreshSeq.current;
@@ -66,8 +73,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      await refreshUser();
-      if (!cancelled) setLoading(false);
+      const profile = await refreshUser();
+      if (cancelled) return;
+      setLoading(false);
+      // The access cookie lasts an hour, so the edge proxy sends returning
+      // users to /login. If the refresh cookie restored the session, carry on.
+      if (profile && isAuthRoute(window.location.pathname)) {
+        routerRef.current.replace(getNextPathFromWindow() ?? homePathForUserType(profile.userType));
+      }
     })();
     return () => {
       cancelled = true;
