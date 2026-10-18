@@ -17,6 +17,7 @@ export interface SponsorDashboardStats {
 export interface CampaignPaymentStatus {
   approvedCount: number;
   submittedCount: number;
+  deliverablesApprovedCount: number;
   amountDueMnt: number;
   deadlinePassed: boolean;
   allSubmitted: boolean;
@@ -57,6 +58,7 @@ export interface SponsorApplication {
   applied_at: string | null;
   deliverable_url: string | null;
   deliverable_submitted_at: string | null;
+  deliverable_approved_at: string | null;
   creator: {
     id: string;
     name: string;

@@ -129,6 +129,31 @@ router.post('/campaigns/:id/payment', verifyToken, async (req: AuthRequest, res:
   }
 });
 
+router.post(
+  '/applications/:id/deliverable-approval',
+  verifyToken,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const application = await sponsorService.approveDeliverable(
+        req.userId!,
+        req.token!,
+        String(req.params.id)
+      );
+      res.json({ message: 'Deliverable approved', application });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Failed to approve deliverable';
+      const status = message.includes('Sponsor account')
+        ? 403
+        : message.includes('not found')
+          ? 404
+          : message.includes('Not authorized')
+            ? 403
+            : 400;
+      res.status(status).json({ error: message });
+    }
+  }
+);
+
 router.patch('/applications/:id', verifyToken, async (req: AuthRequest, res: Response) => {
   try {
     const { status, sponsorNotes } = req.body;

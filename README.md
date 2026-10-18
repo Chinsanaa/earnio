@@ -46,7 +46,7 @@ npm run dev          # from repo root — frontend :3000 + backend :3001
 npm run seed:demo
 ```
 
-This drives the real API to create a demo sponsor + campaign, a demo creator, an application, an approval, a mark-paid wallet credit, and a payout request — see [Commands](#commands).
+This drives the real API to create a demo sponsor + campaign, a demo creator, an application, an approval, an approved deliverable, a mark-paid wallet credit, and a payout request — see [Commands](#commands).
 
 ---
 

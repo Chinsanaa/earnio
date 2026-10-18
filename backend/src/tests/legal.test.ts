@@ -10,6 +10,7 @@ const testConfig: EnvConfig = {
   supabaseUrl: 'https://example.supabase.co',
   supabaseAnonKey: 'test-anon-key',
   nodeEnv: 'test',
+  trustProxyHops: 1,
 };
 
 describe('Legal documents', () => {

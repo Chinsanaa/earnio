@@ -97,7 +97,8 @@ export async function refreshAccessToken(): Promise<boolean> {
       method: 'POST',
       credentials: 'include',
     });
-    if (!res.ok) return false;
+    // 204 = no refresh cookie (not signed in).
+    if (!res.ok || res.status === 204) return false;
     const data = (await res.json()) as { accessToken: string };
     setAccessToken(data.accessToken);
     return true;

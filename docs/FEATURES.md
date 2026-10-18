@@ -84,6 +84,7 @@
 - [x] Add Mongolian bank account (Khan Bank, Golomt, etc.)
 - [x] Bank account storage with secure masking in API responses
 - [x] Request payout (minimum 50,000 MNT)
+- [x] Sponsor approves each submitted deliverable before payment (Oct 2026)
 - [x] Sponsorship mark-paid credits creator wallet (gross + 20% platform fee)
 - [x] Payout creates pending transaction
 - [x] Payout request sends in-app notification

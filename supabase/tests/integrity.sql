@@ -93,6 +93,30 @@ UPDATE public.sponsorship_applications
 SET deliverable_url = 'https://www.tiktok.com/@cr/video/1', deliverable_submitted_at = now()
 WHERE id = '20000000-0000-0000-0000-000000000001';
 
+-- 6b. Creator cannot approve their own deliverable --------------------------
+SELECT pg_temp.expect_error($q$
+  UPDATE public.sponsorship_applications SET deliverable_approved_at = now()
+  WHERE id = '20000000-0000-0000-0000-000000000001'
+$q$, 'creator self-approves deliverable');
+RESET ROLE;
+
+-- 6c. Sponsor approves the deliverable once; creator then cannot swap it ----
+SELECT pg_temp.act_as('00000000-0000-0000-0000-00000000000a');
+SET ROLE authenticated;
+UPDATE public.sponsorship_applications SET deliverable_approved_at = now()
+WHERE id = '20000000-0000-0000-0000-000000000001';
+SELECT pg_temp.expect_error($q$
+  UPDATE public.sponsorship_applications SET deliverable_approved_at = NULL
+  WHERE id = '20000000-0000-0000-0000-000000000001'
+$q$, 'sponsor un-approves deliverable');
+RESET ROLE;
+SELECT pg_temp.act_as('00000000-0000-0000-0000-00000000000b');
+SET ROLE authenticated;
+SELECT pg_temp.expect_error($q$
+  UPDATE public.sponsorship_applications SET deliverable_url = 'https://www.tiktok.com/@cr/video/2'
+  WHERE id = '20000000-0000-0000-0000-000000000001'
+$q$, 'creator swaps approved deliverable');
+
 -- 7. Bank account verified flag is server-only ------------------------------
 INSERT INTO public.bank_accounts (id, user_id, bank_name, account_number, account_holder_name, verified)
 VALUES ('30000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-00000000000b', 'Khan Bank', 'enc', 'Cr', true);

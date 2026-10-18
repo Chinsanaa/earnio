@@ -30,6 +30,7 @@ export interface SponsorshipApplication {
   applied_at: string | null;
   deliverable_url: string | null;
   deliverable_submitted_at: string | null;
+  deliverable_approved_at?: string | null;
   sponsorship: {
     id: string;
     title: string;

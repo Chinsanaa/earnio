@@ -26,6 +26,7 @@ export function PlatformBento({ data }: { data: DashboardSummary }) {
       <h2 id="your-platforms" className="mb-3 font-display text-lg font-bold tracking-tight text-foreground">
         {t('your_platforms')}
       </h2>
+      <p className="-mt-1 mb-3 text-xs text-muted-foreground">{t('demo_platform_stats_note')}</p>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {data.connectedPlatforms.map((account) => {
           const earnings = byPlatform.get(account.platform.toLowerCase());

@@ -551,7 +551,9 @@ CREATE TRIGGER on_auth_user_created
    - In-app notification appears
    - Sponsor navigates to /sponsor/campaigns/[id] to review
 6. Sponsor approves application:
-   - Frontend calls POST /api/sponsor/applications/[id]/approve
+   - Frontend calls PATCH /api/sponsor/applications/[id] { status }
+   - After the creator submits a post link: POST /api/sponsor/applications/[id]/deliverable-approval
+   - Then POST /api/sponsor/campaigns/[id]/payment (requires every approved deliverable)
    - Backend:
      - Updates applications row: status='approved'
      - Creates wallet_transaction: type='sponsorship_earned', amount=budget*0.8

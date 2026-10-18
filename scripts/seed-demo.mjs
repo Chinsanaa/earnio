@@ -2,7 +2,7 @@
 /**
  * Seeds a realistic demo state for the portfolio walkthrough by driving the
  * real API: sponsor signup -> campaign -> creator signup -> apply -> approve
- * -> deliverable -> mark paid -> bank account -> payout request.
+ * -> deliverable -> approve deliverable -> mark paid -> bank account -> payout request.
  *
  * Usage: npm run dev (in another shell), then `node scripts/seed-demo.mjs`
  */
@@ -93,14 +93,16 @@ async function main() {
   const { campaign } = await json(createRes);
   console.log(`  campaign id: ${campaign.id}`);
 
-  console.log('Publishing campaign (status: active)...');
-  await json(
-    await fetch(`${BACKEND}/api/sponsor/campaigns/${campaign.id}/status`, {
-      method: 'PATCH',
-      headers: authHeaders(sponsor.accessToken),
-      body: JSON.stringify({ status: 'active' }),
-    })
-  );
+  if (campaign.status === 'draft') {
+    console.log('Publishing campaign (status: active)...');
+    await json(
+      await fetch(`${BACKEND}/api/sponsor/campaigns/${campaign.id}/status`, {
+        method: 'PATCH',
+        headers: authHeaders(sponsor.accessToken),
+        body: JSON.stringify({ status: 'active' }),
+      })
+    );
+  }
 
   console.log('Creator applying...');
   const applyRes = await fetch(`${BACKEND}/api/sponsorships/${campaign.id}/apply`, {
@@ -128,6 +130,14 @@ async function main() {
       method: 'PATCH',
       headers: authHeaders(creator.accessToken),
       body: JSON.stringify({ deliverableUrl: `https://www.tiktok.com/@demo_creator/video/${STAMP}` }),
+    })
+  );
+
+  console.log('Sponsor approving deliverable...');
+  await json(
+    await fetch(`${BACKEND}/api/sponsor/applications/${application.id}/deliverable-approval`, {
+      method: 'POST',
+      headers: authHeaders(sponsor.accessToken),
     })
   );
 

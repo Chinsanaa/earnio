@@ -78,7 +78,9 @@ export default function PlatformsPage() {
     setError(null);
     setMessage(null);
     try {
-      await connectPlatform(platformId, username);
+      const account = await connectPlatform(platformId, username);
+      // Pull the simulated stats right away so the card isn't empty.
+      await syncPlatform(account.id).catch(() => undefined);
       setUsernames((prev) => ({ ...prev, [platformId]: '' }));
       await load();
     } catch (err) {

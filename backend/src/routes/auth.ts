@@ -28,6 +28,19 @@ const authRateLimiter = rateLimit({
   message: { error: 'Too many auth attempts. Please try again later.' },
 });
 
+// Refresh runs on every page load without an access token, so it gets a looser
+// budget than login. Guessing a refresh token is not feasible, so this only
+// guards against floods.
+const REFRESH_RATE_LIMIT = 30;
+const refreshRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: REFRESH_RATE_LIMIT,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => `${ipKeyGenerator(req.ip ?? '')}:${req.method}:${req.path}`,
+  message: { error: 'Too many auth attempts. Please try again later.' },
+});
+
 const forgotPasswordRateLimiter = rateLimit({
   windowMs: 30 * 60 * 1000,
   limit: 3,
@@ -180,12 +193,14 @@ router.post('/logout', async (req: AuthRequest, res: Response) => {
   res.json({ message: 'Logged out successfully' });
 });
 
-router.post('/refresh', authRateLimiter, async (req: AuthRequest, res: Response) => {
+router.post('/refresh', refreshRateLimiter, async (req: AuthRequest, res: Response) => {
   try {
     const refreshToken = req.cookies.refreshToken;
 
+    // No cookie just means "not signed in": answer without an error status so
+    // anonymous page loads don't log a failed request in the browser console.
     if (!refreshToken) {
-      res.status(401).json({ error: 'Refresh token not found' });
+      res.status(204).end();
       return;
     }
 

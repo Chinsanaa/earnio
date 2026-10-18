@@ -131,6 +131,13 @@ export default function MyApplicationsPage() {
                     <p className="text-sm text-landing-muted">
                       {t('deliverable_submitted')}{' '}
                       <DeliverableLink url={app.deliverable_url} className="auth-link font-medium" />
+                      <span
+                        className={`ml-2 inline-flex ${app.deliverable_approved_at ? 'badge-status-success' : 'badge-status-neutral'}`}
+                      >
+                        {app.deliverable_approved_at
+                          ? t('deliverable_approved_label')
+                          : t('deliverable_awaiting_review')}
+                      </span>
                     </p>
                   ) : (
                     <div className="space-y-2">

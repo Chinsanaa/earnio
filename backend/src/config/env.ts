@@ -4,6 +4,7 @@ export interface EnvConfig {
   supabaseUrl: string;
   supabaseAnonKey: string;
   nodeEnv: string;
+  trustProxyHops: number;
 }
 
 export function loadEnvConfig(): EnvConfig {
@@ -24,5 +25,11 @@ export function loadEnvConfig(): EnvConfig {
     supabaseUrl,
     supabaseAnonKey,
     nodeEnv: process.env.NODE_ENV?.trim() || 'development',
+    trustProxyHops: parseTrustProxyHops(process.env.TRUST_PROXY_HOPS),
   };
+}
+
+function parseTrustProxyHops(value: string | undefined): number {
+  const hops = Number(value);
+  return Number.isInteger(hops) && hops >= 0 && hops <= 5 ? hops : 1;
 }
