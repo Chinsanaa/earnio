@@ -43,6 +43,8 @@ PGHOST=/var/run/postgresql PGUSER=postgres supabase/tests/run.sh
 
 The repo ships a Blueprint: [`render.yaml`](../render.yaml).
 
+> **Already have an `earnio-api` service?** Don't apply the Blueprint (it would create a second service). Open the existing service → **Environment** and make sure it has the variables in the tables below, including `TRUST_PROXY_HOPS=2`, then set **Settings → Health Check Path** to `/api/health`. A Node service with root directory `backend`, build `npm install && npm run build` and start `npm start` works the same as the Docker one.
+
 1. Render dashboard → **New → Blueprint** → select this repo.
 2. Fill in the values it asks for:
 
