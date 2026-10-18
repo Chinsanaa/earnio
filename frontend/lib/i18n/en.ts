@@ -167,6 +167,8 @@ export const translations: Record<string, string> = {
   sync_completed: 'Sync completed. Check Home for updated earnings.',
   sync_history: 'Sync history',
   failed_to_load_platforms: 'Failed to load platforms',
+  demo_platform_data_notice: 'Demo data: follower counts and earnings are simulated from your username. No platform login is needed.',
+  platform_username_label: 'Platform username',
   failed_to_connect: 'Failed to connect',
   sync_failed: 'Sync failed',
   synced: 'Synced',

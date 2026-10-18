@@ -16,7 +16,7 @@ if (config.nodeEnv === 'production' && !hasServiceRoleKey()) {
 }
 if (config.nodeEnv === 'production' && !isEncryptionConfigured()) {
   throw new Error(
-    'ENCRYPTION_KEY is required when NODE_ENV=production so OAuth tokens and bank account numbers are encrypted at rest. Generate one with: openssl rand -base64 32'
+    'ENCRYPTION_KEY is required when NODE_ENV=production so bank account numbers are encrypted at rest. Generate one with: openssl rand -base64 32'
   );
 }
 warnIfMissingServiceRoleKey();

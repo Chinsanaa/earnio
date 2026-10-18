@@ -1,23 +1,22 @@
 # Earnio — Project Context
 
-> **Start here.** This file maps the repository, explains what each part does, and points to the one document you should read for each topic. Updated June 2026.
+> **Start here.** This file maps the repository, explains what each part does, and points to the one document you should read for each topic. Updated October 2026.
 
 ---
 
 ## What is Earnio?
 
-**Earnio** (*Earn more, create more*) is a full-stack UGC monetization platform for **Mongolian Gen Z creators** and **brands**. Creators connect TikTok, YouTube, and Instagram (mock sync in MVP), track earnings, apply to sponsorship campaigns, and request MNT payouts. Brands post campaigns, review applications, and manage partnerships.
+**Earnio** (*Earn more, create more*) is a full-stack UGC monetization platform for **Mongolian Gen Z creators** and **brands**. Creators connect TikTok, YouTube, and Instagram by username (simulated stats), track earnings, apply to sponsorship campaigns, and request MNT payouts. Brands post campaigns, review applications, and manage partnerships.
 
 | Layer | Tech | Port |
 |-------|------|------|
 | Web app | Next.js 16, React 19, Tailwind 4 | 3000 |
 | API | Express 5, TypeScript | 3001 |
 | Database & auth | Supabase (PostgreSQL + JWT) | — |
-| Mobile | Capacitor 7 (iOS wrapper) + native SwiftUI app in `ios/` | — |
 
 **Revenue model:** 20% platform commission on sponsorships (creators keep 80%).
 
-**MVP constraint:** Mock platform data and mock payouts — no real OAuth or bank rails in scope. See [instructions.md](./instructions.md).
+**Goal:** polished portfolio demo. Mock platform data and simulated payouts are final; there is no platform OAuth or bank rail code. Plan: [docs/SHIP_PLAN.md](./docs/SHIP_PLAN.md). Scope: [instructions.md](./instructions.md).
 
 ---
 
@@ -33,10 +32,9 @@ creator-toolkit/                 # Monorepo root (npm scripts delegate to sub-pa
 ├── frontend/                    # Next.js website → see frontend/README.md
 ├── backend/                     # Express REST API → see backend/README.md
 ├── supabase/                    # SQL migrations → see supabase/README.md
-├── ios/                         # Native iOS app → see ios/README.md
 ├── scripts/                     # Dev & smoke-test helpers → see scripts/README.md
 ├── docs/                        # Canonical technical docs → see docs/README.md
-├── .agents/                     # AI agent skills (MuAPI, design, React) → see .agents/README.md
+├── .agents/                     # AI agent skills (design, React, Supabase) → see .agents/README.md
 ├── .github/workflows/           # CI: backend tests + frontend lint/build
 └── docker-compose.yml           # Optional local full-stack containers
 ```
@@ -56,6 +54,7 @@ Each topic has **one canonical file**. Other files link here instead of repeatin
 | [instructions.md](./instructions.md) | Product scope, 12-week plan, locked decisions, what **not** to build |
 | [docs/EARNIO_PROJECT_DOCS.md](./docs/EARNIO_PROJECT_DOCS.md) | Original 6 spec documents (PRD, TRD, routes, UI brief, schema, phases) |
 | [docs/APP_OVERVIEW.md](./docs/APP_OVERVIEW.md) | Honest status: gaps, troubleshooting, backlog |
+| [docs/SHIP_PLAN.md](./docs/SHIP_PLAN.md) | 8-week finish-and-ship plan, audit findings, competitor research |
 
 ### Architecture & features
 
@@ -65,28 +64,19 @@ Each topic has **one canonical file**. Other files link here instead of repeatin
 | [docs/FEATURES.md](./docs/FEATURES.md) | Feature checklist (implemented / planned) |
 | [docs/FRONTEND.md](./docs/FRONTEND.md) | Landing pages, auth UI, route map, marketing design tokens |
 | [frontend/design-system/MASTER.md](./frontend/design-system/MASTER.md) | Product design tokens (colors, typography, spacing) |
-| [ios/DESIGN_SYSTEM.md](./ios/DESIGN_SYSTEM.md) | iOS-native design (SwiftUI, SF fonts, system colors) |
 
 ### Operations
 
 | Read this | For |
 |-----------|-----|
-| [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) | Production deploy (Vercel + Railway/Render + Supabase) |
+| [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) | Production deploy (Vercel + Render + Supabase) |
 | [docs/QA_MANUAL_CHECKLIST.md](./docs/QA_MANUAL_CHECKLIST.md) | Pre-release manual QA |
-| [docs/phases_11_15_complete_plan.md](./docs/phases_11_15_complete_plan.md) | Launch polish plan (phases 11–15) |
 | [SECURITY_AUDIT.md](./SECURITY_AUDIT.md) | Auth security implementation & test results |
 | [SECURITY.md](./SECURITY.md) | Vulnerability reporting policy |
 
-### Integrations (post-MVP)
-
-| Read this | For |
-|-----------|-----|
-| [docs/TIKTOK_OAUTH_SETUP.md](./docs/TIKTOK_OAUTH_SETUP.md) | TikTok developer portal setup |
-| [docs/TIKTOK_OAUTH_IMPLEMENTATION.md](./docs/TIKTOK_OAUTH_IMPLEMENTATION.md) | TikTok OAuth code paths in this repo |
-
 ### In-app docs (web UI at `/docs`)
 
-The running app renders markdown from `docs/` (not duplicate copies). Slugs: `deployment`, `qa-checklist`, `launch-plan`.
+The running app renders markdown from `docs/` (not duplicate copies). Slugs: `deployment`, `qa-checklist`.
 
 ### Agent & AI tooling
 
@@ -94,7 +84,7 @@ The running app renders markdown from `docs/` (not duplicate copies). Slugs: `de
 |-----------|-----|
 | [AGENTS.md](./AGENTS.md) | Cursor Cloud: ports, commands, gotchas |
 | [frontend/AGENTS.md](./frontend/AGENTS.md) | Next.js 16 breaking-change warning for agents |
-| [.agents/README.md](./.agents/README.md) | Bundled agent skills (design, media, React best practices) |
+| [.agents/README.md](./.agents/README.md) | Bundled agent skills (design, React best practices) |
 
 ### Legal (served by API, not dev docs)
 
@@ -123,17 +113,9 @@ JSON API under `/api/*`. Routes in `src/routes/`, business logic in `src/service
 
 ### `supabase/` — Database
 
-Timestamped SQL migrations: schema, RLS policies, auth triggers, demo seeds, password-reset and email-verification tables, OAuth token columns.
+Timestamped SQL migrations: schema, RLS policies, auth triggers, demo seeds, password-reset and email-verification tables, OAuth token columns (now unused).
 
 → Details: [supabase/README.md](./supabase/README.md)
-
-### iOS native app
-
-→ [ios/TESTING.md](./ios/TESTING.md) — demo mode + pre–App Store checklist
-
-SwiftUI app (iOS 17+) with creator and sponsor flows. Separate from the Capacitor web wrapper configured at repo root.
-
-→ Details: [ios/README.md](./ios/README.md)
 
 ### `scripts/` — Root utilities
 
@@ -149,7 +131,7 @@ All long-form guides. The web app and README link here.
 
 ### `.agents/` — Agent skills
 
-Third-party and project-specific skills for AI assistants (Earnio design system, MuAPI media tools, Vercel React rules). Not part of the runtime app.
+Third-party and project-specific skills for AI assistants (Earnio design system, Vercel React rules, Supabase). Not part of the runtime app.
 
 → Index: [.agents/README.md](./.agents/README.md)
 
@@ -167,7 +149,7 @@ Browser → Next.js (3000) → Express API (3001) → Supabase
 1. User logs in → backend sets httpOnly cookies (`ct-access-token`, refresh token, `ct-user-type`).
 2. Frontend calls API with Bearer token; auto-refreshes on 401.
 3. Edge middleware redirects unauthenticated or wrong-role users.
-4. Platform sync uses mock provider unless real OAuth is configured.
+4. Platform sync always uses the mock provider.
 
 ---
 
@@ -226,7 +208,6 @@ Full endpoint tables: [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md).
 | `npm test` | backend | API tests |
 | `npm run lint` | root | ESLint (frontend) |
 | `npm run smoke` | root | Route/API smoke test |
-| `npm run ios:open` | root | Open Capacitor iOS project (macOS) |
 
 ---
 
@@ -238,18 +219,17 @@ Full endpoint tables: [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md).
 | Understand system design | [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) |
 | See what's done vs. stubbed | [docs/APP_OVERVIEW.md](./docs/APP_OVERVIEW.md) |
 | Change landing or auth UI | [docs/FRONTEND.md](./docs/FRONTEND.md) |
-| Plan the "Solid Pop" design refresh (no gradients) | [docs/DESIGN_REFRESH_PLAN.md](./docs/DESIGN_REFRESH_PLAN.md) |
+| See the ship plan and audit | [docs/SHIP_PLAN.md](./docs/SHIP_PLAN.md) |
 | Deploy to production | [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) |
 | Run QA before release | [docs/QA_MANUAL_CHECKLIST.md](./docs/QA_MANUAL_CHECKLIST.md) |
 | Check scope before coding | [instructions.md](./instructions.md) |
-| Work on iOS | [ios/README.md](./ios/README.md) |
 | Apply a DB migration | [supabase/README.md](./supabase/README.md) |
 
 ---
 
 ## Update log
 
-- **2026-09-27:** Added [docs/DESIGN_REFRESH_PLAN.md](./docs/DESIGN_REFRESH_PLAN.md), a proposed "Solid Pop" frontend redesign: solid colors only (no gradients, enforced by a planned CI test), hard offset shadows, curated copy-paste libraries (shadcn/ui, Motion, Vengeance UI, Skiper UI free tier, Magic UI, Sonner, Vaul, cmdk), and a 6-phase rollout. Plan only; nothing implemented yet. Open questions listed in section 7.
+- **2026-09-27:** Added `docs/DESIGN_REFRESH_PLAN.md` (deleted 2026-10-18; design is frozen), a proposed "Solid Pop" frontend redesign: solid colors only (no gradients, enforced by a planned CI test), hard offset shadows, curated copy-paste libraries (shadcn/ui, Motion, Vengeance UI, Skiper UI free tier, Magic UI, Sonner, Vaul, cmdk), and a 6-phase rollout. Plan only; nothing implemented yet. Open questions listed in section 7.
 - **2026-09-27 (Phase 0+1):** Solid Pop tokens landed in `frontend/app/globals.css` (warm paper bg, `--pop-*` accents, `--outline`, hard shadows `--shadow-hard*`), all gradients/mesh/glass/blur removed, charts use solid fills, `design-system/` + `MASTER.md` mirrored. New CI rule 4 bans gradients. `lib/design/popTone.ts` picks stable card colors.
 - **2026-09-27 (Phase 2):** Added deps `motion`, `sonner`, `vaul`, `cmdk`, `radix-ui`. New/rebuilt primitives in `frontend/components/ui/`: `button` (default/pop/outline/ghost/danger, press effect), `card`, `badge` (pop tones), `input` (Input/Textarea/Label/FieldError), `dialog`, `sheet` (Vaul bottom sheet), `tooltip`, `tabs`, `dropdown-menu`, `toaster` (Sonner, mounted in `app/layout.tsx`), `number-ticker` (Motion, reduced-motion safe).
 - **2026-09-27 (Phase 3):** Command palette (`components/layout/CommandPalette.tsx` + lazy `CommandPaletteDialog.tsx`, cmdk) in the app topbar, Cmd/Ctrl+K. Pages come from nav items; role actions via `commandActions` prop on `CreatorAppShell` (creator: Request payout, My applications; sponsor: New campaign). New i18n keys `command_*` in `lib/i18n/en.ts` + `mn.ts`. Bottom tab bar columns now match nav item count.
@@ -257,3 +237,4 @@ Full endpoint tables: [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md).
 - **2026-09-27 (Phase 5):** Sponsor: pop-colored `ApplicationStatusChart` + `CampaignStatusBadge`, lilac "applications waiting" next-action card, campaign filter chips/skeletons/empty state, application review with A/R keyboard shortcuts (focus moves to next pending card) + toasts; Approve button contrast fixed (was white on green, ~2.5:1). Landing (creator + brands): sticker eyebrow, `.landing-display` headline, `.landing-btn-pop` CTA, `Marquee` lime band, color-coded steps, bento `CreatorFeatures`, sticker `CreatorTestimonials`, lime-open FAQ. `components/ui/reveal.tsx` = CSS + IntersectionObserver scroll reveal (hydration-safe, reduced-motion safe).
 - **2026-09-27 (Phase 6):** Polish. Fixed dark-mode bugs (auth logo tile white-on-white, offline banner contrast, light-only green/red tiles), mapped raw red/emerald/sky utilities to tokens, notification dropdown + account chooser + banners in sticker style. CI guard now also flags raw `text-white`. Verified reduced motion, A/R keyboard review flow, payout flow, EN/MN at 390px and 1280px, light + dark. Docs: `docs/FRONTEND.md` updated. Follow-up: Cyrillic font subsets (see plan doc).
 - **2026-09-29 (calm palette revision):** Per feedback ("too many colors, no neon or yellow"), replaced the six `--pop-*` colors with four calm, theme-aware tints: `--tint-blue`, `--tint-slate` (decorative), `--tint-green`, `--tint-red` (status only), plus `--tint-foreground`. Accent cyan to light Earnio Blue, warm paper background to cool off-white `#F6F7F9`, warning alert from amber to slate. `lib/design/popTone.ts` renamed to `tint.ts` (`tintFor`, `DECORATIVE_TINTS`). CTAs are solid Earnio Blue. New CI checks ban yellow/lime tokens and yellow/amber/lime Tailwind classes.
+- **2026-10-18 (Ship plan, Phase 1):** Audit + competitor research written up in [docs/SHIP_PLAN.md](./docs/SHIP_PLAN.md). Goal confirmed as a polished portfolio demo (no company yet, so no real money), hosting is Vercel + **Render**. Deleted: `ios/`, Capacitor config/deps/bootstrap, `.agents/skills/muapi-*`, `docs/phases_11_15_complete_plan.md`, `docs/DESIGN_REFRESH_PLAN.md`, `docs/TIKTOK_OAUTH_*.md`, `frontend/content/docs/`, `/docs/launch-plan`. Removed platform-connect OAuth (backend `*OAuthService.ts`, `tiktokApiService.ts`, `/api/auth/{tiktok,youtube,instagram}/*`, frontend callback pages); sync is mock-only. Platforms page connects by username with a "demo data" notice (new i18n keys `demo_platform_data_notice`, `platform_username_label`, `connecting`). Google/Apple login OAuth unchanged.

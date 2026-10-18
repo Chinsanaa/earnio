@@ -1,13 +1,9 @@
 import {
   fetchPlatformData,
   isSupportedPlatform,
-  MNT_PER_USD,
   type SupportedPlatform,
 } from '../platforms/mockPlatformProvider';
 import { getAuthenticatedClient, supabaseAdmin } from '../database/supabase';
-import { decrypt } from '../utils/encryption';
-import tiktokApiService from './tiktokApiService';
-import tiktokOAuthService from './tiktokOAuthService';
 import notificationService from './notificationService';
 
 export interface PlatformAccount {
@@ -245,54 +241,8 @@ class PlatformService {
     const earningsClient = supabaseAdmin;
 
     try {
-      // Fetch account with OAuth tokens
-      const { data: accountData } = await earningsClient
-        .from('platform_accounts')
-        .select('oauth_access_token, platform_username, follower_count')
-        .eq('id', accountId)
-        .single();
-
-      let payload;
-      let updatedFollowerCount = 0;
-      let updatedUsername: string | null = null;
-      let profileUpdated = false;
-
-      // Check if this is an OAuth-connected TikTok account with valid token
-      if (platform === 'tiktok' && accountData?.oauth_access_token) {
-        try {
-          const oauthAccessToken = decrypt(accountData.oauth_access_token);
-          // Fetch real data from TikTok API
-          const [profile, videos] = await Promise.all([
-            tiktokApiService.fetchCreatorProfile(oauthAccessToken),
-            tiktokApiService.fetchRecentVideos(oauthAccessToken, 10),
-          ]);
-
-          // Calculate earnings from engagement
-          const earningsMnt = tiktokApiService.calculateEarnings(videos, profile.follower_count);
-
-          updatedFollowerCount = profile.follower_count;
-          updatedUsername = profile.display_name || null;
-          profileUpdated = true;
-
-          // Create payload in mock format for consistency
-          payload = {
-            earningsMnt,
-            amountUsd: Math.round(earningsMnt / MNT_PER_USD),
-            followerCount: profile.follower_count,
-            periodStart: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
-              .toISOString()
-              .split('T')[0],
-            periodEnd: new Date().toISOString().split('T')[0],
-          };
-        } catch (oauthErr) {
-          console.warn('OAuth fetch failed, falling back to mock:', oauthErr);
-          // If OAuth fetch fails, fall back to mock
-          payload = fetchPlatformData(platform, platformUserId);
-        }
-      } else {
-        // Use mock data for non-OAuth accounts or other platforms
-        payload = fetchPlatformData(platform, platformUserId);
-      }
+      // Demo build: platform stats always come from the mock provider.
+      const payload = fetchPlatformData(platform, platformUserId);
 
       const { data: existingEarning } = await earningsClient
         .from('earnings')
@@ -341,16 +291,11 @@ class PlatformService {
 
       // Update platform account with latest data
       const updateData: Record<string, unknown> = {
-        follower_count: profileUpdated ? updatedFollowerCount : payload.followerCount,
+        follower_count: payload.followerCount,
         last_synced_at: new Date().toISOString(),
         status: 'connected',
         updated_at: new Date().toISOString(),
       };
-
-      // If OAuth, also update platform_username if we got it from the API
-      if (updatedUsername) {
-        updateData.platform_username = `@${updatedUsername}`;
-      }
 
       await client.from('platform_accounts').update(updateData).eq('id', accountId);
 

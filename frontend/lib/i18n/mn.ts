@@ -146,6 +146,8 @@ export const translations: Record<string, string> = {
   sync_completed: 'Синк дуусгавар боллоо. Шинэчлэгдсэн орлогыг Нүүр хуудаснаас харна уу.',
   sync_history: 'Синкийн түүх',
   failed_to_load_platforms: 'Платформуудыг ачаалж чадсангүй',
+  demo_platform_data_notice: 'Демо өгөгдөл: дагагчийн тоо болон орлогыг таны хэрэглэгчийн нэрээс загварчилсан. Платформд нэвтрэх шаардлагагүй.',
+  platform_username_label: 'Платформын хэрэглэгчийн нэр',
   failed_to_connect: 'Холбогдож чадсангүй',
   sync_failed: 'Синк амжилтгүй болсон',
   synced: 'Синк хийгдсэн',

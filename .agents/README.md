@@ -13,7 +13,6 @@ Bundled [Cursor Agent Skills](https://cursor.com/docs) for AI assistants working
 | **earnio-design** | `skills/earnio-design/` | Earnio brand, tokens, UI components, web/app UI kits |
 | **vercel-react-best-practices** | `skills/vercel-react-best-practices/` | React/Next.js performance rules |
 | **ui-ux-pro-max** | `skills/ui-ux-pro-max/` | UI/UX guidance |
-| **muapi-*** | `skills/muapi-*/` | Media generation (logos, ads, video, Instagram, etc.) |
 
 Each skill has a `SKILL.md` entry point. Subfolders may contain rules, prompts, or reference assets.
 
@@ -23,6 +22,5 @@ Each skill has a `SKILL.md` entry point. Subfolders may contain rules, prompts, 
 
 - Building or restyling Earnio UI → **earnio-design** (+ [../frontend/design-system/MASTER.md](../frontend/design-system/MASTER.md))
 - Optimizing React/Next.js → **vercel-react-best-practices**
-- Generating marketing assets → relevant **muapi-*** skill
 
 Product constraints and scope still come from [../instructions.md](../instructions.md) — skills do not override MVP scope.

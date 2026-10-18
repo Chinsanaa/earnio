@@ -85,13 +85,6 @@ frontend/
 ├── contexts/
 │   └── AuthContext.tsx           # User auth state (login, logout, user)
 │
-├── content/
-│   ├── docs/                     # Markdown docs for /docs page
-│   │   ├── deployment.md
-│   │   ├── qa-checklist.md
-│   │   └── launch-plan.md
-│   └── legal/                    # Legal content (terms, privacy)
-│
 ├── middleware.ts                 # Edge middleware (auth redirect, role check)
 ├── proxy.ts                      # Auth middleware (old, edge-based protection)
 └── tailwind.config.ts            # Tailwind config + design tokens
@@ -608,7 +601,7 @@ CREATE TRIGGER on_auth_user_created
 
 ### Production
 - Frontend: Vercel → https://earnio.app
-- Backend: Railway/Render → https://api.earnio.app
+- Backend: Render → https://api.earnio.app
 - Database: Supabase (managed PostgreSQL)
 - Email: Resend (transactional email service)
 - Sync: External cron (GitHub Actions, AWS Lambda, etc.)

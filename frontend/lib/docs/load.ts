@@ -5,7 +5,6 @@ import path from 'path';
 const DOC_SOURCES: Record<string, string> = {
   deployment: 'DEPLOYMENT.md',
   'qa-checklist': 'QA_MANUAL_CHECKLIST.md',
-  'launch-plan': 'phases_11_15_complete_plan.md',
 };
 
 export function loadDocMarkdown(slug: string): string {

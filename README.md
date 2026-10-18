@@ -6,7 +6,7 @@ UGC monetization platform for Mongolian Gen Z creators and brands. Creators conn
 
 This is a solo-built, full-stack portfolio project — not a live startup. Platform earnings and bank payouts are intentionally **mocked** (real OAuth and bank rails were scoped out to ship the full product loop in 12 weeks; see [instructions.md](./instructions.md)). Everything else — auth, RLS-backed Postgres, the sponsorship marketplace, wallet ledger, notifications, i18n — is real, working code with backend + frontend + e2e test coverage.
 
-`Next.js 16` · `React 19` · `Express 5` · `TypeScript` · `Supabase (Postgres + JWT)` · `Tailwind 4` · `Capacitor/SwiftUI (iOS)`
+`Next.js 16` · `React 19` · `Express 5` · `TypeScript` · `Supabase (Postgres + JWT)` · `Tailwind 4`
 
 → **Full project map:** [context.md](./context.md) · **Demo walkthrough:** [docs/APP_OVERVIEW.md](./docs/APP_OVERVIEW.md#demo-walkthrough-portfolio)
 
@@ -57,7 +57,6 @@ This drives the real API to create a demo sponsor + campaign, a demo creator, an
 | [frontend/](./frontend/) | Next.js website |
 | [backend/](./backend/) | Express REST API |
 | [supabase/](./supabase/) | SQL migrations |
-| [ios/](./ios/) | Native SwiftUI iOS app |
 | [docs/](./docs/) | Technical documentation |
 | [scripts/](./scripts/) | Dev & smoke-test helpers |
 

@@ -11,7 +11,7 @@ Guidance for AI assistants (Claude Code and others) working in this repository.
 **Earnio** (*Earn more, create more*) is a full-stack UGC monetization platform for **Mongolian Gen Z creators** and **brands**. Creators connect TikTok/YouTube/Instagram (mock sync in the MVP), track earnings, apply to sponsorship campaigns, and request MNT payouts. Brands post campaigns, review applications, and approve creators.
 
 - **Revenue model:** 20% platform commission on sponsorships (creators keep 80%).
-- **MVP constraint:** Platform data and payouts are **mocked** — no real OAuth or bank rails are in scope for the MVP. Real TikTok OAuth code paths exist but are post-MVP/optional.
+- **MVP constraint:** Platform data and payouts are **mocked** — no platform OAuth or bank rails exist in the codebase. Creators connect a platform by typing a username; stats come from `mockPlatformProvider`. The goal is a polished portfolio demo (see [`docs/SHIP_PLAN.md`](./docs/SHIP_PLAN.md)).
 
 **This is a portfolio project, not a validated startup.** Do not add features, real APIs, or scope beyond what is in the spec. See [`instructions.md`](./instructions.md) for locked scope and the list of things **not** to build.
 
@@ -31,7 +31,6 @@ Browser → Next.js frontend (:3000) → Express API (:3001) → Supabase (Postg
 | Web app | Next.js 16 (App Router), React 19, Tailwind 4 | 3000 | `frontend/` |
 | API | Express 5, TypeScript | 3001 | `backend/` |
 | Database & auth | Supabase (PostgreSQL + JWT) | — | `supabase/` |
-| Mobile | Capacitor 7 web wrapper + native SwiftUI app | — | root config + `ios/` |
 
 **Auth flow:** Login → backend issues JWTs and sets httpOnly cookies (`ct-access-token`, refresh token, `ct-user-type`). Frontend calls the API with a Bearer token and auto-refreshes on 401. Next.js edge middleware (`frontend/proxy.ts`) redirects unauthenticated or wrong-role users.
 
@@ -46,7 +45,6 @@ earnio/
 ├── frontend/          Next.js web app (App Router)
 ├── backend/           Express REST API
 ├── supabase/          Timestamped SQL migrations
-├── ios/               Native SwiftUI iOS app (separate from Capacitor wrapper)
 ├── scripts/           dev.mjs (runs both servers) + smoke-test.mjs
 ├── docs/              Canonical long-form documentation
 ├── .agents/           Bundled AI agent skills (design, media, React rules)
@@ -68,7 +66,7 @@ earnio/
 | Feature checklist (done vs. planned) | [`docs/FEATURES.md`](./docs/FEATURES.md) |
 | Frontend UI, routes, marketing tokens | [`docs/FRONTEND.md`](./docs/FRONTEND.md) |
 | Product design tokens | [`frontend/design-system/MASTER.md`](./frontend/design-system/MASTER.md) |
-| Deployment (Vercel + Railway + Supabase) | [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md) |
+| Deployment (Vercel + Render + Supabase) | [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md) |
 | Auth security implementation & audit | [`SECURITY_AUDIT.md`](./SECURITY_AUDIT.md) |
 
 ---
@@ -112,7 +110,6 @@ npm run dev
 | `npm run smoke` | root | HTTP smoke tests against running servers |
 | `npm test` | `backend/` | Builds then runs Node test runner on `dist/tests/*.test.js` |
 | `npm test` | `frontend/` | Vitest run |
-| `npm run cap:sync` / `ios:open` | root | Capacitor iOS sync / open in Xcode (macOS) |
 
 ---
 
@@ -129,7 +126,7 @@ npm run dev
   - `src/jobs/syncScheduler.ts` — background platform sync (gated by `ENABLE_SYNC_CRON`).
   - `src/config/env.ts` — `loadEnvConfig()`; throws on missing `SUPABASE_URL` / `SUPABASE_ANON_KEY`.
 - **Errors:** Throw `AppError` (`src/utils/AppError.ts`) from services; the global handler in `app.ts` maps it to `{ error: { status, message, code } }`. Never leak raw errors — the fallback returns a generic 500.
-- **Production guards:** `index.ts` throws if `NODE_ENV=production` and `SUPABASE_SERVICE_ROLE_KEY` or `ENCRYPTION_KEY` is missing (OAuth tokens and bank account numbers are encrypted at rest).
+- **Production guards:** `index.ts` throws if `NODE_ENV=production` and `SUPABASE_SERVICE_ROLE_KEY` or `ENCRYPTION_KEY` is missing (bank account numbers are encrypted at rest).
 - **API prefixes:** `/api/auth`, `/api/dashboard`, `/api/platforms`, `/api/sponsorships`, `/api/sponsor`, `/api/wallet`, `/api/notifications`, `/api/sync`, `/api/legal`, `/api/health`. Mutation-heavy routers get `mutationRateLimiter`. Full endpoint tables: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md).
 
 ## Frontend conventions (`frontend/`)
@@ -172,7 +169,7 @@ When fixing a dark-mode bug, verify the new/changed color pair numerically (`con
 ## Conventions & guardrails
 
 - **Match surrounding style.** Backend is CommonJS TypeScript; frontend is ESM/React 19. Follow existing naming (`camelCase` services, feature-grouped components).
-- **Respect the locked MVP scope.** Do not introduce real OAuth, Stripe, or bank integrations, or add features not in the 6 spec documents. If a change won't fit scope, cut it — don't expand. See [`instructions.md`](./instructions.md).
+- **Respect the locked MVP scope.** Do not introduce platform OAuth, Stripe, or bank integrations (Google/Apple *login* via Supabase is fine), or add features not in the 6 spec documents. If a change won't fit scope, cut it — don't expand. See [`instructions.md`](./instructions.md).
 - **Keep mocks as mocks.** Mock platform data and payouts are intentional. Don't wire them to real providers.
 - **Secrets:** Never commit `.env` files or hardcode keys. Backend env is validated at startup.
 - **Two user roles everywhere:** creator vs. sponsor. New protected routes must be added to both `frontend/proxy.ts` `matcher`/role helpers and any relevant backend auth checks.

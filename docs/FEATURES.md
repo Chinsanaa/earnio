@@ -158,7 +158,7 @@
 
 ## 🚧 In Progress / Partial Implementation
 
-- **Mobile app** — Capacitor iOS wrapper exists but not tested on real devices
+- **Mobile app** — removed (web-first; responsive layout covers phones)
 - **Accessibility** — Not fully audited for WCAG compliance
 - **Performance optimization** — No Lighthouse budget automation
 
@@ -201,7 +201,6 @@
 ### Low Priority (Polish & Growth)
 
 - [x] i18n support (EN/MN UI copy)
-- [ ] Mobile app push notifications (Capacitor)
 - [ ] Creator messaging / DM system
 - [ ] Creator portfolio/reel showcase
 - [ ] Brand discovery recommendations
@@ -272,7 +271,7 @@
 | RLS policies | ✅ | Policies exist but need formal audit |
 | Email integration | ✅ | Resend working with verified domains (optional in local demo) |
 | CI/CD | ✅ | GitHub Actions pipeline in place (unit/lint/build; E2E local) |
-| Deployment docs | ✅ | Vercel + Railway setup guide |
+| Deployment docs | ✅ | Vercel + Render setup guide |
 | Health monitoring | ✅ | Public `/api/health`; detailed requires `x-cron-secret` |
 | Error tracking | 🚧 | Sentry integration planned |
 | Analytics | 🚧 | PostHog/Plausible planned |
