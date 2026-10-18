@@ -53,28 +53,43 @@
 - Removed platform-connect OAuth (TikTok/YouTube/Instagram services, routes, callback pages). Google/Apple **login** stays.
 - Platforms page now connects by username with a visible "demo data" notice.
 
-### Phase 2 (weeks 2-3): security and integrity
+### Phase 2 (weeks 2-3): security and integrity ✅ done
 - New migration: trigger blocking creators from changing application `status`; trigger keeping bank `verified` server-only; drop the client payout-insert policy; block client writes to follower counts; unique index + single `mark_campaign_paid` Postgres function.
 - Backend: creator-only apply, follower minimum check, deliverable URL allowlist (https + TikTok/YouTube/Instagram hosts).
-- Tests for each hole.
+- Tests for each hole: `supabase/tests/run.sh` (also runs in CI), backend unit tests, and checked against a local Supabase stack, including direct REST exploit attempts.
 
-### Phase 3 (weeks 3-4): honest, complete demo
+### Phase 3 (weeks 3-4): honest, complete demo ✅ done
 - "Demo data" badge on dashboard platform stats.
 - Sponsor **Approve deliverable** step before **Mark paid** (Collabstr/Insense pattern).
 - Wallet payout timeline with "simulated" copy.
 - Emails: new application → sponsor, deliverable submitted → sponsor.
 - `npm run seed:demo` is the one supported demo path.
+- Also fixed: payment no longer waits for the completion deadline (it blocked campaigns without one); anonymous pages no longer log a 401 from `/api/auth/refresh`; refresh has its own rate limit; dashboard handle/percentage/plural display bugs.
 
-### Phase 4 (weeks 4-5): deploy
+### Phase 4 (weeks 4-5): deploy 🟡 config done, accounts and deploy are yours
 - Fresh Supabase prod project, migrations, advisors clean.
 - Backend on Render (`render.yaml`, Dockerfile, health check). Free tier sleeps after idle; warm it before demos.
-- Frontend on Vercel with a `/api/*` rewrite to Render so auth cookies are first-party.
+- Frontend on Vercel with a `/api/*` rewrite to Render so auth cookies are first-party. Verified in a local production build, including silent session refresh.
+- Returning users bounced to `/login` after the 1-hour access token expires are now restored from the refresh cookie.
 
-### Phase 5 (weeks 5-6): QA and polish
-- Playwright happy path in CI. Manual QA checklist on phone and desktop, EN and MN, light and dark. Zero console errors. Design freeze.
+### Phase 5 (weeks 5-6): QA and polish 🟡 partly done
+- Done: CI job runs every migration plus the exploit checks; Playwright happy path updated and passing locally; zero console errors on the flows walked.
+- Not done: Playwright in CI (needs a Supabase stack in CI, about 2 GB of images per run; run it locally before releases instead). Manual QA on a real phone, EN and MN, light and dark. Design freeze.
 
-### Phase 6 (weeks 7-8): ship and buffer
-- 5-minute Maybee Pop&Joy demo script and recording. README "Live demo" section with honest limits. Buffer.
+### Phase 6 (weeks 7-8): ship and buffer 🟡 README done
+- Done: README screenshots and a "what's real and what's simulated" table.
+- Yours: live URL in README, 5-minute Maybee Pop&Joy demo recording.
+
+---
+
+## Your next actions (in order)
+
+1. Create a fresh Supabase project and run `npx supabase db push` (Step 1 of [DEPLOYMENT.md](./DEPLOYMENT.md)).
+2. Render → New → Blueprint → this repo; paste the Supabase values.
+3. Vercel → import with root `frontend`; set `API_PROXY_TARGET` and `NEXT_PUBLIC_API_URL=/`.
+4. `BACKEND_URL=https://<vercel-domain> npm run seed:demo`.
+5. Walk the QA checklist on your phone; note anything broken.
+6. Record the 5-minute demo and add the live URL to the README.
 
 ---
 

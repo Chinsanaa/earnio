@@ -427,6 +427,7 @@ export const translations: Record<string, string> = {
   available: 'Боломжит',
   pending: 'Хүлээгдэж буй',
   connected: 'Холбогдсон',
+  platform_count_one: '{count} платформ',
   platforms_count: '{count} платформ',
 
   // Wallet (Solid Pop)
@@ -453,6 +454,7 @@ export const translations: Record<string, string> = {
   application_approved_toast: 'Өргөдлийг зөвшөөрлөө.',
   application_rejected_toast: 'Өргөдлөөс татгалзлаа.',
   review_now: 'Одоо шалгах',
+  application_waiting: '{count} өргөдөл шалгахыг хүлээж байна',
   applications_waiting: '{count} өргөдөл шалгахыг хүлээж байна',
   all_caught_up: 'Бүгдийг шалгасан. Хүлээгдэж буй өргөдөл алга.',
 };

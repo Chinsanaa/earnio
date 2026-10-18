@@ -182,7 +182,10 @@ function CreatorDashboardBody({ user }: { user: AuthUser }) {
                 <div>
                   <p className="creator-hero-stat-label">{t('connected')}</p>
                   <p className="creator-hero-stat-value">
-                    {t('platforms_count').replace('{count}', String(data.connectedPlatforms.length))}
+                    {t(data.connectedPlatforms.length === 1 ? 'platform_count_one' : 'platforms_count').replace(
+                      '{count}',
+                      String(data.connectedPlatforms.length)
+                    )}
                   </p>
                 </div>
               </div>

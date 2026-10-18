@@ -460,6 +460,7 @@ export const translations: Record<string, string> = {
   available: 'Available',
   pending: 'Pending',
   connected: 'Connected',
+  platform_count_one: '{count} platform',
   platforms_count: '{count} platforms',
 
   // Wallet (Solid Pop)
@@ -486,6 +487,7 @@ export const translations: Record<string, string> = {
   application_approved_toast: 'Application approved.',
   application_rejected_toast: 'Application rejected.',
   review_now: 'Review now',
+  application_waiting: '{count} application waiting for review',
   applications_waiting: '{count} applications waiting for review',
   all_caught_up: 'All caught up. No applications waiting.',
 };

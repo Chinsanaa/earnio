@@ -4,7 +4,7 @@
 
 UGC monetization platform for Mongolian Gen Z creators and brands. Creators connect their TikTok/YouTube/Instagram, track earnings, apply to brand sponsorship campaigns, and request MNT payouts. Brands post campaigns, review applications, and approve creators. Earnio takes a 20% commission on sponsorships; creators keep 80%.
 
-This is a solo-built, full-stack portfolio project — not a live startup. Platform earnings and bank payouts are intentionally **mocked** (real OAuth and bank rails were scoped out to ship the full product loop in 12 weeks; see [instructions.md](./instructions.md)). Everything else — auth, RLS-backed Postgres, the sponsorship marketplace, wallet ledger, notifications, i18n — is real, working code with backend + frontend + e2e test coverage.
+This is a solo-built, full-stack portfolio project, not a live startup. Platform stats and bank payouts are intentionally **simulated** (see [What's real and what's simulated](#whats-real-and-whats-simulated)). Everything else (auth, RLS-backed Postgres, the sponsorship marketplace, deliverable review, wallet ledger, notifications, EN/MN i18n) is real, working code with backend, frontend, database and e2e tests.
 
 `Next.js 16` · `React 19` · `Express 5` · `TypeScript` · `Supabase (Postgres + JWT)` · `Tailwind 4`
 
@@ -12,9 +12,31 @@ This is a solo-built, full-stack portfolio project — not a live startup. Platf
 
 ---
 
+## Live demo
+
+<!-- Add the Vercel URL here after deploying (docs/DEPLOYMENT.md), then run `npm run seed:demo` against it. -->
+Not deployed yet. Deploy guide: [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) (Vercel + Render + Supabase, free tiers).
+
 ## Screenshots
 
-<!-- TODO: add 3-5 screenshots/GIF here (creator dashboard, sponsorship marketplace, wallet, dark mode) once captured against a running local instance with seeded demo data — see `npm run seed:demo` below. -->
+| Creator dashboard | Explore sponsorships |
+|---|---|
+| ![Creator dashboard](./docs/screenshots/creator-dashboard.png) | ![Explore](./docs/screenshots/explore.png) |
+| **Wallet** | **Sponsor dashboard** |
+| ![Wallet](./docs/screenshots/wallet.png) | ![Sponsor dashboard](./docs/screenshots/sponsor-dashboard.png) |
+
+## What's real and what's simulated
+
+| Part | Status |
+|------|--------|
+| Sign up, login, email verification, password reset, Google/Apple sign-in | Real (Supabase Auth) |
+| Campaigns, applications, approvals, deliverable links, deliverable approval | Real |
+| Wallet ledger: 80% to the creator, 20% platform fee | Real (database rows, enforced by RLS and triggers) |
+| Platform stats (followers, earnings) | **Simulated** from the username you enter; no TikTok/YouTube/Instagram login |
+| Brand payment ("Mark as paid") | **Simulated**: the sponsor confirms payment, no money moves |
+| Creator payouts | **Simulated**: requests are recorded and stay pending |
+
+How a real version would work (research summary in [docs/SHIP_PLAN.md](./docs/SHIP_PLAN.md)): brands prepay through QPay or a bank invoice, creators post and submit the link (already built), the brand approves it (already built), and an admin batches payouts weekly.
 
 ---
 

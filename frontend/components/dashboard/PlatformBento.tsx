@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { platformTone } from '@/lib/design/platformTone';
-import { formatMnt, platformLabel } from '@/lib/format';
+import { formatHandle, formatMnt, platformLabel } from '@/lib/format';
 import type { DashboardSummary } from '@/lib/types/dashboard';
 
 const TONE_BG = {
@@ -39,7 +39,7 @@ export function PlatformBento({ data }: { data: DashboardSummary }) {
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
                   <p className="font-display text-lg font-bold">{platformLabel(account.platform)}</p>
-                  <p className="truncate text-sm font-medium">@{account.platform_username}</p>
+                  <p className="truncate text-sm font-medium">{formatHandle(account.platform_username)}</p>
                 </div>
                 <span className="rounded-full border-2 border-outline bg-[color:var(--card)] px-2 py-0.5 font-mono text-xs font-bold text-[color:var(--foreground)]">
                   {compact(account.follower_count)}
@@ -49,7 +49,8 @@ export function PlatformBento({ data }: { data: DashboardSummary }) {
                 <p className="font-mono text-xl font-bold">{earnings ? formatMnt(earnings.totalMnt) : '—'}</p>
                 {earnings ? (
                   <p className="text-xs font-semibold">
-                    {Math.round(earnings.share * 100)}% {t('share_of_earnings')}
+                    {/* share is already a percentage (0-100) from the API */}
+                    {Math.round(earnings.share)}% {t('share_of_earnings')}
                   </p>
                 ) : null}
               </div>
