@@ -13,6 +13,8 @@ import { ApiError } from '@/lib/api/client';
 import { listMyApplications, submitDeliverable } from '@/lib/api/sponsorships';
 import { applicationStatusLabel, formatDate, formatMnt } from '@/lib/format';
 import type { SponsorshipApplication } from '@/lib/types/sponsorship';
+import { DeliverableLink } from '@/components/sponsorships/DeliverableLink';
+import { safeDeliverableHref } from '@/lib/deliverable';
 
 const STATUS_STYLES: Record<string, string> = {
   pending: 'badge-status-pending',
@@ -42,6 +44,11 @@ export default function MyApplicationsPage() {
   async function handleSubmitDeliverable(applicationId: string) {
     const url = deliverableDrafts[applicationId]?.trim();
     if (!url) return;
+    if (!safeDeliverableHref(url)) {
+      setError(t('deliverable_url_invalid'));
+      return;
+    }
+    setError(null);
     setSubmittingId(applicationId);
     try {
       const deliverableUrl = await submitDeliverable(applicationId, url);
@@ -123,14 +130,7 @@ export default function MyApplicationsPage() {
                   {app.deliverable_url ? (
                     <p className="text-sm text-landing-muted">
                       {t('deliverable_submitted')}{' '}
-                      <a
-                        href={app.deliverable_url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="auth-link font-medium"
-                      >
-                        {app.deliverable_url}
-                      </a>
+                      <DeliverableLink url={app.deliverable_url} className="auth-link font-medium" />
                     </p>
                   ) : (
                     <div className="space-y-2">
@@ -140,7 +140,7 @@ export default function MyApplicationsPage() {
                       <div className="flex flex-wrap gap-2">
                         <input
                           type="url"
-                          placeholder="https://..."
+                          placeholder="https://www.tiktok.com/@you/video/..."
                           value={deliverableDrafts[app.id] ?? ''}
                           onChange={(e) =>
                             setDeliverableDrafts((prev) => ({ ...prev, [app.id]: e.target.value }))

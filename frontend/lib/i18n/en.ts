@@ -169,6 +169,7 @@ export const translations: Record<string, string> = {
   failed_to_load_platforms: 'Failed to load platforms',
   demo_platform_data_notice: 'Demo data: follower counts and earnings are simulated from your username. No platform login is needed.',
   platform_username_label: 'Platform username',
+  deliverable_url_invalid: 'Use an https link to your TikTok, YouTube, or Instagram post.',
   failed_to_connect: 'Failed to connect',
   sync_failed: 'Sync failed',
   synced: 'Synced',

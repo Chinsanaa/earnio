@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { SponsorShell } from '@/components/sponsor/SponsorShell';
+import { DeliverableLink } from '@/components/sponsorships/DeliverableLink';
 import { CampaignEditorToolbar } from '@/components/sponsor/CampaignEditorToolbar';
 import { CampaignReadOnly } from '@/components/sponsor/CampaignReadOnly';
 import { ApiError } from '@/lib/api/client';
@@ -440,9 +441,7 @@ function ApplicationCard({
           {application.deliverable_url ? (
             <>
               {t('deliverable_submitted')}{' '}
-              <a href={application.deliverable_url} target="_blank" rel="noreferrer" className="link-primary">
-                {application.deliverable_url}
-              </a>
+              <DeliverableLink url={application.deliverable_url} className="link-primary" />
             </>
           ) : (
             t('deliverable_pending')

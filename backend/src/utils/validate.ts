@@ -44,3 +44,31 @@ export function trimString(value: unknown, maxLength: number): string | null {
 
   return trimmed;
 }
+
+const DELIVERABLE_HOSTS = ['tiktok.com', 'youtube.com', 'youtu.be', 'instagram.com'];
+
+/**
+ * Returns the normalized URL when it is an https link to a supported platform
+ * (TikTok, YouTube, Instagram), otherwise null.
+ */
+export function normalizeDeliverableUrl(value: unknown): string | null {
+  const raw = trimString(value, 2048);
+  if (!raw) {
+    return null;
+  }
+
+  let url: URL;
+  try {
+    url = new URL(raw);
+  } catch {
+    return null;
+  }
+
+  if (url.protocol !== 'https:' || url.username || url.password) {
+    return null;
+  }
+
+  const host = url.hostname.toLowerCase();
+  const allowed = DELIVERABLE_HOSTS.some((h) => host === h || host.endsWith(`.${h}`));
+  return allowed ? url.toString() : null;
+}

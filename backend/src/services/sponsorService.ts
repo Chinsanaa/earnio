@@ -586,18 +586,21 @@ class SponsorService {
       throw new Error('Payment processing is temporarily unavailable');
     }
 
-    const { data: existingCredits, error: existingError } = await supabaseAdmin
-      .from('wallet_transactions')
-      .select('id')
-      .eq('reference_type', 'sponsorship')
-      .eq('reference_id', campaignId)
-      .eq('type', 'sponsorship_credit')
-      .limit(1);
+    // Claim the campaign first: only one request can flip payment_marked_paid_at
+    // from null, so concurrent clicks cannot both credit wallets. The unique
+    // index on sponsorship ledger rows is a second line of defence.
+    const { data, error } = await client
+      .from('sponsorships')
+      .update({ payment_marked_paid_at: new Date().toISOString() })
+      .eq('id', campaignId)
+      .is('payment_marked_paid_at', null)
+      .select(CAMPAIGN_COLUMNS)
+      .maybeSingle();
 
-    if (existingError) {
-      throw new Error(`Failed to verify payment ledger: ${existingError.message}`);
+    if (error) {
+      throw new Error(`Failed to mark campaign as paid: ${error.message}`);
     }
-    if (existingCredits && existingCredits.length > 0) {
+    if (!data) {
       throw new Error('Payment has already been marked as paid');
     }
 
@@ -617,23 +620,16 @@ class SponsorService {
       .insert(ledgerRows);
 
     if (ledgerError) {
+      // A unique violation means these creators were already credited, so the
+      // campaign really is paid; keep the claim. Otherwise release it to retry.
+      if (ledgerError.code === '23505') {
+        throw new Error('Payment has already been marked as paid');
+      }
+      await client
+        .from('sponsorships')
+        .update({ payment_marked_paid_at: null })
+        .eq('id', campaignId);
       throw new Error(`Failed to credit creator wallets: ${ledgerError.message}`);
-    }
-
-    const { data, error } = await client
-      .from('sponsorships')
-      .update({ payment_marked_paid_at: new Date().toISOString() })
-      .eq('id', campaignId)
-      .is('payment_marked_paid_at', null)
-      .select(CAMPAIGN_COLUMNS)
-      .single();
-
-    if (error || !data) {
-      throw new Error(
-        error?.message
-          ? `Failed to mark campaign as paid: ${error.message}`
-          : 'Failed to mark campaign as paid'
-      );
     }
 
     const netPerCreator = Math.round(gross * (1 - PLATFORM_FEE_RATE));

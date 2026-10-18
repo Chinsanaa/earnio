@@ -1,4 +1,5 @@
 import { getAuthenticatedClient, supabaseAdmin } from '../database/supabase';
+import { normalizeDeliverableUrl } from '../utils/validate';
 import { toNumber } from '../utils/toNumber';
 
 export interface SponsorInfo {
@@ -187,9 +188,19 @@ class SponsorshipService {
 
     const client = getAuthenticatedClient(accessToken);
 
+    const { data: profile } = await client
+      .from('users')
+      .select('user_type')
+      .eq('id', userId)
+      .single();
+
+    if (profile?.user_type !== 'creator') {
+      throw new Error('Only creator accounts can apply to sponsorships');
+    }
+
     const { data: sponsorship, error: loadError } = await client
       .from('sponsorships')
-      .select('id, status, deadline_apply')
+      .select('id, status, deadline_apply, required_followers_min')
       .eq('id', sponsorshipId)
       .single();
 
@@ -207,6 +218,20 @@ class SponsorshipService {
       today.setHours(0, 0, 0, 0);
       if (deadline < today) {
         throw new Error('Application deadline has passed');
+      }
+    }
+
+    if (sponsorship.required_followers_min) {
+      const { data: accounts } = await client
+        .from('platform_accounts')
+        .select('follower_count')
+        .eq('user_id', userId)
+        .eq('status', 'connected');
+      const topFollowers = Math.max(0, ...(accounts ?? []).map((a) => a.follower_count ?? 0));
+      if (topFollowers < sponsorship.required_followers_min) {
+        throw new Error(
+          `This sponsorship requires at least ${sponsorship.required_followers_min.toLocaleString()} followers on one platform`
+        );
       }
     }
 
@@ -311,6 +336,10 @@ class SponsorshipService {
     if (!deliverableUrl?.trim()) {
       throw new Error('A deliverable link is required');
     }
+    const normalizedUrl = normalizeDeliverableUrl(deliverableUrl);
+    if (!normalizedUrl) {
+      throw new Error('Deliverable must be an https link to a TikTok, YouTube, or Instagram post');
+    }
 
     const client = getAuthenticatedClient(accessToken);
 
@@ -332,7 +361,7 @@ class SponsorshipService {
     const { data, error } = await client
       .from('sponsorship_applications')
       .update({
-        deliverable_url: deliverableUrl.trim(),
+        deliverable_url: normalizedUrl,
         deliverable_submitted_at: new Date().toISOString(),
       })
       .eq('id', applicationId)

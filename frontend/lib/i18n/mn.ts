@@ -148,6 +148,7 @@ export const translations: Record<string, string> = {
   failed_to_load_platforms: 'Платформуудыг ачаалж чадсангүй',
   demo_platform_data_notice: 'Демо өгөгдөл: дагагчийн тоо болон орлогыг таны хэрэглэгчийн нэрээс загварчилсан. Платформд нэвтрэх шаардлагагүй.',
   platform_username_label: 'Платформын хэрэглэгчийн нэр',
+  deliverable_url_invalid: 'TikTok, YouTube эсвэл Instagram пост руу чиглэсэн https холбоос оруулна уу.',
   failed_to_connect: 'Холбогдож чадсангүй',
   sync_failed: 'Синк амжилтгүй болсон',
   synced: 'Синк хийгдсэн',

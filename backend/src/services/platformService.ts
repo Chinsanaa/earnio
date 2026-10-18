@@ -297,7 +297,12 @@ class PlatformService {
         updated_at: new Date().toISOString(),
       };
 
-      await client.from('platform_accounts').update(updateData).eq('id', accountId);
+      // follower_count is server-only (guard_platform_follower_count trigger).
+      await earningsClient
+        .from('platform_accounts')
+        .update(updateData)
+        .eq('id', accountId)
+        .eq('user_id', userId);
 
       const { error: syncLogError } = await client.from('api_syncs').insert({
         user_id: userId,
